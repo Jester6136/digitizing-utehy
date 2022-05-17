@@ -1,0 +1,12 @@
+<app-navbar></app-navbar>
+<div class="main-container ace-save-state" id="main-container" style="padding-top: 41px;">
+  <app-sidebar></app-sidebar>
+  <div class="main-content" style="width: 99.1%;">
+    <div class="main-content-inner">
+      <!-- <p-scrollPanel styleClass="custombar"> -->
+      <router-outlet (activate)="onActivated($event)"></router-outlet>
+      <!-- </p-scrollPanel> -->
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

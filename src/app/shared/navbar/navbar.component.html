@@ -1,0 +1,298 @@
+<div id="navbar" class="navbar navbar-default ace-save-state navbar-fixed-top">
+  <div class="navbar-container ace-save-state" id="navbar-container">
+    <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar"
+      style="border-radius: 0;">
+      <span class="sr-only">Toggle sidebar</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-header pull-left ">
+      <a [routerLink]="['/']" class="navbar-brand no-padding-left hidden-xs">
+        <small>
+          <img src="assets/images/logo.png" style="height:23px;">
+          {{ 'COMMON.company_name' | translate }}
+        </small>
+      </a>
+    </div>
+    <div class="navbar-buttons navbar-header pull-right" role="navigation">
+      <ul class="nav ace-nav">
+        <li class="green hidden-xs">
+          <a (click)="openSettingPopup()" href="javascript:;" title="{{ 'SETTING.setting' | translate }}">
+            <i class="ace-icon fa fa-cogs"></i>
+          </a>
+        </li>
+        <li>
+          <p-menu #menu popup="popup" [model]="items"></p-menu>
+          <a href="javascript:;" title="{{ 'COMMON.change_language' | translate }}" (click)="menu.toggle($event)">
+            <i class="ace-icon fa fa-language icon-only bigger-120"></i>
+          </a>
+        </li>
+
+        <li class="purple dropdown-modal">
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <i class="ace-icon fa fa-bell icon-animated-bell"></i>
+            <span class="badge badge-important">8</span>
+          </a>
+
+          <!-- <ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+            <li class="dropdown-header">
+              <i class="ace-icon fa fa-exclamation-triangle"></i>
+              8 Notifications
+            </li>
+
+            <li class="dropdown-content">
+              <ul class="dropdown-menu dropdown-navbar navbar-pink">
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                      <span class="pull-left">
+                        <i class="btn btn-xs no-hover btn-pink fa fa-comment"></i>
+                        New Comments
+                      </span>
+                      <span class="pull-right badge badge-info">+12</span>
+                    </div>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <i class="btn btn-xs btn-primary fa fa-user"></i>
+                    Bob just signed up as an editor ...
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                      <span class="pull-left">
+                        <i class="btn btn-xs no-hover btn-success fa fa-shopping-cart"></i>
+                        New Orders
+                      </span>
+                      <span class="pull-right badge badge-success">+8</span>
+                    </div>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                      <span class="pull-left">
+                        <i class="btn btn-xs no-hover btn-info fa fa-twitter"></i>
+                        Followers
+                      </span>
+                      <span class="pull-right badge badge-info">+11</span>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="dropdown-footer">
+              <a href="#">
+                See all notifications
+                <i class="ace-icon fa fa-arrow-right"></i>
+              </a>
+            </li>
+          </ul> -->
+        </li>
+
+
+        <!-- UserModel -->
+        <li class="light-blue dropdown-modal">
+          <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+            <span title="{{ full_name }}" class="user-info">
+              <small>{{ 'COMMON.welcome' | translate }}, </small>{{ full_name }}
+            </span>
+            <i class="ace-icon fa fa-caret-down"></i>
+          </a>
+          <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+            <li>
+              <a [routerLink]="['/security/profile']">
+                <i class="ace-icon fa fa-user"></i>
+                {{ 'COMMON.profile' | translate }}
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="javascript:;" (click)="openchangePasswordModal()">
+                <i class="ace-icon fa fa-key"></i>
+                {{ 'COMMON.change_password' | translate }}
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="javascript:;" (click)="logout()">
+                <i class="ace-icon fa fa-power-off"></i>
+                {{ 'COMMON.logout' | translate }}
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="showChangePasswordModal" id="changePasswordModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <form [formGroup]="changePasswordForm" id="changePasswordForm" (ngSubmit)="onChangePasswordSubmit()">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{ 'COMMON.change_password' | translate }}</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="ui-g-12">
+                <div class="col-g-2 control-label">{{ 'COMMON.password' | translate }}</div>
+                <div class="col-g-10">
+                  <error-messages [valid]="changePasswordForm.controls['password'].valid"
+                    [control]="changePasswordForm.controls['password']"></error-messages>
+                  <input pInputText class="form-control input-sm" type="password" formControlName="password" ngModel />
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="col-g-2 control-label">{{ 'COMMON.new_password' | translate }}</div>
+                <div class="col-g-10">
+                  <error-messages [valid]="changePasswordForm.controls['new_password'].valid"
+                    [control]="changePasswordForm.controls['new_password']"></error-messages>
+                  <input pInputText class="form-control input-sm" type="password" formControlName="new_password"
+                    ngModel />
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="col-g-2 control-label">{{ 'COMMON.confirm_password' | translate }}</div>
+                <div class="col-g-10">
+                  <error-messages [valid]="changePasswordForm.controls['confirm_password'].valid"
+                    [control]="changePasswordForm.controls['confirm_password']"></error-messages>
+                  <input pInputText class="form-control input-sm" type="password" formControlName="confirm_password"
+                    ngModel />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="!changePasswordForm.valid" class="btn btn-success btn-sm">
+              <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+            </button>
+            <button type="button" class="btn btn-default btn-sm" (click)="closeChangePasswordModal()">
+              <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<p-dialog [modal]="true" [draggable]="false" [closable]="false" [responsive]="true"
+  [style]="{width: '550px', minWidth: '200px'}" [(visible)]="displayHelp" header="{{ 'COMMON.help' | translate }}"
+  [width]="425">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th style="width: 50px; text-align: center;">{{ 'COMMON.keyboard_shortcut' | translate }}</th>
+        <th>{{ 'COMMON.description' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let key of keys">
+        <td style="width: 30%; text-align: center;">
+          Control + {{ key.key }}
+        </td>
+        <td>
+          {{ key.message }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" class="pull-left" (click)="startFeaturesTour()"
+      label="{{ 'COMMON.screen_guide' | translate }}"></button>
+    <button type="button" pButton icon="fa-check" (click)="displayHelp = false"
+      label="{{ 'COMMON.close' | translate }}"></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [modal]="true" [draggable]="false" [closable]="false" [width]="550" [minWidth]="200" [responsive]="true"
+  [baseZIndex]="" [(visible)]="displaySetting" header="{{ 'SETTING.setting' | translate }}" [width]="425">
+
+  <form [formGroup]="settingForm" class="lap-form">
+    <div class="row ui-fluid">
+      <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.font_size' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <ng-selectize [config]="defaultSelectizeConfigS" formControlName="font_size" [options]="font_sizes"
+            placeholder="{{ 'COMMON.choose' | translate }}" [(ngModel)]="selectedFontSize"></ng-selectize>
+        </div>
+      </div>
+      <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.typing_speed' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <ng-selectize [config]="defaultSelectizeConfigS" formControlName="typing_speed" [options]="typing_speeds"
+            placeholder="{{ 'COMMON.choose' | translate }}" [(ngModel)]="selectedTypingSpeed">
+          </ng-selectize>
+        </div>
+      </div>
+      <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.font_family' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <ng-selectize [config]="defaultSelectizeConfigS" formControlName="font_family" [options]="font_families"
+            placeholder="{{ 'COMMON.choose' | translate }}" [(ngModel)]="selectedFontFamily"></ng-selectize>
+        </div>
+      </div>
+      <!-- <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.opd_icd_number' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <input pInputText type="text" formControlName="opd_icd_number" [(ngModel)]="opd_icd_number" />
+        </div>
+      </div> -->
+      <!-- <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.use_print_default' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <p-checkbox [(ngModel)]="use_print_default" formControlName="use_print_default" binary="true"></p-checkbox>
+        </div>
+      </div> -->
+      <!-- <div class="ui-g-12 ui-form-group">
+        <div class="ui-g-12 ui-md-3 inline-label text-right">
+          {{ 'SETTING.print_preview' | translate }}
+        </div>
+        <div class="ui-g-12 ui-md-8">
+          <p-checkbox [disabled]="use_print_default" [(ngModel)]="print_preview" formControlName="print_preview"
+            binary="true"></p-checkbox>
+        </div>
+      </div> -->
+    </div>
+  </form>
+
+  <p-footer>
+    <button type="button" pButton icon="fa-check" (click)="saveSetting()"
+      label="{{ 'COMMON.save' | translate }}"></button>
+    <button type="button" pButton icon="fa-times" (click)="cancelSetting()"
+      label="{{ 'COMMON.close' | translate }}"></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [modal]="true" [closable]="false" [width]="550" [minWidth]="200" [responsive]="true"
+  [(visible)]="deleteInboxFlag" header="{{ 'MESSAGE.message_detele' | translate }}">
+  <div class="ui-g-12 ui-form-group">
+    <h5>{{ 'MESSAGE.message_inbox_delete' | translate }}</h5>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" debounceClick (debounceClick)="onDeleteInbox()"
+      label="{{ 'COMMON.delete' | translate }}"></button>
+    <button type="button" pButton icon="fa-times" debounceClick (debounceClick)="deleteInboxFlag = false"
+      label="{{ 'COMMON.cancel' | translate }}"></button>
+  </p-footer>
+</p-dialog>

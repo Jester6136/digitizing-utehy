@@ -1,0 +1,231 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">{{ 'MODULE.SECURITY.role_list' | translate }}</li>
+  </ul>
+</div>
+<div class="page-content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="user-profile-1" class="user-profile row">
+        <div class="col-xs-12 col-sm-3 center">
+          <div>
+            <span class="profile-picture">
+              <img id="avatar" class="editable img-responsive" alt="{{ user.objectjson_person.full_name }}" src="{{ user.objectjson_employee.avatar ? user.objectjson_employee.avatar : 'assets/images/avatars/profile-pic.jpg' }}"
+              />
+            </span>
+
+            <div class="space-4"></div>
+
+            <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+              <div class="inline position-relative">
+                <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                  <i class="ace-icon fa fa-circle light-green"></i>
+                  &nbsp;
+                  <span class="white">{{ user.objectjson_person.full_name }}</span>
+                </a>
+
+                <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
+                  <li class="dropdown-header"> Change Status </li>
+
+                  <li>
+                    <a href="#">
+                      <i class="ace-icon fa fa-circle green"></i>
+                      &nbsp;
+                      <span class="green">Available</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <i class="ace-icon fa fa-circle red"></i>
+                      &nbsp;
+                      <span class="red">Busy</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="#">
+                      <i class="ace-icon fa fa-circle grey"></i>
+                      &nbsp;
+                      <span class="grey">Invisible</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="hr hr12 dotted"></div>
+
+          <div class="clearfix">
+            <div class="grid2">
+              <span class="bigger-175 blue">25</span>
+
+              <br /> Followers
+            </div>
+
+            <div class="grid2">
+              <span class="bigger-175 blue">12</span>
+
+              <br /> Following
+            </div>
+          </div>
+
+          <div class="hr hr16 dotted"></div>
+        </div>
+
+        <div class="col-xs-12 col-sm-9">
+          <div class="space-12"></div>
+
+          <div class="profile-user-info profile-user-info-striped">
+            <div class="profile-info-row">
+              <div class="profile-info-name"> {{ 'COMMON.username' | translate }} </div>
+              <div class="profile-info-value">
+                {{ user.username }}
+              </div>
+            </div>
+
+            <div class="profile-info-row">
+              <div class="profile-info-name"> {{ 'PERSON.full_name' | translate }} </div>
+              <div class="profile-info-value">
+                {{ user.objectjson_person.full_name }}
+              </div>
+            </div>
+
+            <div class="profile-info-row">
+              <div class="profile-info-name"> {{ 'PERSON.date_of_birth' | translate }} </div>
+              <div class="profile-info-value">
+                {{ user.objectjson_person.date_of_birth }}
+              </div>
+            </div>
+
+            <div class="profile-info-row">
+              <div class="profile-info-name"> Email </div>
+              <div class="profile-info-value">{{ user.objectjson_person.email }}</div>
+            </div>
+
+            <div class="profile-info-row">
+              <div class="profile-info-name"> Last Online </div>
+
+              <div class="profile-info-value">
+                <span class="editable" id="login">3 hours ago</span>
+              </div>
+            </div>
+
+            <div class="profile-info-row">
+              <div class="profile-info-name"> About Me </div>
+
+              <div class="profile-info-value">
+                <span class="editable" id="about">Editable as WYSIWYG</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-20"></div>
+
+          <div class="widget-box transparent">
+            <div class="widget-header widget-header-small">
+              <h4 class="widget-title blue smaller">
+                <i class="ace-icon fa fa-rss orange"></i>
+                Recent Activities
+              </h4>
+
+              <div class="widget-toolbar action-buttons">
+                <a href="#" data-action="reload">
+                  <i class="ace-icon fa fa-refresh blue"></i>
+                </a>
+                &nbsp;
+                <a href="#" class="pink">
+                  <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-8">
+                <div id="profile-feed-1" class="profile-feed">
+                  <div class="profile-activity clearfix">
+                    <div>
+                      <img class="pull-left" alt="Alex Doe's avatar" src="assets/images/avatars/avatar5.png" />
+                      <a class="user" href="#"> Alex Doe </a>
+                      changed his profile photo.
+                      <a href="#">Take a look</a>
+
+                      <div class="time">
+                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                        an hour ago
+                      </div>
+                    </div>
+
+                    <div class="tools action-buttons">
+                      <a href="#" class="blue">
+                        <i class="ace-icon fa fa-pencil bigger-125"></i>
+                      </a>
+
+                      <a href="#" class="red">
+                        <i class="ace-icon fa fa-times bigger-125"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="profile-activity clearfix">
+                    <div>
+                      <img class="pull-left" alt="Susan Smith's avatar" src="assets/images/avatars/avatar1.png" />
+                      <a class="user" href="#"> Susan Smith </a>
+
+                      is now friends with Alex Doe.
+                      <div class="time">
+                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                        2 hours ago
+                      </div>
+                    </div>
+
+                    <div class="tools action-buttons">
+                      <a href="#" class="blue">
+                        <i class="ace-icon fa fa-pencil bigger-125"></i>
+                      </a>
+
+                      <a href="#" class="red">
+                        <i class="ace-icon fa fa-times bigger-125"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="profile-activity clearfix">
+                    <div>
+                      <i class="pull-left thumbicon fa fa-check btn-success no-hover"></i>
+                      <a class="user" href="#"> Alex Doe </a>
+                      joined
+                      <a href="#">Country Music</a>
+
+                      group.
+                      <div class="time">
+                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                        5 hours ago
+                      </div>
+                    </div>
+
+                    <div class="tools action-buttons">
+                      <a href="#" class="blue">
+                        <i class="ace-icon fa fa-pencil bigger-125"></i>
+                      </a>
+
+                      <a href="#" class="red">
+                        <i class="ace-icon fa fa-times bigger-125"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

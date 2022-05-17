@@ -1,0 +1,93 @@
+<div id="sidebar" class="sidebar responsive ace-save-state sidebar-fixed" data-sidebar="true" data-sidebar-scroll="true"
+  data-sidebar-hover="true">
+  <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+    <div class="sidebar-shortcuts-large" style="line-height: 1em; padding: 5px;">
+      <form (ngSubmit)="onFilterMenu()">
+        <div class="ui-inputgroup">
+          <input type="text" name="key" pInputText [(ngModel)]="filterMenuKey" placeholder="{{ 'COMMON.search' | translate }}..."
+            style="width: calc(100% - 26px);" />
+          <button pButton type="submit" icon="fa-search" class="ui-button-success"></button>
+        </div>
+      </form>
+    </div>
+
+    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+      <span class="btn btn-success"></span>
+
+      <span class="btn btn-info"></span>
+
+      <span class="btn btn-warning"></span>
+
+      <span class="btn btn-danger"></span>
+    </div>
+
+  </div>
+  <ul class="nav nav-list" style="top: 0px;">
+    <li [class.active]="isDashboard()">
+      <a href="javascript:;" (click)="redirect('')">
+        <i class="menu-icon fas fa-tachometer-alt blue"></i>
+        <span class="menu-text"> {{ 'COMMON.dashboard' | translate }} </span>
+      </a>
+      <b class="arrow"></b>
+    </li>
+    <li *ngIf="filterMenuKey && filterMenuKey != ''" class="fix-active">
+      <a href="javascript:;">
+        <i class="menu-icon fas fa-filter blue"></i>
+        <span class="menu-text">
+          {{ 'COMMON.search_result' | translate }}
+          <span *ngIf="pageIndexes" class="badge badge-primary">{{pageIndexes.length}}</span>
+        </span>
+      </a>
+      <b class="arrow"></b>
+      <ul class="submenu">
+        <li *ngFor="let index of pageIndexes">
+          <a href="javascript:;" (click)="redirect(pages[index])">
+            <i class="menu-icon fa fa-caret-right"></i>
+            <span [innerHTML]="currentLang == 'local' ? pages[index].page_name_l_f : pages[index].page_name_e_f"></span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li *ngIf="recently && recently.length > 0" class="fix-active">
+      <a href="javascript:;">
+        <i class="menu-icon fas fa-user-clock blue"></i>
+        <span class="menu-text"> {{ 'COMMON.recently' | translate }} </span>
+      </a>
+      <b class="arrow"></b>
+      <ul class="submenu">
+        <li *ngFor="let page of recently">
+          <a href="javascript:;" (click)="redirect(page)">
+            <i class="menu-icon fa fa-caret-right"></i>
+            {{ currentLang == 'local' ? page.page_name_l : page.page_name_e }}
+          </a>
+        </li>
+      </ul>
+    </li> 
+    <ng-container *ngFor = "let pageGroup of pageGroups; index as i;">
+      <li [id]="'id'+i" [class.active]="pageGroup.active" *ngIf="pageGroup.is_public" (click)="Ok(pageGroup,i)">
+        <a href="javascript:;" class="dropdown-toggle">
+          <i class="menu-icon fas {{ pageGroup.css_class ? pageGroup.css_class : 'fa-file' }}"></i>
+          <span class="menu-text">
+            {{ currentLang == 'local' ? pageGroup.page_group_name_l : pageGroup.page_group_name_e }}
+          </span>
+          <b class="arrow fa fa-angle-down" *ngIf="pageGroup.pages.length > 0"></b>
+        </a>
+        <b class="arrow"></b>
+        <ul [ngClass]="{'max-height-scoll':pageGroup.pages.length>10}" class="submenu" *ngIf="pageGroup.pages.length > 0" [ngStyle]="pageGroup.is_open?'':''">
+          <ng-container *ngFor = "let page of pageGroup.pages | sort:'sort_order'">
+            <li *ngIf="page.public_flag" [class.active]="page.active">
+              <a href="javascript:;" debounceClick (debounceClick)="redirect(page)">
+                <i class="menu-icon fa fa-caret-right"></i>
+                {{ currentLang == 'local' ? page.page_name_l : page.page_name_e }}
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </li>
+    </ng-container> 
+  </ul>
+  <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+    <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left"
+      data-icon2="ace-icon fa fa-angle-double-right"></i>
+  </div>
+</div>

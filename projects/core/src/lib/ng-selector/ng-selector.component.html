@@ -1,0 +1,16 @@
+<div [attr.id]="inputId" [class.disabled]="disabled" class="ui fluid search selection scrolling dropdown">
+  <input type="hidden" [attr.name]="name">
+  <div class="default text">{{ placeholder }}</div>
+  <i class="dropdown icon"></i>
+  <ng-container *ngTemplateOutlet="headerTemplate; context: {}"></ng-container>
+  <div class="menu">
+    <ng-template ngFor let-item let-i="index" [ngForOf]="options">
+      <div class="item" [attr.data-value]="item[valueField]">
+        <span *ngIf="!itemTemplate">
+          {{ item[labelField] }}
+        </span>
+        <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+</div>

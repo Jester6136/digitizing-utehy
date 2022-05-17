@@ -1,0 +1,407 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">{{ 'MODULE.CORE.countries_ref' | translate }}</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
+        <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
+      </a>
+      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
+          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
+    </p>
+  </div>
+</div>
+<div class="page-content">
+  <div class="row">
+    <div class="ui-g-12" *ngIf="showSearchPanel">
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title"
+              style="font-size: 16px; display: inline-block; margin-top: 2px">{{ 'COMMON.search' | translate }}</span>
+            <p class="pull-right no-margin">
+
+              <button type="button" title="{{ 'COMMON.close' | translate }}" (click)="toggleSearchPanel()"
+                class="btn btn-xs btn-primary" style="width: 29.29px">
+                <i class="ace-icon fa bigger-110 icon-only fa-angle-double-up"></i>
+              </button>
+            </p>
+          </div>
+        </p-header>
+        <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_rcd' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <input pInputText formControlName="countries_rcd" ngModel type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.country_type_rcd' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)"
+                    formControlName="country_type_rcd" [options]="country_type_refs"
+                    placeholder="{{ 'COMMON.all' | translate }}"></ng-selectize>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_name' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-8">
+                  <input pInputText formControlName="countries_name" ngModel type="text" />
+                </div>
+              </div>
+
+
+              <div class="clearfix"></div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">&nbsp;</div>
+                <div class="ui-g-12 ui-md-2">
+                  <button type="submit" class="btn btn-primary btn-xs">
+                    <i class="fa fa-search"></i> {{ 'COMMON.search' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+    <div class="ui-g-12 datatable-container">
+      <div class="row">
+        <div class="col-xs-12">
+          <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 38px; text-align: center;">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width: 10%; text-align: left;">{{ 'MODULE.CORE.countries_rcd' | translate }}</th>
+                <th style="text-align: left;">{{ 'MODULE.CORE.countries_name' | translate }}</th>
+                <th style="width: 5%; text-align: left;">{{ 'MODULE.CORE.sort_order' | translate }}</th>
+                <th style="width: 10%; text-align: left;">{{ 'MODULE.CORE.capital' | translate }}</th>
+                <th style="width: 10%; text-align: left;">{{ 'MODULE.CORE.currency_code' | translate }}</th>
+                <th style="width: 10%; text-align: left;">{{ 'MODULE.CORE.currency_name' | translate }}</th>
+                <th style="width: 120px; text-align: left;" *ngIf="hasUpdatePermission || hasDeletePermission">
+                  {{ 'COMMON.action' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex">
+              <tr [pSelectableRow]="row">
+                <td style="width: 38px; text-align: center;">
+                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                </td>
+                <td style="width: 70px; text-align: center;">
+                  <div class="index_{{ row.countries_rcd }}">{{ first + i + 1 }}</div>
+                </td>
+                <td style="width: 10%; text-align: left;">{{ row.countries_rcd }}</td>
+                <td style="text-align: left;">{{ row.countries_name }}</td>
+                <td style="width: 5%; text-align: left;">{{ row.sort_order }}</td>
+                <td style="width: 10%; text-align: left;">{{ row.capital }}</td>
+                <td style="width: 10%; text-align: left;">{{ row.currency_code }}</td>
+                <td style="width: 10%; text-align: left;">{{ row.currency_name }}</td>
+                <td class="action-col" style="width: 120px; text-align: left;"
+                  *ngIf="hasUpdatePermission || hasDeletePermission">
+                  <div class="btn-group">
+                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasUpdatePermission" (click)="openUpdateModal(row)"><i
+                        class="ace-icon fa fa-edit"></i></button>
+                    <button title="{{ 'COMMON.delete' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasDeletePermission" (click)="onRemove([row])">
+                      <i class="ace-icon fa fa-trash bigger-120"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="50">
+                  <div style="text-align: center">
+                    <div style="float: left;">
+                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
+                        label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
+                      </p-splitButton>
+                    </div>
+                    <div style="display: inline-block">
+                      <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+                        [totalRecords]="totalRecords" (onPageChange)="onPageChange($event)" [rows]="pageSize"
+                        [pageLinkSize]="10"></p-paginator>
+                    </div>
+                    <div class="custom-ng-star-inserted">
+                      <div class="ui-inputgroup">
+                        <input type="text" name="inputTextInt" [pKeyFilter]="rgxPInt" (keypress)="goToPage($event)"
+                          [(ngModel)]="page" pInputText placeholder="{{ 'COMMON.page_number' | translate }}">
+                        <span class="ui-inputgroup-addon">/ {{ totalPages }}</span>
+                        <button pButton type="button" (click)="goToPage($event)" icon="fa-random"
+                          class="ui-button-secondary"></button>
+                      </div>
+                    </div>
+                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <div class="clearfix"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="50">
+                  {{ 'COMMON.empty_table' | translate}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateCountriesRefModal"
+    class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CORE.create_countries_ref' | translate }}</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.CORE.update_countries_ref' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="!doneSetupForm" class="loading-overlay">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
+            <div class="row ui-fluid">
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_rcd' | translate }}
+                  <span class="red">&nbsp;*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['countries_rcd'].errors"
+                    [control]="updateForm.controls['countries_rcd']"></error-messages>
+                  <input pInputText autofocus formControlName="countries_rcd" [(ngModel)]="countries_ref.countries_rcd"
+                    type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_code' | translate }}
+                  <span class="red">&nbsp;*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['countries_code'].errors"
+                    [control]="updateForm.controls['countries_code']"></error-messages>
+                  <input pInputText formControlName="countries_code" [(ngModel)]="countries_ref.countries_code"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_name' | translate }}
+                  <span class="red">&nbsp;*</span>
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['countries_name_l'].errors"
+                    [control]="updateForm.controls['countries_name_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['countries_name_e'].errors"
+                    [control]="updateForm.controls['countries_name_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <input pInputText formControlName="countries_name_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="countries_ref.countries_name_l" type="text" />
+                    <input pInputText formControlName="countries_name_e" [class.hidden]="local_flag"
+                      [(ngModel)]="countries_ref.countries_name_e" type="text" />
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.country_type_rcd' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages class="has-icon select" [errors]="updateForm.controls['country_type_rcd'].errors"
+                    [control]="updateForm.controls['country_type_rcd']"></error-messages>
+                  <ng-selectize [config]="selectizeConfig(1, 'label', 'value', true)" formControlName="country_type_rcd"
+                    [options]="country_type_refs" placeholder="{{ 'COMMON.choose' | translate }}"
+                    [(ngModel)]="selectedCountryTypeRef"></ng-selectize>
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.capital' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['capital'].errors"
+                    [control]="updateForm.controls['capital']"></error-messages>
+                  <input pInputText formControlName="capital" [(ngModel)]="countries_ref.capital" type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.currency_code' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['currency_code'].errors"
+                    [control]="updateForm.controls['currency_code']"></error-messages>
+                  <input pInputText formControlName="currency_code" [(ngModel)]="countries_ref.currency_code"
+                    type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.currency_name' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['currency_name'].errors"
+                    [control]="updateForm.controls['currency_name']"></error-messages>
+                  <input pInputText formControlName="currency_name" [(ngModel)]="countries_ref.currency_name"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.telephone_code' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['telephone_code'].errors"
+                    [control]="updateForm.controls['telephone_code']"></error-messages>
+                  <input pInputText formControlName="telephone_code" [(ngModel)]="countries_ref.telephone_code"
+                    type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.internet_country_code' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['internet_country_code'].errors"
+                    [control]="updateForm.controls['internet_country_code']"></error-messages>
+                  <input pInputText formControlName="internet_country_code"
+                    [(ngModel)]="countries_ref.internet_country_code" type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.flags' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['flags'].errors"
+                    [control]="updateForm.controls['flags']"></error-messages>
+                  <file-upload #fu_flags className="f_flags" formControlName="flags" mode="advanced" multiple="false"
+                    accept="image/*" maxFileSize="5242880" previewWidth="100" ngDefaultControl
+                    (emtFileUploadChange)="emtFileUploadChange($event)"></file-upload>
+                  <div class="existing-file-row">
+                    <div class="ui-fileupload-row f_flags"
+                      *ngIf="countries_ref.flags != null && countries_ref.flags != '' && countries_ref.flags.split(';').length == 2">
+                      <div *ngIf="isImage(countries_ref.flags)">
+                        <img [src]="gfp(countries_ref.flags)" width="100" />
+                      </div>
+                      <div *ngIf="!isImage(countries_ref.flags)">
+                        <span><i class="fa fa-file" style="color: #444444"></i></span>
+                      </div>
+                      <div> {{ gfnng(countries_ref.flags) }} </div>
+                      <div> {{ gfs(countries_ref.flags) }} Kb</div>
+                      <div>
+                        <a type="button" pButton icon="fa-download" target="_blank"
+                          href="{{ gfp(countries_ref.flags) }}"
+                          title="{{ 'COMMON.click_to_download' | translate }}"></a>
+                        <a type="button" pButton icon="fa-close" href="javascrip:;"
+                          title="{{ 'COMMON.remove_file' | translate }}"
+                          (click)="countries_ref.flags = null; updateFormChangedByFileUpload = true;"
+                          class="ui-button-danger remove-file"></a>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.sort_order' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['sort_order'].errors"
+                    [control]="updateForm.controls['sort_order']"></error-messages>
+                  <input pInputText formControlName="sort_order" [(ngModel)]="countries_ref.sort_order" type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.meta_title' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages [errors]="updateForm.controls['meta_title'].errors"
+                    [control]="updateForm.controls['meta_title']"></error-messages>
+                  <input pInputText formControlName="meta_title" [(ngModel)]="countries_ref.meta_title" type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.meta_description' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages [errors]="updateForm.controls['meta_description'].errors"
+                    [control]="updateForm.controls['meta_description']"></error-messages>
+                  <input pInputText formControlName="meta_description" [(ngModel)]="countries_ref.meta_description"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.meta_keywords' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages [errors]="updateForm.controls['meta_keywords'].errors"
+                    [control]="updateForm.controls['meta_keywords']"></error-messages>
+                  <input pInputText formControlName="meta_keywords" [(ngModel)]="countries_ref.meta_keywords"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CORE.countries_note' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['countries_note_l'].errors"
+                    [control]="updateForm.controls['countries_note_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['countries_note_e'].errors"
+                    [control]="updateForm.controls['countries_note_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <input pInputText formControlName="countries_note_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="countries_ref.countries_note_l" type="text" />
+                    <input pInputText formControlName="countries_note_e" [class.hidden]="local_flag"
+                      [(ngModel)]="countries_ref.countries_note_e" type="text" />
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetUpdateForm()">
+            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
+          </button>
+          <button type="button" (click)="onSubmit()"
+            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
+            class="btn btn-success btn-sm btn-submit">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" class="btn btn-default btn-sm btn-close" (click)="closeUpdateForm($event)">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}"
+      (click)="cd.accept()"></button>
+    <button class="btn-default" type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}"
+      (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

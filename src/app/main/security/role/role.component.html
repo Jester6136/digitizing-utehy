@@ -1,0 +1,338 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">{{ 'MODULE.SECURITY.role_list' | translate }}</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
+        <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
+      </a>
+      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()">
+        <i class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}
+      </a>
+    </p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="row">
+    <!-- SearchForm -->
+    <div class="ui-g-12" *ngIf="showSearchPanel">
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size: 16px; display: inline-block; margin-top: 2px">{{ 'COMMON.search' | translate }}</span>
+            <p class="pull-right no-margin">
+              <button type="button" title="{{ 'COMMON.close' | translate }}" (click)="toggleSearchPanel()" class="btn btn-xs btn-primary"
+                style="width: 29.29px">
+                <i class="ace-icon fa bigger-110 icon-only fa-angle-double-up"></i>
+              </button>
+            </p>
+          </div>
+        </p-header>
+        <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'MODULE.SECURITY.role_code' | translate }}</div>
+                <div class="ui-g-12 ui-md-6">
+                  <input pInputText formControlName="role_code" ngModel type="text" />
+                </div> 
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'MODULE.SECURITY.role_name' | translate }}</div>
+                <div class="ui-g-12 ui-md-6">
+                  <input pInputText formControlName="role_name" ngModel type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 hidden-xs inline-label text-right">&nbsp;</div>
+                <div class="ui-g-12 ui-md-4">
+                  <p-checkbox formControlName="role_type" [value]="false" label="{{ 'MODULE.SECURITY.role_type_general' | translate }}" [(ngModel)]="selectedTypes"></p-checkbox>
+                  <p-checkbox formControlName="role_type" [value]="true" label="{{ 'MODULE.SECURITY.use_context_security' | translate }}" [(ngModel)]="selectedTypes"></p-checkbox>
+                </div>
+                <div class="ui-g-12 ui-md-2 text-right">
+                  <button type="submit" class="btn btn-primary btn-xs">
+                    <i class="fa fa-search"></i> {{ 'COMMON.search' | translate }}
+                  </button>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+    <!-- ./ SearchForm -->
+
+    <!-- DataGrid -->
+    <div class="ui-g-12 datatable-container">
+      <div class="row">
+        <div class="col-xs-12">
+          <p-table #dataTable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 38px;">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 70px;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width: 15%; text-align: left;">{{ 'MODULE.SECURITY.role_code' | translate }}</th>
+                <th style="width: 20%; text-align: left;">{{ 'MODULE.SECURITY.role_name' | translate }}</th>
+                <th style="width: 90px; text-align: right;">{{ 'COMMON.number' | translate }}</th>
+                <th style="text-align: left;">{{ 'COMMON.description' | translate }}</th>
+                <th style="width: 130px; text-align: left;">{{ 'COMMON.type' | translate }}</th>
+                <th style="width: 205px; text-align: left;" *ngIf="hasUpdatePermission || hasDeletePermission">{{ 'COMMON.action' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex">
+              <tr [pSelectableRow]="row">
+                <td style="width: 38px;">
+                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                </td>
+                <td style="width: 70px;">
+                  <div class="index_{{ row.role_id }}">{{ first + i + 1 }}</div>
+                </td>
+                <td style="width: 15%; text-align: left;">{{ row.role_code }}</td>
+                <td style="width: 20%; text-align: left;">{{ row.role_name }}</td>
+                <td style="width: 90px; text-align: right;">{{ row.user_number }}</td>
+                <td style="text-align: left;">{{ row.description }}</td>
+                <td style="width: 130px; text-align: left;">
+                  <span *ngIf="row.use_context_security" class="label label-sm label-light arrowed arrowed-right">
+                    {{ 'MODULE.SECURITY.use_context_security' | translate }}
+                  </span>
+                  <span *ngIf="!row.use_context_security" class="label label-sm label-light arrowed arrowed-right">
+                    {{ 'MODULE.SECURITY.role_type_general' | translate }}
+                  </span>
+                </td>
+                <td class="action-col" *ngIf="hasUpdatePermission || hasDeletePermission" style="width: 205px; text-align: left;">
+                  <div class="btn-group">
+                    <button title="{{ 'MODULE.SECURITY.grant_permission' | translate }}" class="btn btn-xs btn-white btn-default" *ngIf="hasViewRolePermission || hasViewRoleScopePermission"
+                      (click)="openGrantModal($event, row)">
+                      <i class="ace-icon fa fa-flag"></i>
+                    </button>
+                    <button *ngIf="hasViewRoleMembershipPermission" title="{{ 'MODULE.SECURITY.grant_user_for_role' | translate }}" class="btn btn-xs btn-white btn-default"
+                      (click)="openUpdateRoleMembershipModal($event, row)">
+                      <i class="ace-icon fa fa-users"></i>
+                    </button>
+                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default" *ngIf="hasUpdatePermission" (click)="openUpdateModal(row)">
+                      <i class="ace-icon fa fa-edit"></i>
+                    </button>
+                    <button title="{{ 'COMMON.delete' | translate }}" class="btn btn-xs btn-white btn-default" *ngIf="hasDeletePermission" (click)="onRemove([row])">
+                      <i class="ace-icon fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="50">
+                  <div style="text-align: center">
+                    <div style="float: left;">
+                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0" label="{{ 'COMMON.action' | translate }}"
+                        icon="fa-check" [model]="tableActions"></p-splitButton>
+                    </div>
+                    <div style="display: inline-block">
+                      <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]" [totalRecords]="totalRecords"
+                        (onPageChange)="onPageChange($event)" [rows]="pageSize" [pageLinkSize]="10"></p-paginator>
+                    </div>
+                    <div class="custom-ng-star-inserted">
+                      <div class="ui-inputgroup">
+                        <input type="text" name="inputTextInt" [pKeyFilter]="rgxPInt" (keypress)="goToPage($event)" [(ngModel)]="page" pInputText
+                          placeholder="{{ 'COMMON.page_number' | translate }}">
+                        <span class="ui-inputgroup-addon">/ {{ totalPages }}</span>
+                        <button pButton type="button" (click)="goToPage($event)" icon="fa-random" class="ui-button-secondary"></button>
+                      </div>
+                    </div>
+                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <div class="clearfix"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="50">
+                  {{ 'COMMON.empty_table' | translate}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+    <!-- ./ DataGrid -->
+  </div>
+
+  <!-- Create | Update form -->
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateRoleModal" class="modal fade" role="dialog"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.SECURITY.create_role' | translate }}</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.SECURITY.update_role' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="!doneSetupForm" class="loading-overlay">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
+            <div class="row ui-fluid">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'PERSON.facility' | translate }}</div>
+                <div class="ui-g-12 ui-md-9">
+                  <input pInputText formControlName="facility_name" [(ngModel)]="facility.facility_name_l" type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'MODULE.SECURITY.role_code' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                  <error-messages [errors]="updateForm.controls['role_code'].errors" [control]="updateForm.controls['role_code']"></error-messages>
+                  <input pInputText formControlName="role_code" [(ngModel)]="role.role_code" autofocus type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'MODULE.SECURITY.role_name' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['role_name_l'].errors" [control]="updateForm.controls['role_name_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['role_name_e'].errors" [control]="updateForm.controls['role_name_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <input pInputText formControlName="role_name_l" [class.hidden]="!local_flag" [(ngModel)]="role.role_name_l" type="text" />
+                    <input pInputText formControlName="role_name_e" [class.hidden]="local_flag" [(ngModel)]="role.role_name_e" type="text" />
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()"></language-switcher>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'COMMON.type' | translate }}</div>
+                <div class="ui-g-12 ui-md-9">
+                  <div class="ui-g radiobuttons" style="flex-wrap: nowrap;">
+                    <div class="ui-g-12">
+                      <p-radioButton label="{{ 'MODULE.SECURITY.role_type_general' | translate }}" formControlName="use_context_secutiry" [value]="false"
+                        [(ngModel)]="selectedType"></p-radioButton>
+                    </div>
+                    <div class="ui-g-12">
+                      <p-radioButton [disabled]="true" label="{{ 'MODULE.SECURITY.use_context_security' | translate }}" formControlName="use_context_secutiry" [value]="true"
+                        [(ngModel)]="selectedType"></p-radioButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group" *ngIf="selectedType">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'COMMON.context' | translate }}</div>
+                <div class="ui-g-12 ui-md-9">
+                  <error-messages [errors]="updateForm.controls['context'].errors" [control]="updateForm.controls['context']"></error-messages>
+                  <ng-selectize [config]="selectizeConfig(1, 'context_name', 'context_id', true)" formControlName="context" [options]="contexts" placeholder="{{ 'COMMON.choose' | translate }}"
+                    [(ngModel)]="selectedContext"></ng-selectize>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'COMMON.description' | translate }}</div>
+                <div class="ui-g-12 ui-md-9">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['description_l'].errors" [control]="updateForm.controls['description_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['description_e'].errors" [control]="updateForm.controls['description_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <textarea [rows]="3" formControlName="description_l" [class.hidden]="!local_flag" [(ngModel)]="role.description_l" pInputTextarea
+                      style="resize: none" autoResize="false"></textarea>
+                    <textarea [rows]="3" formControlName="description_e" [class.hidden]="local_flag" [(ngModel)]="role.description_e" pInputTextarea
+                      style="resize: none" autoResize="false"></textarea>
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()"></language-switcher>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetUpdateForm()">
+            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
+          </button>
+          <button type="button" (click)="onSubmit()" [disabled]="!doneSetupForm || !updateForm.valid || !modified() || submitting"
+            class="btn btn-success btn-sm btn-submit">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" class="btn btn-default btn-sm" (click)="closeUpdateForm($event)">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ./ Create | Update form -->
+
+  <div *ngIf="hasViewRoleMembershipPermission && showUpdateRoleMembershipModal" id="updateRoleMembershipModal" class="modal fade"
+    role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl full-height-modal">
+      <div id="updateRoleMembershipForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{ 'MODULE.SECURITY.grant_user_for_role' | translate }}:&nbsp;{{ role_name }}</h4>
+          </div>
+          <div class="modal-body no-padding">
+            <div class="ui-fluid">
+              <div class="ui-g-6" *ngIf="hasAddRoleMembershipPermission">
+                <app-update-user-first-datatable [hasAddRoleMembershipPermission]="hasAddRoleMembershipPermission" [selectedUsers]="addSecondDataTable.data"
+                  (emiterAddToList)="addToList($event)"></app-update-user-first-datatable>
+              </div>
+              <div [class.ui-g-6]="hasAddRoleMembershipPermission" [class.ui-g-12]="!hasAddRoleMembershipPermission">
+                <app-update-user-second-datatable #addSecondDataTable [hasAddRoleMembershipPermission]="hasAddRoleMembershipPermission" [hasRemoveRoleMembershipPermission]="hasRemoveRoleMembershipPermission"
+                  [role_id]="role_id" (emiterRemoveFromList)="removeFromList($event)"></app-update-user-second-datatable>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" *ngIf="hasRemoveRoleMembershipPermission && hasAddRoleMembershipPermission" class="btn btn-success btn-sm"
+              (click)="onUpdateRoleMembership()">
+              <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+            </button>
+            <button type="button" class="btn btn-default btn-sm" (click)="closeUpdateRoleMembershipModal()">
+              <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="hasViewRolePermission" id="modalGrantPermission" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl full-height-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ 'MODULE.SECURITY.grant_permission' | translate }}: {{role_name }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="loading-overlay" *ngIf="!loadComponent">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <grant-permission #cmpGrantPermission *ngIf="loadComponent" [hasViewRolePermission]="hasViewRolePermission" [hasViewRoleScopePermission]="hasViewRoleScopePermission"
+            (disposeModal)="closeGrantPermissonModal($event)" [roleScopes]="roleScopes" [role]="roleGrantPermission" [allPageGroups]="allPageGroups"></grant-permission>
+        </div>
+        <div class="modal-footer">
+          <button type="button" *ngIf="hasGrantPermissionToRole || hasGrantScopeToRole" (click)="ok()" class="btn btn-success btn-sm">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" (click)="closeGrantPermissonModal($event)" class="btn btn-default btn-sm">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p-confirmDialog [baseZIndex]="25000" header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}" (click)="cd.accept()"></button>
+    <button class="btn-default" type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

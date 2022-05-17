@@ -1,0 +1,19 @@
+export class TeacherProject	 {
+	public teacher_pro_id : string 	
+    public quantity : number 		
+    public teacher_id_rcd : string 	
+    public teacher_name : string 	
+    public manager_role_id1 : string 	
+    public manager_role_id2 : string 	
+    public department_id : string 	
+    public phone : string 	
+    public email : string 	
+    public password : string 	
+    public additional_information : string 	
+    public gender : boolean 	
+    public active_flag : number 		
+    public created_by_user_id : string 	
+    public created_date_time : Date 
+    public lu_updated : Date
+    public lu_user_id : string 	
+}

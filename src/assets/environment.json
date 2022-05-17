@@ -1,0 +1,10 @@
+{
+  "ENVIRONMENT": {
+    "production": false,
+    "BASE_API": "http://localhost:2809"     
+  },
+  "ENVIRONMENT_PROD": {
+    "production": true,
+    "BASE_API": "http://localhost:2809"     
+  }
+}

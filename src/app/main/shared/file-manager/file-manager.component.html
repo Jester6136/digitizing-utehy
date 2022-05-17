@@ -1,0 +1,18 @@
+<div class="col-md-6 text-left">
+  <div class="ui-inputgroup">
+    <span style="padding-top: 5px; margin-right: 5px;">
+      {{ 'COMMON.upload_file_image' | translate }}
+    </span>
+    <app-upload [category]="category" [disabled]="showProgress" [id]="id" (uploadStatus)="uploadStatus($event)"></app-upload>
+  </div>
+</div>
+
+<div class="col-md-12 text-left">
+  <p *ngIf="showProgress">{{ 'COMMON.upload_file_progress' | translate }}{{percentage}}%</p>
+</div>
+
+<div class="ui-g-12 ui-md-12" style="margin-top: 10px;">
+  <div *ngFor="let file_path of files" class="col-md-2 text-center" style="margin-top: 5px; margin-bottom: 5px;">
+    <img title="{{ 'COMMON.title_insert_image' | translate }}" style="cursor: pointer;" (dblclick) = "insertImage(file_path)"  src="{{host_image + file_path}}" height="50"><i  title="{{ 'COMMON.title_delete_image' | translate }}" (click) = "deleteFile(file_path)" style="cursor: pointer;margin-left: 10px; color: red;" class="fa fa-times"></i> 
+  </div>
+</div> 

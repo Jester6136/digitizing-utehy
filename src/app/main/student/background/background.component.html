@@ -1,0 +1,447 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">Lý lịch trích ngang</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="hasUpdatePermission" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Import CV</a>
+
+      <a *ngIf="hasUpdatePermission" class="btn btn-success btn-xs" (click)="Update()"><i
+          class="fa fa-plus"></i>&nbsp;&nbsp;Lưu thông tin</a>
+    </p>
+  </div>
+</div>
+<div class="page-content">
+  <div class="row">
+    <div class="ui-g-12" *ngIf="showSearchPanel">
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size: 16px; display: inline-block; margin-top: 2px">
+              Thông tin cá nhân  
+            </span>
+          </div>
+        </p-header>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Mã sinh viên
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.student_rcd" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Họ và tên
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.student_name" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Ngày sinh
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.date_of_birth" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Giới tính
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.gender" type="text" />
+                </div>
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Hệ đào tạo
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.degree_name" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Ngành học
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.specialization_name_VN" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Chuyên ngành
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.major_name_VN" type="text" />
+                </div>
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Niên khóa
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.school_year" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Khóa học
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.school_year" type="text" />
+                </div>
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quốc tịch</span>
+                  <input pInputText [(ngModel)]="student.student_nationality" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Dân tộc</span>
+                  <input pInputText [(ngModel)]="student.student_nation" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Tôn giáo</span>
+                  <input pInputText [(ngModel)]="student.student_religion" type="text" />
+                </div>
+
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Số nhà</span>
+                  <input pInputText [(ngModel)]="student.student_apartment_number" type="text" />
+                </div>
+
+                <div class="ui-g-12 ui-md-8">
+                  <span class="inline-label text-right">Quê quán</span>
+                  <input pInputText [(ngModel)]="student.student_countryside" type="text" />
+                </div>
+
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Mã số bảo hiểm</span>
+                  <input pInputText [(ngModel)]="student.student_health_insurance_code" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Thẻ căn cước</span>
+                  <input pInputText [(ngModel)]="student.student_citizen_identity_card" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Ngày cấp</span>
+                  <input pInputText [(ngModel)]="student.student_citizen_identity_card_date" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Nơi cấp</span>
+                  <input pInputText [(ngModel)]="student.student_citizen_identity_card_place" type="text" />
+                </div>
+
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Điện thoại nhà riêng</span>
+                  <input pInputText [(ngModel)]="student.student_phone_home" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right"> Điện thoại cá nhân</span>
+                  <input pInputText [(ngModel)]="student.student_phone" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Email</span>
+                  <input pInputText [(ngModel)]="student.student_email" type="text" />
+                </div>
+                
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right"> Tỉnh/Thành phố thường chú</span>
+                    <ng-selectize style="padding: 5px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                     [(ngModel)]="student.student_province_of_residence"
+                    [options]="provinces" (ngModelChange)="chooseprovinces($event)"></ng-selectize>
+                  
+                  <!-- <input pInputText [(ngModel)]="student.student_province_of_residence" type="text" /> -->
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quận/Huyện thường chú</span>
+                  <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                   [(ngModel)]="student.student_resident_district"
+                   (ngModelChange)="choosedistrics($event)"
+                  [options]="districs"></ng-selectize>
+                  <!-- <input pInputText [(ngModel)]="student.student_resident_district" type="text" /> -->
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Xã thường chú</span>
+                  <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                   [(ngModel)]="student.student_resident_ward" (ngModelChange)="choosewards($event)"
+                  [options]="wards"></ng-selectize>
+                  <!-- <input pInputText [(ngModel)]="student.student_resident_ward" type="text" /> -->
+                </div>
+              </div>
+
+
+              <div class="ui-g-12 ui-form-group">
+                
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Nơi ở hiện nay</span>
+                  <input pInputText [(ngModel)]="student.student_address" type="text" />
+                </div>
+
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right"> Tỉnh/Thành phố nơi sinh</span>
+                  <input pInputText [(ngModel)]="student.student_province_born" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quận/Huyện nơi sinh</span>
+                  <input pInputText [(ngModel)]="student.student_district_born" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Xã nơi sinh</span>
+                  <input pInputText [(ngModel)]="student.student_ward_born" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Địa chỉ báo tin</span>
+                  <input pInputText [(ngModel)]="student.student_address_receive" type="text" />
+                </div>
+
+              </div>
+              
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Link facebook</span>
+                  <input pInputText [(ngModel)]="student.student_facebook_url" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Ảnh thẻ</span>
+                  <input pInputText [(ngModel)]="student.student_card_photo" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Ảnh CCCD</span>
+                  <input pInputText [(ngModel)]="student.citizen_identification_photo" type="text" />
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+          </div>
+      </p-panel>
+
+
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size: 16px; display: inline-block; margin-top: 2px">
+              Quan hệ gia đình
+            </span>
+          </div>
+        </p-header>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Họ tên cha</span>
+                  <input pInputText [(ngModel)]="student.father_name" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Năm sinh</span>
+                  <input pInputText [(ngModel)]="student.father_year_of_birth" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quốc tịch</span>
+                  <input pInputText [(ngModel)]="student.father_nationality" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Dân tộc</span>
+                  <input pInputText [(ngModel)]="student.father_nation" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Tôn giáo</span>
+                  <input pInputText [(ngModel)]="student.father_religion" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Hộ khẩu thường chú</span>
+                  <input pInputText [(ngModel)]="student.father_permanent_residence" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-8">
+                  <span class="inline-label text-right"> Nghề nghiệp cha</span>
+                  <input pInputText [(ngModel)]="student.father_work" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Số điện thoại cha</span>
+                  <input pInputText [(ngModel)]="student.father_phone_number" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Họ tên mẹ</span>
+                  <input pInputText [(ngModel)]="student.mother_name" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Năm sinh</span>
+                  <input pInputText [(ngModel)]="student.mother_year_of_birth" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quốc tịch</span>
+                  <input pInputText [(ngModel)]="student.mother_nationality" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Dân tộc</span>
+                  <input pInputText [(ngModel)]="student.mother_nation" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Tôn giáo</span>
+                  <input pInputText [(ngModel)]="student.mother_religion" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Hộ khẩu thường chú</span>
+                  <input pInputText [(ngModel)]="student.mother_permanent_residence" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-8">
+                  <span class="inline-label text-right"> Nghề nghiệp mẹ</span>
+                  <input pInputText [(ngModel)]="student.mother_work" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Số điện thoại mẹ</span>
+                  <input pInputText [(ngModel)]="student.mother_phone_number" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Họ tên vợ/chồng</span>
+                  <input pInputText [(ngModel)]="student.spouses_name" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Năm sinh</span>
+                  <input pInputText [(ngModel)]="student.mother_year_of_birth" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Quốc tịch</span>
+                  <input pInputText [(ngModel)]="student.spouses_nationality" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Dân tộc</span>
+                  <input pInputText [(ngModel)]="student.spouses_nation" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Tôn giáo</span>
+                  <input pInputText [(ngModel)]="student.spouses_religion" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+
+                <div class="ui-g-12 ui-md-12">
+                  <span class="inline-label text-right">Hộ khẩu thường chú</span>
+                  <input pInputText [(ngModel)]="student.spouses_address" type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-8">
+                  <span class="inline-label text-right"> Nghề nghiệp vợ/chồng</span>
+                  <input pInputText [(ngModel)]="student.spouses_work" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <span class="inline-label text-right">Số điện thoại vợ/chồng</span>
+                  <input pInputText [(ngModel)]="student.spouses_phone_number" type="text" />
+                </div>
+              </div>
+              
+
+              
+              <div class="clearfix"></div>
+
+
+            </div>
+          </div>
+      </p-panel>
+
+    </div>
+
+  </div>
+
+
+
+</div>
+<p-confirmDialog header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}"
+      (click)="cd.accept()"></button>
+    <button class="btn-default" type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}"
+      (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+
+<p-dialog header="Cập nhật CV" [(visible)]="display" [modal]="true"
+  [responsive]="true" [style]="{width: '550px', minWidth: '200px'}" [minY]="70" [maximizable]="true"
+  [baseZIndex]="10000">
+  <div *ngIf="!doneSetupForm" class="loading-overlay">
+    <i class="fa fa-spinner fa-spin orange"></i>
+  </div>
+  <div style="display: flex; justify-content: right;">
+    <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
+      value="{{student.cv_path}}">
+    <input accept=".doc" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
+    <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
+      value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />
+  </div>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="pi pi-check" (click)="uploadFile()"
+      label="{{ 'COMMON.save' | translate }}"></button>
+    <button class="btn-default" type="button" pButton icon="pi pi-close" (click)="display=false"
+      label="{{ 'COMMON.cancel' | translate }}"></button>
+  </p-footer>
+</p-dialog>

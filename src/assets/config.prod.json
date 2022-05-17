@@ -1,0 +1,1741 @@
+{
+  "DISABLE_OR_THROW_MESSAGE_FLAG": false,
+  "SHOW_ERROR": true,
+  "CURRENT_USER": "CURRENT_USER",
+  "DEPARTMENT": "Department",
+  "PREFIX_FACILITIES": "fs",
+  "PREFIX_ROLES": "r",
+  "PREFIX_PERMISSIONS": "p",
+  "PREFIX_SCOPES": "s",
+  "PREFIX_CURRENT_FACILITY": "cfs",
+  "PREFIX_PAGE_GROUPS": "pgs",
+  "PREFIX_WORKING_LOCATION": "wl",
+  "PREFIX_SERVICE_LOCATION_CONFIG": "slc",
+  "PREFIX_LAB_ROOM_CONFIG": "labr",
+  "PREFIX_CAPTION_LANGUAGE": "caption_lang",
+  "PREFIX_DATA_LANGUAGE": "data_lang",
+  "PREFIX_RECENTLY_PAGES": "recently",
+  "CHATBOX_PAGESIZE": 20,
+  "P_DATE_FORMAT": "dd/mm/yy",
+  "P_BIRTHDAY_FORMAT": "dd/mm",
+  "DATE_FORMAT": "dd/MM/yyyy",
+  "DATETIME_FORMAT": "dd/MM/yyyy HH:mm:ss",
+  "DATETIME_FORMAT_NOT_SECOND": "dd/MM/yyyy HH:mm",
+  "TIME_FORMAT": "HH:mm:ss",
+  "EMPTY_GUID": "00000000-0000-0000-0000-000000000000",  
+  "SCHEDULER_LICENSE_KEY": "GPL-My-Project-Is-Open-Source",
+  "ADAPTER_API": "/api/adapter/execute",
+  "CONTENT_TYPE": "Content-Type",
+  "ACCEPT": "Accept",
+  "ACCEPT_LANGUAGE": "Accept-Language",
+  "CONTENT_TYPE_JSON": "application/json",
+  "CONTENT_TYPE_OCTET_STREAM": "application/octet-stream",
+  "CONTENT_TYPE_MESSAGEPACK": "application/msg",
+  "CONTENT_TYPE_LZSTRING": "application/x-vnpt",
+  "CONTENT_TYPE_URLENCODED": "application/x-www-form-urlencoded",
+  "HEADER_AUTH": "Authorization",
+  "TOKEN_PREFIX": "Bearer ",
+  "LOGIN_URL": "/login",
+  "FACILITY_ID":"00000000-0000-8000-0000-000000000000",
+  "CHOOSE_FACILITY_URL": "/choose-facility",
+  "NOT_FOUND_URL": "/security/not-found",
+  "UNAUTHORIZED_URL": "/security/unauthorized",
+  "USE_HRM_MODULE": true,
+  "ALLOW_CREATE_EMPLOYEE_FROM_USER_LIST": true,
+  "USE_DOMAIN": false,
+  "NO_AUTH_URL": [
+    "",
+    "/choose-facility",
+    "/security/profile",
+    "/security/not-found",
+    "/security/unauthorized",
+    "/security/confirm",
+    "/login"    
+  ],
+  "TYPECOLOR": [
+    {
+      "label": "COMMON.type_images",
+      "value": 1
+    },
+    {
+      "label": "COMMON.type_code",
+      "value": 0
+    }
+  ],
+  "STATUSNEWS": [
+    {
+      "label": "COMMON.release",
+      "value": 1
+    },
+    {
+      "label": "COMMON.composing",
+      "value": 2
+    }
+  ],
+  "GENDERS": [
+    {
+      "label": "COMMON.unknown",
+      "value": -1
+    },
+    {
+      "label": "PERSON.male",
+      "value": 1
+    },
+    {
+      "label": "PERSON.female",
+      "value": 0
+    },
+    {
+      "label": "COMMON.other",
+      "value": 2
+    }
+  ],
+  "INSURANCE_FLAGS": [
+    {
+      "label": "MODULE.HIS.item_insurance_flag",
+      "value": true
+    },
+    {
+      "label": "MODULE.HIS.item_service_flag",
+      "value": false
+    }
+  ],
+  "ProcessingStatus": [
+    {
+      "label": "MODULE.HIS.process_waiting",
+      "value": "WAITING"
+    },
+    {
+      "label": "MODULE.HIS.process_waiting_area_regis",
+      "value": "WAITING_FOR_AREA"
+    },
+    {
+      "label": "MODULE.HIS.process_success",
+      "value": "COMPL"
+    }
+  ], 
+  "CustomCurrencyMaskConfig": {
+    "suffix": " VND",
+    "prefix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 0,
+    "allowNegative": false,
+    "align": "right"
+  },
+  "CustomIntegerMaskConfig": {
+    "prefix": "",
+    "suffix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 0,
+    "allowNegative": false,
+    "align": "right"
+  },
+  "CustomIntegerNegativeMaskConfig": {
+    "prefix": "",
+    "suffix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 0,
+    "allowNegative": true,
+    "align": "right"
+  },
+  "CustomNegativeIntegerMaskConfig": {
+    "prefix": "",
+    "suffix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 0,
+    "allowNegative": true,
+    "align": "right"
+  },
+  "CustomDecimalMaskConfig": {
+    "prefix": "",
+    "suffix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 2,
+    "allowNegative": false,
+    "align": "right"
+  },
+  "CustomNegativeDecimalMaskConfig": {
+    "prefix": "",
+    "suffix": "",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 2,
+    "allowNegative": true,
+    "align": "right"
+  },
+  "PercentMaskConfig": {
+    "prefix": "",
+    "suffix": " %",
+    "thousands": ",",
+    "decimal": ".",
+    "precision": 2,
+    "allowNegative": false,
+    "align": "right"
+  },
+  "PL_REGEX_DECIMAL": "^(\\-?)(\\s*|(\\d+(\\.\\d+|\\.)?))$",
+  "REGEX_DECIMAL": "^(\\s*|(\\d+(\\.\\d{1,2}|\\.)?))$",
+  "REGEX_NEGATIVE_DECIMAL": "^-?[0-9]\\d*(\\.\\d+)?$",
+  "REGEX_INTEGER": "[\\d]|^$",
+  "REGEX_POSITIVE_INTEGER": "^(\\s*|\\d+)$",
+  "NO_HANDLE_EXCEPTION_MESSAGE": {
+    "catched_error": "Catched error",
+    "other_error": "Other error",
+    "loading_chunk_failed": "Loading chunk",
+    "formgroup_expects": "formGroup expects a FormGroup instance",
+    "cannot_node_name": "Cannot read property 'nodeName' of null",
+    "cannot_print": "Cannot read property 'print' of null"
+  },
+  "CURRENT_LANG": "en",
+  "LOCAL_LANG": "vi",
+  "LOCAL": "local",
+  "EN": "en",
+  "DEFAULT_MESSAGE": "MESSAGE.cannot_load_data",
+  "WORK_TYPE_CLINIC": "CLI",
+  "DEFAULT_NATIONALITY": "VNM",
+  "DEFAULT_RELIGION": "UNK",
+  "DEFAULT_LANGUAGE": "VI",
+  "DEFAULT_STORAGE_LANGUAGE": "local",
+  "DEFAULT_ETHNIC_GROUP": "01",
+  "DEFAULT_CANDIDATE_STATUS_RCD": "WAI",
+  "DEFAULT_RECRUITMENT_ROUND_TYPE_RCD": "EXM",
+  "DEFAULT_BANK_ACCOUNT_TYPE_RCD": "P",
+  "DEFAULT_ACCOUNT_OWNER_COMPANY_RCD": "COMP",
+  "DEFAULT_ACCOUNT_OWNER_CUSTOMER_RCD": "CUST",
+  "DEFAULT_ACCOUNT_OWNER_EMPLOYEE_RCD": "EMPL",
+  "DEFAULT_ACCOUNT_OWNER_OTHER_RCD": "OTHS",
+  "DEFAULT_ACCOUNT_OWNER_PATIENT_RCD": "PATI",
+  "DEFAULT_ACCOUNT_OWNER_VENDOR_RCD": "VEND",
+  "DEFAULT_RELATIONSHIP_TYPE_RCD": "OT",
+  "DEFAULT_CONTACT_TYPE_RCD": "OTH",
+  "DEFAULT_VISIT_TYPE_RCD": "HHOPD",
+  "DEFAULT_VISIT_TYPE_CHRONIC": "HHCR",
+  "DEFAULT_CASUALTY_RCD": "0",
+  "DEFAULT_VISIT_SOURCE_RCD": "NATIV",
+  "DEFAULT_PATIENT_PRICING_CLASS_RCD": "KHDV",
+  "DEFAULT_RELATION_TYPE_RCD": "MO",
+  "DEFAULT_PERSON_INDICATOR_RCD": "BH",
+  "DEFAULT_JOB_TYPE_RCD": "UNK",
+  "DEFAULT_ACCEPT_TYPE": "application/x-vnpt",
+  "DEFAULT_CONTENT_TYPE": "application/json",
+  "AUTO_INCREMENT_EMPLOYEE_CODE": "true",
+  "DEFAULT_IPD_VISIT_TYPE_RCD": "HHIPD",
+  "DEFAULT_ED_VISIT_TYPE_RCD": "HHED",
+  "DEFAULT_SO_VISIT_TYPE_RCD": "HHSO",
+  "DEFAULT_CR_VISIT_TYPE_RCD": "HHCR",
+  "DEFAULT_ED_GENERIC_ORDERABLE_ITEM_ID": "82683492-69cb-4f32-b4c9-dedc0f848c2e",
+  "DEFAULT_ED_CLINICAL_SPECIALTY_ID": "87097cf1-355c-e511-80d7-005056bc51b7",
+  "DEFAULT_CR_GENERIC_ORDERABLE_ITEM_ID": "9d31ef9c-16c9-4ed5-b7de-78e045b59a31",
+  "ALLOW_MODIFY_FOR": 300,
+  "DEFAULT_PATH_AVATAR": "assets/images/avatars/profile-pic.jpg",
+  "DEFAULT_ENABLED_VISIT_SOURCE": "TRAN",
+  "DEFAULT_ENABLED_INDICATOR": "LOCAL",
+  "CHECKED_HEALTH_INSURANCE_CARD_API_CODE_RESULT": "000",
+  "CHECKED_HEALTH_INSURANCE_CARD_API_CODE_RESULT_NEW_CARD": "003",
+  "CHECKED_HEALTH_INSURANCE_CARD_API_CODE_RESULT_ACCEPT": [
+    "004",
+    "130"
+  ],
+  "CHECKED_HEALTH_INSURANCE_CARD_API_CODE_RESULT_THROW_MESSAGE": [
+    "124"
+  ],
+  "MEDICAL_NAME": "Bệnh viện đa khoa Hưng Hà",
+  "MEDICAL_RCD": "33-0-52",
+  "GLAND_CODE": 3,
+  "FACILITY_MANAGEMENT": "Sở Y Tế Hưng Yên",
+  "LOCATION": "Hưng Yên",
+  "PRINT_SCREEN_SIZE": "width=800,height=600",
+  "DEFAULT_TREATMENT_PLANS_RCD": "OPH",
+  "DEFAULT_ARC_TYPE_RCD": "FOOD",
+  "DEFAULT_PROCESSING_QUEUE_STATUS_CALL_RCD": "CLIP",
+  "DEFAULT_PROCESSING_QUEUE_STATUS_RCD": "CLIW",
+  "DEFAULT_MIN_TIME_WORK_CAREGIVER": "7:00",
+  "DEFAULT_MAX_TIME_WORK_CAREGIVER": "17:00",
+  "DEFAULT_CPOE_PRESCRIPTION_ORDER_TYPE_RCD": "GENER",
+  "CPOE_PRESCRIPTION_ORDER_DISCHARGE": "DISCH",
+  "DEFAULT_DURATION_UNIT_RCD": "HOUR",
+  "DEFAULT_FILL_CYCLE_TIME_UNIT_RCD": "DAY",
+  "DEFAULT_TREATMENT_PLAN_CLOSURE_VISIT_RCD": "OPH",
+  "DEFAULT_ORGANISATION_LICENSE": "LCS",
+  "DEFAULT_ORGANISATION_BOARD_CERTIFICAITON": "BCF",
+  "DEFAULT_ORGANISATION_EDUCATION": "6C1",
+  "DEFAULT_ORGANISATION_TRAINING": "TRN",
+  "DEFAULT_DEPARTMENT_TYPE_RCD": "DEP",
+  "DEFAULT_CANDIDATE_PASSED": "PAS",
+  "DEFAULT_CANDIDATE_FAILED": "REJ",
+  "DEFAULT_CANDIDATE_EXAMINATING": "EMN",
+  "DEFAULT_TIMESHEET_START_DATE_CONFIG_NAME": "TS_SD",
+  "DEFAULT_TIMESHEET_END_DATE_CONFIG_NAME": "TS_ED",
+  "DEFAULT_TIMESHEET_CELLING_CONFIG_NAME": "CTS",
+  "DEFAULT_MAX_ITEM": 9999999,
+  "DEFAULT_AR_PAYMENT_TYPE_GROUP_RCD": "CASH",
+  "DEFAULT_AR_PAYMENT_TYPE_CASH_RCD": "CASH001",
+  "DEFAULT_AR_PAYMENT_TYPE_RCD": "CASH001",
+  "APPOINTMENT_MIN_AGE": 6,
+  "TEMPORARY_MAX_AGE_MONTH": 72,
+  "APPOINTMENT_RELATION_MIN_AGE": 18,
+  "SCREEN_SAVER_PATIENT_TAKE": 5,
+  "STATUS_CLI_COMPLETE": "CLICOM",
+  "STATUS_LAB_WORK_ORDER_ITEM_COLLECTED": "COLT",
+  "STATUS_LAB_WORK_ORDER_ITEM_RESULT": "RSLTD",
+  "AGE_ENOUGH_MONTH": true,
+  "AGE_BONUS": false,
+  "RADIOGRAPHER_JOB_TYPE": "2,10,34,43,53,56,77,70",
+  "TYPIST_JOB_TYPE": "95684,10,4,71,30",
+  "DOCTOR_PARA_JOB_TYPE": "16,15,6,8,9,12,13,14,22,24,26,27,28,45,36,37,38,39,40,42,46,20,47,49,50,60,51,59,61,63,64,67,69,62,80,84,72,74,75,76,78,81,32,11,52,73,BSCC,HN,HN1,BSHN,BSHN1,BSHN5,58,HN2,BHN6,HN11,HN12,HN13,HN14,HN15,HN20,HN21,HN62,101",
+  "RADIOLOGY_PASS_PLACED": true,
+  "LEGAL_RADIOLOGY_CODE": "`BMD,CT,ES,US,SA,MG,MR,PET,DX422,DX424,DX425,DX427,OT,DX426,DX423,CT43,EEG,ECG,OT1,ES03,ES01,ES02,US0,US01,US02,US03,US04,US05,US06,US07,US08,US09,US10,US11`",
+  "LEGAL_LAB_CODE": "`CHEIMM,CHEMIS,CYTO,HEMATO,IMMUNO,MCRIMM,MICROB,PATHO,URICHE,BLTRAN,APNGY,APSP,COAGUL,XN09,XN99,XN01,XN02,XN020,XN03,XN04,XN06,DMMM`",
+  "LEGAL_SUR_CODE": "`TT18,TT13,T11,TT14,TT141,TT10,TT060,TT050,TT03,TT01,TT010,TT011,TTKK,PT06,PT19,PT03,PT14,PT01,PT20,PT18,PT201,PT143,PT180,PT02,PT0501,PT04,PT08,PTK,TT012,TT131,TT132,TT04,TT06,TT12,TT17,TT142,TT05,TTK,TT013`",
+  "DEPOSIT_EXCLUDE_TYPE": "HHOPD",
+  "DEFAULT_PHARMACY_WORK_QUEUE_TYPE_RCD": "PHA",
+  "ADMINISTRATOR_ALL_FLAG": true,
+  "ALLOW_ADMINISTRATOR_IN_PASS": true,
+  "COMPANY_START_WORK_HOUR": 0,
+  "COMPANY_START_WORK_MINUTES": 0,
+  "REFUND_ONLY_CASH_FLAG": true,
+  "DEFAULT_CURRENCY_RCD": "VND",
+  "PRESCRIPTION_SPLIT_FLAG": true,
+  "RADIOGRAPHERS": "erad",
+  "SUB_ITEM_LAB": "SVLB,XNVS,XNDCT,XNO,XNH,XNHS,XNMD,XNNT,XNGPB",
+  "SUB_ITEM_RAD": "SVIM,DX,OT,CT,EECG,ES,US,MRI",
+  "LOADING_DEBOUND": 1000,
+  "STATIC_PERSON_CODE": "3000001",
+  "STATIC_PERSON_CODE3": "3000003",
+  "STATIC_VISIT_CODE": "VS2000001024",
+  "STATIC_PATIENT_VISIT_ID": "30000000-0000-0000-0000-000000000001",
+  "STATIC_PATIENT_VISIT_ID3": "30000000-0000-0000-0000-000000000003",
+  "PAYMENT_ONLY_CASH": true,
+  "DEFAULT_TRANSFER_TO_LOCATION": "Bệnh viện 108",
+  "PRESCRIPTION_ADMINISATRATION_ORDER_TYPE": "1",
+  "MAXIMUM_ICD": 10,
+  "HEALTH_CLASSIFICATIONS": [
+    {
+      "label": 1,
+      "value": 1
+    },
+    {
+      "label": 2,
+      "value": 2
+    },
+    {
+      "label": 3,
+      "value": 3
+    },
+    {
+      "label": 4,
+      "value": 4
+    },
+    {
+      "label": 5,
+      "value": 5
+    }
+  ],
+  "MEDICAL_SERVICE_ANIMATED_CLASS": "",
+  "MEDICAL_SERVICE_ANIMATED_TIMEOUT": "0",
+  "MAX_MONTH_ALLOW_ADD_TEMPORARY_CARD": "3",
+  "TEMPORARY_CARD_SIGN": "KT",
+  "TEMPORARY_START_SIGN": "TE1",
+  "PREFIX_TEMPORARY_CARD": "TE1__KT",
+  "DEFAULT_TRANSFER_TREATMENT_PLAN": "HT",
+  "DEFAULT_IPD_TREATMENT_PLAN": "IPD",
+  "DEFAULT_RELATIONSHIP": "MO",
+  "PUBLIC_PRICE_FLAG": false,
+  "DEFAULT_ADMINISTRATED_STATUS_RCD": "ADM",
+  "DECIMAL_SEPARATOR": ".",
+  "THOUSANDS_SEPARATOR": ",",
+  "PRINT_VITAL_SIGN_MIN_TEMPERATURE": 35,
+  "PRINT_VITAL_SIGN_MIN_HEART_RATE": 40,
+  "PRINT_VITAL_SIGN_MIN_HEART_RATE_STEP": 20,
+  "PRINT_VITAL_SIGN_MIN_HEART_RATE_COLOR": "red",
+  "PRINT_VITAL_SIGN_MIN_TEMPERATURE_COLOR": "blue",
+  "SETTING_FONT_SIZE": [
+    {
+      "label": "11",
+      "value": "ls-fs-11"
+    },
+    {
+      "label": "12",
+      "value": "ls-fs-12"
+    },
+    {
+      "label": "13",
+      "value": "ls-fs-13"
+    },
+    {
+      "label": "14",
+      "value": "ls-fs-14"
+    },
+    {
+      "label": "15",
+      "value": "ls-fs-15"
+    }
+  ],
+  "SETTING_FONT_FAMILY": [
+    {
+      "label": "SF",
+      "value": "ls-ff-sf"
+    },
+    {
+      "label": "Open Sans",
+      "value": "ls-ff-open-sans"
+    },
+    {
+      "label": "Alegreya Sans",
+      "value": "ls-ff-alegreya-sans"
+    },
+    {
+      "label": "Arima Madurai",
+      "value": "ls-ff-arima-madurai"
+    }
+  ],
+  "SETTING_TYPING_SPEED": [
+    {
+      "label": "1000",
+      "value": "1000"
+    },
+    {
+      "label": "750",
+      "value": "750"
+    },
+    {
+      "label": "500",
+      "value": "500"
+    },
+    {
+      "label": "250",
+      "value": "250"
+    },
+    {
+      "label": "100",
+      "value": "100"
+    }
+  ],
+  "SETTING_PREFIX": "app_setting",
+  "SID_NUMBER_PER_ROW": 3,
+  "PRELOAD_DELAY": 1000,
+  "ALLOW_ISSUE_BED_OTHER_SPECIALTY": true,
+  "LOCALE_CALENDAR_LOCAL": {
+    "firstDayOfWeek": 1,
+    "dayNames": [
+      "Chủ nhật",
+      "Thứ 2",
+      "Thứ 3",
+      "Thứ 4",
+      "Thứ 5",
+      "Thứ 6",
+      "Thứ 7"
+    ],
+    "dayNamesShort": [
+      "CN",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ],
+    "dayNamesMin": [
+      "CN",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ],
+    "monthNames": [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12"
+    ],
+    "monthNamesShort": [
+      "Th 1",
+      "Th 2",
+      "Th 3",
+      "Th 4",
+      "Th 5",
+      "Th 6",
+      "Th 7",
+      "Th 8",
+      "Th 9",
+      "Th 10",
+      "Th 11",
+      "Th 12"
+    ],
+    "today": "Hôm nay",
+    "clear": "Xóa"
+  },
+  "LOCALE_CALENDAR_EN": {
+    "firstDayOfWeek": 0,
+    "dayNames": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dayNamesShort": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "dayNamesMin": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "monthNames": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "monthNamesShort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "today": "Today",
+    "clear": "Clear"
+  },
+  "DEBOUNCE_CLICK_TIME": 200,
+  "ALLOW_CHANGE_CLOSE_SHIFT_MONEY": false,
+  "ALLOW_USE_PHARMACY_ON_DEPARTMENT": false,
+  "PRIORITY_PROVINCE": "33",
+  "SETTING_DASHBOARD_PREFIX": "dashboard_setting",
+  "ALLOW_DOCTOR_GUARANTEE": false,
+  "SPLIT_PRINT_PAGER": true,
+  "DEFAULT_RECEIVE_OTHER_SYSTEM_TRANSACTION_TYPE_RCD": "REOTH",
+  "SELECT_SYSTEM_TRANSACTION_TYPE_RCD": [
+    "PS"
+  ],
+  "DEFAULT_PAY_SLIP_SYSTEM_TRANSACTION_TYPE_RCD": [
+    "PS"
+  ],
+  "DEFAULT_REFUND_SYSTEM_TRANSACTION_TYPE_RCD": "RF",
+  "ALLOW_PAYMENT_OTHER_SYSTEM_TRANSACTION_TYPE_RCD": [
+    "PS",
+    "OTHER",
+    "RD",
+    "PD"
+  ],
+  "DURATION_INSURANCE_PHARMACY_MAXIMUM": 7,
+  "PROCESSING_QUEUE_STATUS_COLOR": [
+    "ha-red",
+    "orange",
+    "",
+    "",
+    "ha-blue",
+    "",
+    "",
+    "",
+    "",
+    "green"
+  ],
+  "IPD_STATUS_COLOR": [
+    "ha-red",
+    "",
+    "ha-blue",
+    "orange2"
+  ],
+  "SYSTEM_TRANSACTION_TYPE": [
+    "PAY",
+    "PDEP",
+    "VOID",
+    "RF",
+    "PD",
+    "PS",
+    "RD",
+    "OTHER",
+    "REOTH"
+  ],
+  "SYSTEM_TRANSACTION_TYPE_RECEIVE": [
+    "PAY",
+    "PDEP",
+    "REOTH"
+  ],
+  "SYSTEM_TRANSACTION_TYPE_REFUND": [
+    "RF",
+    "VOID",
+    "PD",
+    "PS",
+    "RD",
+    "OTHER"
+  ],
+  "STACK_ITEM_TYPE": [
+    "PHA"
+  ],
+  "RAD_SEARCH_SERVICE_TYPE": "rad_svt",
+  "DEFAULT_PRINT_IMAGE_LEGAL_TYPE": "",
+  "PROCESSING_QUEUE_AUDIO_RECEPTION_BOX": "moinguoibenh,so,{number},denquaytiepdonso,{box}",
+  "PROCESSING_QUEUE_AUDIO_EXAMINATION_ROOM": "moinguoibenh,so,{number},den,pkbenh,so,{box}",
+  "DISPLAY_COLUMN_INDEX_ON_WAITING_SCREEN": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "HOSPITAL_TRANSFER_SYMPTOM_INDEX": 0,
+  "HOSPITAL_TRANSFER_LAB_INDEX": 1,
+  "HOSPITAL_TRANSFER_ICD_INDEX": 2,
+  "HOSPITAL_TRANSFER_PHA_INDEX": 3,
+  "HOSPITAL_TRANSFER_TIME_INDEX": 7,
+  "ALLOW_MODIFY_REQUEST_QUANTITY": false,
+  "TRADITIONAL_DEFAULT_QUANITY": 15,
+  "TRADITIONAL_DEFAULT_DURING": 2,
+  "DEFAULT_TRADITIONAL_PHARMACY_FREQUENCY": "74c7df57-5182-42ac-a3be-d72402f2fcc2",
+  "DEFAULT_TRADITIONAL_PHARMACY_ADMIN_TIMES": "09:00,15:00",
+  "DEFAULT_TRADITIONAL_PHARMACY_ROUTE": "c9ec2ebb-fa34-44e1-8ffe-a2973b690641",
+  "RAD_PRINT_AFTER_COMPLETED": "rpac",
+  "MEDICAL_EXAMINATION_IPD_ICD_INDEX": 5,
+  "MEDICAL_EXAMINATION_IPD_LAB_INDEX": 6,
+  "SHOW_PHARMACY_EFFECT": false,
+  "SHOW_PHARMACY_QUANTITY_CONVERSATION": false,
+  "RAD_PRINT_IMG_AFTER_SAVE": "rpias",
+  "RAD_CONSULTATION_RESULT": "rcr",
+  "LAB_COLLECTION_MULTIPLE": true,
+  "LAB_PASS_OUTSTANDING": true,
+  "DEFAULT_PAYMENT_STATUS_UNPAYMENT": "UNP",
+  "DEFAULT_PAYMENT_STATUS_COMPLETE": "COM",
+  "IPD_ONLY_ONE_DAY": true,
+  "MAX_RECENTLY_PAGES": 3,
+  "DEFAULT_TREATMENT_PLAN_IPD_NORMAL": "RV",
+  "DEFAULT_TREATMENT_PLAN_IPD_NORMAL_PATIENT": "XRV",
+  "DEFAULT_TREATMENT_PLAN_OPD_NORMAL": "OPH",
+  "DEFAULT_TREATMENT_PLAN_HOSPITAL_TRANSFER": "HT",
+  "DEFAULT_TREATMENT_PLAN_MOVE_TO_IPD": "IPD",
+  "DEFAULT_TREATMENT_RESULT_DIE": "5",
+  "PSYCHOTROPIC_DRUGS": [
+    "STTSE",
+    "STTNA",
+    "STDOX",
+    "STDOT"
+  ],
+  "AUTO_REFUND": true,
+  "DEFAULT_VISIT_STATUS_RECEIVED": "1",
+  "SCREEN_RCD_RAD": "RAD",
+  "SCREEN_RCD_LAB": "LAB",
+  "PATIENT_PRICING_CLASS_NORMAL": "LOCAL",
+  "PATIENT_PRICING_CLASS_INSURANCE_TRUST": "BHHH",
+  "PATIENT_PRICING_CLASS_INSURANCE_NOT_TRUST": "BHNHH",
+  "DEFAULT_SELECT_ALL_DOCTOR_ON_REGISTRATION": true,
+  "ALLOW_PAYMENT_WHEN_NOT_CHECKOUT": false,
+  "SEPARATE_IPD_ASSET_STORE": false,
+  "SEQUENCE_OPD": [
+    [],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      },
+      {
+        "type": "textbox",
+        "control_id": "ta_10_1"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_2"
+      },
+      {
+        "type": "textbox",
+        "control_id": "ta_10_2"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_3"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_4"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_5"
+      }
+    ],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_5"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_6"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_7"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_3"
+      }
+    ]
+  ],
+  "SEQUENCE_TMH": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_4"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_5"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_2"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb_3"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_6"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_7"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_1"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_2"
+      },
+      {
+        "type": "textbox",
+        "control_id": "ta_10_1"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_3"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_4"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_5"
+      }
+    ],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_6_4"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_3"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_4"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_5"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_10_2"
+      }
+    ]
+  ],
+  "SEQUENCE_NOI": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_4"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_5"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_a41"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb_a42"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a211"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a221"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a223"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a311"
+      }
+    ],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a331"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b31"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b41"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b51"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b21"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b41"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b51"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b21"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a341"
+      }
+    ]
+  ],
+  "SEQUENCE_NGOAI": "SAME_SEQUENCE_TMH",
+  "SEQUENCE_NHI": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_4"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_5"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb41"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb42"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a211"
+      },
+      {
+        "type": "textbox",
+        "control_id": "tab11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a221"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a223"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta311"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb13"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta331"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tab31"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tab41"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tab51"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tab21"
+      }
+    ]
+  ],
+  "SEQUENCE_RHM": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_4"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_5"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_a41"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb_a42"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_6"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_7"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a211"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a221"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a223"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a311"
+      }
+    ]
+  ],
+  "SEQUENCE_CAP_CUU": "SAME_SEQUENCE_NOI",
+  "SEQUENCE_MAT": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_1"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_3"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_4"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_5"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_a61"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb_a62"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_6"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_7"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tb_a11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a211"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a222"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a223"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a322"
+      }
+    ],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a41"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a81"
+      }
+    ],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b22"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_b29"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "tab21"
+      }
+    ]
+  ],
+  "SEQUENCE_YHCT": [
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_21"
+      }
+    ],
+    [
+      {
+        "type": "radio",
+        "control_id": "rd_22"
+      }
+    ],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "icd-selector",
+        "control_id": "icd_1"
+      },
+      {
+        "type": "icd-selector",
+        "control_id": "icd_2"
+      },
+      {
+        "type": "icd-selector",
+        "sub_flag": true,
+        "control_id": "icd_3"
+      }
+    ],
+    [
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_1152"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_a71"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_d42"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "control_id": "tb_d72"
+      },
+      {
+        "type": "icd-selector",
+        "text_only": true,
+        "sub_flag": true,
+        "control_id": "tb_a72"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a11"
+      },
+      {
+        "type": "textbox",
+        "control_id": "ta_d11"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a21"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a31"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a32"
+      }
+    ],
+    [
+      {
+        "type": "textbox",
+        "control_id": "ta_a41"
+      }
+    ]
+  ],
+  "package_surgical": "TT020,TT01,TT02,PT",
+  "MAIN_CAREGIVER_ROLE": "PRIDR",
+  "NOT_FILTER_AREA_ON_PAYMENT": true,
+  "NOT_REQUIRED_BELOW_SIX_AGE": true,
+  "HEIGHT_UNIT_INCHES": false,
+  "WEIGHT_UNIT_LB": false,
+  "CURRENT_RAD_SUMMARY_DOCTOR": "crsd",
+  "CURRENT_RAD_SUPPORT_DOCTOR": "crsp",
+  "LAB_WORK_ORDER_RESULT": "RSLTD",
+  "LAB_TIMER_RELOAD": 30000,
+  "TEMPORARY_CARD_VALID_DAYS": 0,
+  "TEMPORARY_CARD_VALID_MONTHS": 1,
+  "TEMPORARY_PROVINCE_SUBFIX": "000",
+  "CONSULTATION_DISABLE_STATUS": [
+    6,
+    9
+  ],
+  "TEMPORARY_PERSON_INDICATOR_SUB_RCD": "BH100",
+  "LAB_FOOTER_TITLE_DOC": "BÁC SĨ XÉT NGHIỆM",
+  "LAB_FOOTER_TITLE_TYP": "PHÒNG XÉT NGHIỆM",
+  "LAB_FOOTER_TITLE_OTHER": "NHÂN VIÊN THỰC HIỆN",
+  "CASHIER_TRANSACTION_DETAIL_RECEIVE_TYPES": [
+    {
+      "field": "CLI",
+      "column_name_e": "E.Khám",
+      "column_name_l": "Khám",
+      "sub_item_types": "CLI",
+      "total_amount": 0
+    },
+    {
+      "field": "SRV",
+      "column_name_e": "E.Dịch vụ",
+      "column_name_l": "Dịch vụ",
+      "sub_item_types": "SVIM,SVAP,SRV,SVLB,XNVS,DX,XNDCT,OT,CT,EECG,ES,US,XNO,XNH,XNHS,XNMD,XNNT,XNGPB,TT020,PT,TT02,TT01,MRI,SATH",
+      "total_amount": 0
+    },
+    {
+      "field": "HPF",
+      "column_name_e": "E.Viện phí",
+      "column_name_l": "Viện phí",
+      "sub_item_types": "",
+      "total_amount": 0
+    }
+  ],
+  "ALLOW_COMPLETE_CLINIC_AFTER_PRESCRIPTION": false,
+  "ALLOW_UPDATE_LOCATION_IDS": [
+    "00000000-0000-0000-0000-000000000001"
+  ],
+  "REPORT_EXTENSIONS": "[{\"value\":\"excel\",\"label\":\"Excel\"},{\"value\":\"pdf\",\"label\":\"Pdf\"}]",
+  "DEFAULT_REPORT_EXTENSIONS": "pdf",
+  "RAD_REPORT_AREA_SEARCH": "rras",
+  "SHOW_MEDICAL_PLACER_ORDER_DEFAULT": true,
+  "SHOW_MEDICAL_PHARMACY_DEFAULT": true,
+  "DEFAULT_REASON_PROFESSIONAL": "Thu phí khám Bác sỹ Hà Nội",
+  "ALLOW_MODIFY_BACKDATE_TREATMENT": false,
+  "ALLOW_PRINT_SEFL_RAD_REPORT": false,
+  "TABS_COUNT": "t_c",
+  "ALLOW_PRINT_SUBCLINICAL_RESULT": true,
+  "LAB_NORM_AREA_SEARCH": "lnas",
+  "ARR_CLEAN_LOCAL_STOGARES": [
+    "PREFIX_ROLES",
+    "PREFIX_PERMISSIONS",
+    "PREFIX_PAGE_GROUPS",
+    "PREFIX_FACILITIES",
+    "PREFIX_CURRENT_FACILITY",
+    "PREFIX_RECENTLY_PAGES",
+    "PREFIX_SCOPES",
+    "CURRENT_RAD_SUPPORT_DOCTOR"
+  ],
+  "REQUIRE_REFUND": true,
+  "PRINT_LOCAL": false,
+  "FRONT_END_ADDRESS": "https://pdf.vnpt.com:8888/",
+  "ALLOW_EXECUTE_TO_NEXT_DAY": 720,
+  "ALLOW_TREATMENT_DAYS": 1,
+  "RAD_OVERTIME_FILTER": [
+    11,
+    30,
+    13,
+    30,
+    17,
+    0,
+    7,
+    0
+  ],
+  "HOSPITAL_TRANSFER_SUBCLINICAL_RESULT": [
+    1
+  ],
+  "SUBCLINICAL_RESULT": {
+    "TMH": [
+      "ta_6_4",
+      "ta_10_2"
+    ],
+    "NOI": [
+      "ta_a341",
+      "ta_b21"
+    ],
+    "NHI": [
+      "ta331",
+      "tab21",
+      "ta341"
+    ],
+    "CAP_CUU": [
+      "ta_a331",
+      "ta_b21"
+    ],
+    "NGOAI": [
+      "ta_6_4",
+      "ta_10_2"
+    ]
+  },
+  "REPLACE_MEDICAL_FILE": {
+    "Định lượng": "ĐL",
+    "Điện giải đồ": "ĐGĐ",
+    "Đo hoạt độ": "ĐHĐ"
+  },
+  "ALLOW_REGISTRATION_SAME_DAY": false,
+  "ALLOW_OTHER_DOCTOR_MODIFY": false,
+  "START_TEMPLATE_TMH": 19,
+  "DEFAULT_ED_CLINIC_ROOM_ID": "990a3b2e-567e-45f8-aef7-44ed69f9ec1c",
+  "ENDOSCOPIC_ROOM_ID": [
+    "68a08ee2-5863-4953-b17e-347eaf18b085",
+    "27ca32e4-87bc-4ad7-9977-e02d9b26bdaa",
+    "b80a6d79-56f9-4318-97eb-5690c804d815"
+  ],
+  "RAD_DESCRIPTION_CONF": true,
+  "LAB_QC_COLUMN_ADD_DATA_NUMBER": 30,
+  "TRANSFER_TREATMENT_RESULT": [
+    "3",
+    "4"
+  ],
+  "SUBCLINICAL_ALL_VIEW": true,
+  "SUBCLINICAL_ALL_VIEW_AUTO_TOGGLE_ROW": false,
+  "DEFAULT_OPD_CLINICAL_SPECIALTY": "de1e192b-b8aa-451c-bad4-a67948cbb49b",
+  "CONSUMABLE_CREATE_BY_DOCTOR": true,
+  "SUB_TYPE_CHECKING_TEST": "NSTH",
+  "USE_APPOINTMENT_MODULE": false,
+  "EXPLODING_COLOR_CLASS": "red",
+  "MESSAGE_LIMIT_RECORD_CHATBOX": 10,
+  "MESSAGE_LIMIT_PAGEINDEX_CHATBOX": 10,
+  "USE_PROCESSING_QUEUE_SEARCH_PERMISSION": true,
+  "NGX_EMOJI_I18N_EN": {
+    "search": "Search",
+    "emojilist": "List of emoji",
+    "notfound": "No Emoji Found",
+    "clear": "Clear",
+    "categories": {
+      "search": "Search Results",
+      "recent": "Frequently Used",
+      "people": "Smileys & People",
+      "nature": "Animals & Nature",
+      "foods": "Food & Drink",
+      "activity": "Activity",
+      "places": "Travel & Places",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags",
+      "custom": "Custom"
+    },
+    "skintones": {
+      "1": "Default Skin Tone",
+      "2": "Light Skin Tone",
+      "3": "Medium-Light Skin Tone",
+      "4": "Medium Skin Tone",
+      "5": "Medium-Dark Skin Tone",
+      "6": "Dark Skin Tone"
+    }
+  },
+  "NGX_EMOJI_I18N_LOCAL": {
+    "search": "Tìm kiếm",
+    "emojilist": "Danh sách biểu tượng",
+    "notfound": "Không tìm thấy biểu tượng của bạn",
+    "clear": "Xóa",
+    "categories": {
+      "search": "Kết quả tìm kiếm",
+      "recent": "Yêu thích",
+      "people": "Mặt cười & Con người",
+      "nature": "Động vật & Thiên nhiên",
+      "foods": "Đồ ăn thức uống",
+      "activity": "Hoạt động",
+      "places": "Du lịch & Địa điểm",
+      "objects": "Vật thể",
+      "symbols": "Ký tự",
+      "flags": "Cờ",
+      "custom": "Khác"
+    },
+    "skintones": {
+      "1": "Default Skin Tone",
+      "2": "Light Skin Tone",
+      "3": "Medium-Light Skin Tone",
+      "4": "Medium Skin Tone",
+      "5": "Medium-Dark Skin Tone",
+      "6": "Dark Skin Tone"
+    }
+  },
+  "CHATBOX_MAX_SIZE_FILE": 2000000,
+  "LAB_EQA_AUTO_CHOOSING_SETUP": true,
+  "PACS_ALLOW_SUB_ITEM_TYPE_RCD": "HA04,CT,DX",
+  "ALLOW_EXECUTE_NOT_SYNTHESIZED": false,
+  "UPDATE_CHANGES": [
+    "Chặn thực hiện thuốc chưa tổng hợp",
+    "Bổ sung kê vật tư cùng với đơn thuốc",
+    "Hỗ trợ tạo bản sao phiếu chăm sóc của cả 1 ngày",
+    "Sửa các lỗi phát sinh"
+  ],
+  "ITEM_STATUS": [
+    {
+      "label": "MODULE.CMS.cancel_news",
+      "value": "TEM"
+    },
+    {
+      "label": "MODULE.CMS.published_news",
+      "value": "PUP"
+    }
+  ]
+}

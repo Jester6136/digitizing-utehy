@@ -1,0 +1,150 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">{{ 'MODULE.CMS.item_group' | translate }}</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
+        <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
+      </a>
+      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()">
+        <i class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
+    </p>
+  </div>
+</div>
+<div class="page-content">
+  <div class="row">
+
+    <div class="ui-g-12 datatable-container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none;padding-bottom: 7px!important">
+            <div class="pull-left">
+              <div class="ui-inputgroup">
+                <input type="text" [(ngModel)]="globalFilterText" (keydown.enter)="filterDataTreeTable()" pInputText
+                  placeholder="{{ 'COMMON.grid_search' | translate }}" />
+                <button pButton type="button" (click)="filterDataTreeTable()" icon="fa-search"
+                  class="ui-button-secondary"></button>
+              </div>
+            </div>
+            <div class="pull-right">
+              <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-sm btn-primary dropdown-toggle" aria-expanded="false">
+                  {{ 'COMMON.export_to_data' | translate }}
+                  <i class="ace-icon fa fa-angle-down icon-on-right"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-danger dropdown-menu-right">
+                  <li>
+                    <a href="javascript:;" (click)="exportToExcel()">{{ 'COMMON.export_to_excel' | translate }}</a>
+                  </li>
+                </ul>
+                <a (click)="search()" href="javascript:;" title="{{ 'COMMON.refresh' | translate }}"
+                  class="btn btn-pink btn-sm">
+                  <i class="fa fa-sync-alt"></i>
+                </a>
+              </div>
+
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <p-treeTable [value]="data_table_tree" [(selection)]="selectedDataTableItems"
+            (onNodeExpand)="nodeExpand($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ 'MODULE.CMS.item_group_name' | translate }}</th>
+                <th style="width: 200px;text-align: center;">{{ 'MODULE.CMS.view_group_type_name' | translate }}</th>
+                <th style="width: 120px;text-align: center;">{{ 'MODULE.CMS.seq_num' | translate }}</th>
+                <th style="width: 160px;">{{ 'COMMON.action' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+              <tr *ngIf="!rowData.hidden">
+                <td (click)="toggleNode(rowData)">
+                  <p-treeTableToggler [rowNode]="rowNode" class="expand_index_{{ rowData.item_group_id }}">
+                  </p-treeTableToggler>
+                  <b class="index_{{ rowData.item_group_id }}">
+                    {{nodeIndex(rowNode.node,true)}}
+                  </b>{{ rowData.item_group_name }}
+                </td>
+                <td style="text-align: center;">
+                  {{ rowData.group_type_name }}
+                </td>
+                <td style="text-align: center;">
+                  {{ rowData.seq_num }}
+                </td>
+                <td class="action-col">
+                  <div class="btn-group">
+                    <button title="{{ 'COMMON.add_child' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasCreatePermission && rowData.group_type_rcd != 'ONE'" (click)="openCreateModal(rowData)">
+                      <i class="ace-icon fa fa-plus"></i>
+                    </button>
+                    <button [disabled]="true" title="{{ 'COMMON.type_news' | translate }}"
+                      class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasCreatePermission && rowData.group_type_rcd == 'ONE'">
+                      <i class="ace-icon fa fa-plus"></i>
+                    </button>
+                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasUpdatePermission" (click)="openUpdateModal(rowData)">
+                      <i class="ace-icon fa fa-edit"></i>
+                    </button>
+                    <button title="{{ 'COMMON.delete' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasDeletePermission" (click)="onRemove([rowData])">
+                      <i class="ace-icon fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-treeTable>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateItemGroupModal"
+    class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg full-height-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CMS.create_item_group' | translate }}</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.CMS.update_item_group' | translate }}</h4>
+        </div>
+        <div class="modal-body" style="overflow: auto;">
+          <div *ngIf="!doneSetupForm" class="loading-overlay">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <div *ngIf="doneSetupForm" class="tabbable tabs-left">
+            <app-detail-item-group #cmpItemGroupDetail [row]="row" [item_group]="item_group" [item_groups]="item_groups"
+              (emtSelectItemGroup)="emtSelectItemGroup($event)" [data_table_tree]="data_table_tree"
+              [group_type_refs]="group_type_refs" [isCreate]="isCreate"></app-detail-item-group>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetForm()">
+            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
+          </button>
+          <button type="button" (click)="onSubmit()"
+            [disabled]="is_news == 'ONE' || !doneSetupForm || submitting || !cmpItemGroupDetail || !cmpItemGroupDetail.updateForm.valid"
+            class="btn btn-success btn-sm btn-submit">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" class="btn btn-default btn-sm" (click)="closeUpdateForm($event)">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog [baseZIndex]="25000" header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle"
+  width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}"
+      (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

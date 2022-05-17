@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+.max-height-scoll { 
+    max-height: 25em;
+    overflow: auto;
+    overflow-x: hidden;
+}
+.ui-dropdown .ui-dropdown-label {
+    padding-top: 0.6em;
+}

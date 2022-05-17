@@ -1,0 +1,279 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">Đăng kí đồ án chuyên ngành</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
+        <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
+      </a>
+      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
+          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
+    </p>
+  </div>
+</div>
+<div class="page-content">
+  <div class="row">
+    <div class="ui-g-12" *ngIf="showSearchPanel">
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size: 16px; display: inline-block; margin-top: 2px">{{
+              'COMMON.search' | translate }}</span>
+            <p class="pull-right no-margin">
+
+              <button type="button" title="{{ 'COMMON.close' | translate }}" (click)="toggleSearchPanel()"
+                class="btn btn-xs btn-primary" style="width: 29.29px">
+                <i class="ace-icon fa bigger-110 icon-only fa-angle-double-up"></i>
+              </button>
+            </p>
+          </div>
+        </p-header>
+        <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  Đồ án
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                  <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)" [(ngModel)]="selectedProject"
+                  formControlName="project_type" [options]="project_types"></ng-selectize>
+                </div>
+              </div>
+
+
+              <div class="clearfix"></div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">&nbsp;</div>
+                <div class="ui-g-12 ui-md-2">
+                  <button type="submit" class="btn btn-primary btn-xs">
+                    <i class="fa fa-search"></i> {{ 'COMMON.search' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+    <div class="ui-g-12 datatable-container">
+      <div class="row">
+        <div class="col-xs-12">
+          <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 38px; text-align: center;">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width: 15%; text-align: left;">Họ và tên</th>
+                <th style="width: 15%;text-align: left;">Số điện thoại</th>
+                <th style="text-align: left;">Email</th>
+                <th style="width: 15%; text-align: center;">Số lượng còn lại</th>
+                <th style="width: 15%; text-align: center;">Đăng kí</th>
+                <th style="width: 120px; text-align: left;" *ngIf="hasUpdatePermission || hasDeletePermission">{{
+                  'COMMON.action' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex">
+              <tr [pSelectableRow]="row">
+                <td style="width: 38px; text-align: center;">
+                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                </td>
+                <td style="width: 70px; text-align: center;">
+                  <div class="index_{{ row.item_type_rcd }}">{{ first + i + 1 }}</div>
+                </td>
+                <td style="width: 10%; text-align: left;">{{ row.teacher_name }}</td>
+                <td style="text-align: left;">{{ row.phone }}</td>
+                <td style="text-align: left;">{{ row.email }}</td>
+                <td style="width: 5%; text-align: center;">{{ row.quantity }}</td>
+                <td style="width: 5%; text-align: center;">
+                    <button class="btn btn-info" *ngIf="row.available_to_register && hasRegisterPermission" (click)="registerTeacher(row)">Đăng kí</button>
+                    <button class="btn btn-danger" *ngIf="!row.available_to_register" (click)="cancelRegisterTeacher(row)">Hủy đăng kí</button>
+                </td>
+                <td class="action-col" style="width: 120px; text-align: left;"
+                  *ngIf="hasUpdatePermission || hasDeletePermission">
+                  <div class="btn-group">
+                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasUpdatePermission" (click)="openUpdateModal(row)"><i
+                        class="ace-icon fa fa-edit"></i></button>
+                    <button title="{{ 'COMMON.delete' | translate }}" class="btn btn-xs btn-white btn-default"
+                      *ngIf="hasDeletePermission" (click)="onRemove([row])">
+                      <i class="ace-icon fa fa-trash bigger-120"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="50">
+                  <div style="text-align: center">
+                    <div style="float: left;">
+                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
+                        label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
+                      </p-splitButton>
+                    </div>
+                    <div style="display: inline-block">
+                      <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
+                        [totalRecords]="totalRecords" (onPageChange)="onPageChange($event)" [rows]="pageSize"
+                        [pageLinkSize]="10"></p-paginator>
+                    </div>
+                    <div class="custom-ng-star-inserted">
+                      <div class="ui-inputgroup">
+                        <input type="text" name="inputTextInt" [pKeyFilter]="rgxPInt" (keypress)="goToPage($event)"
+                          [(ngModel)]="page" pInputText placeholder="{{ 'COMMON.page_number' | translate }}">
+                        <span class="ui-inputgroup-addon">/ {{ totalPages }}</span>
+                        <button pButton type="button" (click)="goToPage($event)" icon="fa-random"
+                          class="ui-button-secondary"></button>
+                      </div>
+                    </div>
+                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <div class="clearfix"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="50">
+                  {{ 'COMMON.empty_table' | translate}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateWebsiteItemTypeRefModal"
+    class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CMS.create_website_item_type_ref' | translate }}</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.CMS.update_website_item_type_ref' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="!doneSetupForm" class="loading-overlay">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
+            <div class="row ui-fluid">
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_rcd' | translate }}
+                  <span class="red">&nbsp;*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['item_type_rcd'].errors"
+                    [control]="updateForm.controls['item_type_rcd']"></error-messages>
+                  <input pInputText autofocus formControlName="item_type_rcd"
+                    [(ngModel)]="website_item_type_ref.item_type_rcd" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.sort_order' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['sort_order'].errors"
+                    [control]="updateForm.controls['sort_order']"></error-messages>
+                  <input pInputText formControlName="sort_order" [(ngModel)]="website_item_type_ref.sort_order"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_name' | translate }}
+                  <span class="red">&nbsp;*</span>
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_l'].errors"
+                    [control]="updateForm.controls['item_type_name_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_e'].errors"
+                    [control]="updateForm.controls['item_type_name_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <input pInputText formControlName="item_type_name_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_name_l" type="text" />
+                    <input pInputText formControlName="item_type_name_e" [class.hidden]="local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_name_e" type="text" />
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_icon' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['item_type_icon'].errors"
+                    [control]="updateForm.controls['item_type_icon']"></error-messages>
+                  <input pInputText formControlName="item_type_icon" [(ngModel)]="website_item_type_ref.item_type_icon"
+                    type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_size' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['item_type_size'].errors"
+                    [control]="updateForm.controls['item_type_size']"></error-messages>
+                  <input pInputText formControlName="item_type_size" [(ngModel)]="website_item_type_ref.item_type_size"
+                    type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_description' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_l'].errors"
+                    [control]="updateForm.controls['item_type_description_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_e'].errors"
+                    [control]="updateForm.controls['item_type_description_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <textarea [rows]="3" formControlName="item_type_description_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_description_l" pInputTextarea style="resize: none"
+                      autoResize="false"></textarea>
+                    <textarea [rows]="3" formControlName="item_type_description_e" [class.hidden]="local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_description_e" pInputTextarea style="resize: none"
+                      autoResize="false"></textarea>
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetUpdateForm()">
+            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
+          </button>
+          <button type="button" (click)="onSubmit()"
+            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
+            class="btn btn-success btn-sm btn-submit">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" class="btn btn-default btn-sm btn-close" (click)="closeUpdateForm($event)">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}"
+      (click)="cd.accept()"></button>
+    <button class="btn-default" type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}"
+      (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

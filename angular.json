@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "digitizing-fitutehy": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/digitizing-fitutehys",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/upload",
+              "src/templates",
+              "src/_log",
+              "src/web.config"
+            ],
+            "styles": [
+              "src/assets/css/bootstrap.min.css",
+              "node_modules/selectize/dist/css/selectize.css",
+              "node_modules/selectize/dist/css/selectize.bootstrap3.css",
+              "node_modules/animate.css/animate.min.css",
+              "node_modules/fullcalendar/dist/fullcalendar.min.css",
+              "node_modules/fullcalendar-scheduler/dist/scheduler.min.css",
+              "src/assets/css/jquery.gritter.min.css",
+              "src/assets/css/fonts.googleapis.com.css",
+              "src/assets/css/bootstro.min.css",
+              "src/assets/font-awesome/5.1.1/css/all.min.css",
+              "src/assets/css/ace-skins.min.css",
+              "src/assets/css/ace-rtl.min.css",
+              "src/assets/css/ace.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/omega/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+              "src/assets/semantic-dropdown/transition.css",
+              "src/assets/semantic-dropdown/dropdown.css",
+              "src/assets/css/custom.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/tinymce/tinymce.min.js",
+              "node_modules/moment/min/moment.min.js",
+              "src/assets/fullcalendar/fullcalendar.min.js",
+              "src/assets/fullcalendar-scheduler/scheduler.min.js",
+              "src/assets/fullcalendar/locale-all.js",
+              "node_modules/print-js/dist/print.js",
+              "node_modules/chart.js/dist/Chart.min.js",
+              "node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js",
+              "node_modules/ace-builds/src-min/ace.js",
+              "node_modules/ace-builds/src-min/theme-eclipse.js",
+              "node_modules/ace-builds/src-min/ext-beautify.js",
+              "node_modules/ace-builds/src-min/ext-searchbox.js",
+              "src/assets/tinymce/tinymce.min.js",
+              "src/assets/tinymce/themes/modern/theme.min.js",
+              "src/assets/js/sifter.js",
+              "src/assets/js/lz-string.min.js",
+              "src/assets/js/wizard.min.js",
+              "src/assets/js/ace-extra.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/jquery.notification.js",
+              "src/assets/js/bootstrap-editable.min.js",
+              "src/assets/js/ace-editable.min.js",
+              "src/assets/js/selectize.js",
+              "src/assets/js/highlight.js",
+              "src/assets/js/ace-elements.min.js",
+              "src/assets/js/ace.min.js",
+              "src/assets/js/bootstro.min.js",
+              "src/assets/js/js-written-number/dist/written-number.min.js",
+              "src/assets/js/recorderjs/audiodisplay.js",
+              "src/assets/js/recorderjs/recorder.js",
+              "src/assets/js/recorderjs/main.js",
+              "node_modules/bignumber.js/bignumber.js",
+              "node_modules/mathjs/dist/math.js",
+              "src/assets/semantic-dropdown/transition.js",
+              "src/assets/semantic-dropdown/dropdown.js",
+              "src/assets/js/customizes.js",
+              "src/assets/jspdf/jspdf.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [{
+                "type": "initial",
+                "maximumWarning": "10mb",
+                "maximumError": "15mb"
+              }]
+            },
+            "uat": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.uat.ts"
+              }],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [{
+                "type": "initial",
+                "maximumWarning": "10mb",
+                "maximumError": "15mb"
+              }]
+            }, 
+            "local": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.local.ts"
+              }],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [{
+                "type": "initial",
+                "maximumWarning": "10mb",
+                "maximumError": "15mb"
+              }]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "digitizing-fitutehy:build"            
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "digitizing-fitutehy:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "digitizing-fitutehy:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/web.config"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "digitizing-fitutehy-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "digitizing-fitutehy:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "digitizing-fitutehy:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }, 
+    "core": {
+      "root": "projects/core",
+      "sourceRoot": "projects/core/src",
+      "projectType": "library",
+      "prefix": "enl",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/core/tsconfig.lib.json",
+            "project": "projects/core/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/core/src/test.ts",
+            "tsConfig": "projects/core/tsconfig.spec.json",
+            "karmaConfig": "projects/core/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/core/tsconfig.lib.json",
+              "projects/core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "digitizing-fitutehy"
+}

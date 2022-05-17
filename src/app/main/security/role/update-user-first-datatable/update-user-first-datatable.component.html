@@ -1,0 +1,107 @@
+<div class="datatable-container first-dt">
+  <div class="ui-widget-header" style="padding:4px 10px; border-bottom: 0 none">
+    <h3 class="no-margin" style="float: left">{{ 'MODULE.SECURITY.user_list' | translate }}</h3>
+    <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
+      <div class="ui-inputgroup" style="float: right;">
+        <input type="text" formControlName="Key_word" ngModel pInputText placeholder="{{ 'COMMON.search' | translate }}" />
+        <button pButton type="submit" id="submitButton" icon="fa-search" class="ui-button-secondary"></button>
+      </div>
+      <div class="clearfix"></div>
+    </form>
+  </div>
+
+  <p-table [value]="data" [scrollable]="true" frozenWidth="337px" unfrozenWidth="calc(100% - 337px)" (valueChange)="onValueChange($event)"
+    [(selection)]="selectedDataTableItems">
+    <ng-template pTemplate="frozencolgroup" let-columns>
+      <colgroup>
+        <col style="width: 38px">
+        <col style="width: 38px">
+        <col style="width: 70px">
+        <col style="width: 200px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col style="width: 200px">
+        <col style="width: 500px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="frozenheader">
+      <tr>
+        <th style="width: 38px; text-align: center;">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngIf="hasAddRoleMembershipPermission" style="width: 38px;"></th>
+        <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+        <th style="width: 150px;">{{ 'COMMON.username' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="frozenbody" let-row let-i="rowIndex">
+      <tr>
+        <td style="width: 38px; text-align: center;">
+          <p-tableCheckbox [value]="row"></p-tableCheckbox>
+        </td>
+        <td *ngIf="hasAddRoleMembershipPermission" style="width: 38px; text-align: center;">
+          <button title="{{ 'COMMON.add_to_list' | translate }}" class="btn btn-xs btn-white btn-default" style="padding: 3px 0!important; height: 23px; border: 0; background: transparent!important;"
+            (click)="addToList([row])">
+            <i class="ace-icon bigger-120 blue fa fa-plus-circle"></i>
+          </button>
+        </td>
+        <td style="width: 70px; text-align: center;">
+          <div class="index_{{ row.user_id }}">{{ first + i + 1 }}</div>
+        </td>
+        <td style="width: 200px;">{{ row.username }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 200px;">{{ 'PERSON.full_name' | translate }}</th>
+        <th style="width: 500px;">{{ 'COMMON.description' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td style="width: 200px;">{{ row.objectjson_person.full_name }}</td>
+        <td style="width: 500px;">{{ row.description }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <tr>
+        <td colspan="50">
+          <div style="text-align: right">
+            <div style="float: left;">
+              <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0" label="{{ 'COMMON.action' | translate }}"
+                icon="fa-check" [model]="tableActions"></p-splitButton>
+            </div>
+            <div class="ui-inputgroup text-align: right">
+               <div style="display: inline-block">
+                  <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]" [totalRecords]="totalRecords"
+                  (onPageChange)="onPageChange($event)" [rows]="pageSize" [pageLinkSize]="3"></p-paginator>
+               </div>
+               <div class="custom-ng-star-inserted">
+                 <div class="ui-inputgroup">
+                   <input type="text" name="inputTextInt" [pKeyFilter]="rgxPInt" (keypress)="goToPage($event)" [(ngModel)]="page" pInputText
+                     placeholder="{{ 'COMMON.page_number' | translate }}">
+                   <span class="ui-inputgroup-addon">/ {{ totalPages }}</span>
+                    <button pButton type="button" (click)="goToPage($event)" icon="fa-random" class="ui-button-secondary"></button>
+                 </div>
+               </div>
+              </div>
+            <div class="clearfix"></div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="50">
+          <div style="text-align: left">
+            <span style="float: left">{{ pageLabel }}</span>
+            <div class="clearfix"></div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      {{ 'COMMON.empty_table' | translate}}
+    </ng-template>
+  </p-table>
+</div>

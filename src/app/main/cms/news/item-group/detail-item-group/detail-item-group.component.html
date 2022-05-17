@@ -1,0 +1,121 @@
+<form [formGroup]="updateForm" id="updateForm" (ngSubmit)="saveDetail()" class="lap-form">
+  <div class="ui-fluid">
+
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.chose_item_group_parent' | translate }}
+      </div>
+      <div class="ui-g-12 ui-md-9">
+        <error-messages [errors]="updateForm.controls['parent_item_group_id'].errors"
+          [control]="updateForm.controls['parent_item_group_id']"></error-messages>
+        <ng-selectize [config]="selectizeConfig(1, 'label', 'value', true, 1)" formControlName="parent_item_group_id"
+          [options]="item_groupsshow" (ngModelChange)="itemgroupChanged($event)"
+          placeholder="{{ 'COMMON.choose' | translate }}" [(ngModel)]="selectedItemGroup"></ng-selectize>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.item_group_code' | translate }}
+        <span class="red">*</span>
+      </div>
+      <div class="ui-g-12 ui-md-3">
+        <error-messages [errors]="updateForm.controls['item_group_code'].errors"
+          [control]="updateForm.controls['item_group_code']"></error-messages>
+        <input pInputText formControlName="item_group_code" [(ngModel)]="item_group.item_group_code" type="text" />
+      </div>
+
+      <div class="ui-g-12 ui-md-2 inline-label text-right">
+        {{ 'MODULE.CMS.item_group_url' | translate }}
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <error-messages [errors]="updateForm.controls['item_group_url'].errors"
+          [control]="updateForm.controls['item_group_url']"></error-messages>
+        <input pInputText formControlName="item_group_url" [(ngModel)]="item_group.item_group_url" type="text" />
+      </div>
+
+    </div>
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.item_group_name' | translate }}
+        <span class="red">*</span>
+      </div>
+      <div class="ui-g-12 ui-md-9">
+        <error-messages class="has-dl" [errors]="updateForm.controls['item_group_name_e'].errors"
+          [control]="updateForm.controls['item_group_name_e']"></error-messages>
+        <error-messages class="has-dl" [errors]="updateForm.controls['item_group_name_l'].errors"
+          [control]="updateForm.controls['item_group_name_l']"></error-messages>
+        <div class="ui-inputgroup dual-language">
+          <input pInputText formControlName="item_group_name_e" [class.hidden]="local_flag"
+            [(ngModel)]="item_group.item_group_name_e" type="text" />
+          <input pInputText formControlName="item_group_name_l" [class.hidden]="!local_flag"
+            [(ngModel)]="item_group.item_group_name_l" type="text" />
+          <language-switcher [(local_flag)]="local_flag"></language-switcher>
+        </div>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.seq_num' | translate }}
+      </div>
+      <div class="ui-g-12 ui-md-1">
+        <error-messages [errors]="updateForm.controls['sort_order'].errors" [control]="updateForm.controls['sort_order']">
+        </error-messages>
+        <input pInputText formControlName="sort_order" [pKeyFilter]="rgxPInt" [(ngModel)]="item_group.sort_order"
+          type="text" />
+      </div>
+
+      <div class="ui-g-12 ui-md-4 inline-label text-right">
+        {{ 'MODULE.CMS.icon_class' | translate }}
+      </div>
+      <div class="ui-g-12 ui-md-4">
+        <error-messages [errors]="updateForm.controls['icon_class'].errors"
+          [control]="updateForm.controls['icon_class']"></error-messages>
+        <input pInputText formControlName="icon_class" [(ngModel)]="item_group.icon_class" type="text" />
+      </div>
+
+    </div>
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.chose_group_type_ref' | translate }}
+        <span class="red">*</span>
+      </div>
+      <div class="ui-g-12 ui-md-9">
+        <error-messages [errors]="updateForm.controls['group_type_rcd'].errors"
+          [control]="updateForm.controls['group_type_rcd']"></error-messages>
+        <ng-selectize [config]="defaultSelectizeConfigS" formControlName="group_type_rcd"
+          [(ngModel)]="selectedGroupTypeRef" [options]="group_type_refs" placeholder="{{ 'COMMON.all' | translate }}">
+        </ng-selectize>
+      </div>
+    </div> 
+    <div class="ui-g-12 ui-form-group">
+      <div class="ui-g-12 ui-md-3 inline-label text-right">
+        {{ 'MODULE.CMS.image_src' | translate }}
+      </div>
+      <div class="ui-g-9 text-left">
+        <file-upload #file_image_url className="f_image_url" formControlName="file_image_url" mode="advanced"
+          multiple="false" accept="image/*" maxFileSize="5242880" previewWidth="100" ngDefaultControl
+          (emtFileUploadChange)="emtFileUploadChange($event)"></file-upload>
+        <div class="existing-file-row">
+          <div class="ui-fileupload-row f_image_url"
+            *ngIf="item_group.image_url != null && item_group.image_url != '' && item_group.image_url.split(';').length == 2">
+            <div *ngIf="isImage(item_group.image_url)">
+              <img [src]="gfp(host_image + item_group.image_url)" width="100" />
+            </div>
+            <div *ngIf="!isImage(item_group.image_url)">
+              <span>
+                <i class="fa fa-file" style="color: #444444"></i>
+              </span>
+            </div>
+            <div> {{ gfnng(item_group.image_url) }} </div>
+            <div> {{ gfs(item_group.image_url) }} Kb</div>
+            <div>
+              <i title="{{ 'COMMON.remove_file' | translate }}"
+                (click)="item_group.image_url = null; updateFormChangedByFileUpload = true;"
+                style="cursor: pointer;margin-left: 10px; color: red;" class="fa fa-times"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

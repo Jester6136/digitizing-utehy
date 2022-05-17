@@ -1,0 +1,29 @@
+<div class="page-container" style="background: url(../assets/images/background/LOGIN_BG_AiO.png) center no-repeat; background-size: cover">
+    <div class="page-login-box">
+        <div class="page-login-widget animated fadeInRight">
+            <h1>{{ 'COMMON.login' | translate }}</h1>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+                <div class="ui-form-group">
+                    <error-messages [errors]="loginForm.controls['username'].errors" [control]="loginForm.controls['username']"></error-messages>
+                    <input type="text" autofocus formControlName="username" ngModel placeholder="{{ 'COMMON.username' | translate }}">
+                </div>
+                <div class="ui-form-group">
+                    <error-messages [errors]="loginForm.controls['password'].errors" [control]="loginForm.controls['password']"></error-messages>
+                    <input type="password" formControlName="password" ngModel placeholder="{{ 'COMMON.password' | translate }}">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input formControlName="remember" type="checkbox" class="ace">
+                        <span class="lbl"> {{ 'COMMON.remember_me' | translate }}</span>
+                    </label>
+                </div>
+                <label>
+                    <input formControlName="lang" class="ace ace-switch ace-switch-4 lang-switch btn-flat" (change)="changeLanguage($event)" type="checkbox">
+                    <span class="lbl" data-lang="{{ 'COMMON.switch_lang' | translate }}"></span>
+                </label>
+                <button [disabled]="!loginForm.valid" type="submit">{{ 'COMMON.login' | translate }}</button>
+            </form>
+            <p>{{ today.getFullYear() }} © {{ 'COMMON.copyright' | translate }}</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="datatable-container second-dt">
+  <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+    <h3 class="no-margin" style="float: left">{{ 'COMMON.selected_list' | translate }}</h3>
+    <div class="ui-inputgroup" style="float: right;">
+      <input type="text" [(ngModel)]="globalFilterText" (keypress)="filterInTable($event)" pInputText placeholder="{{ 'COMMON.grid_search' | translate }}"
+      />
+      <button pButton type="button" (click)="filterInTable($event)" icon="fa-search" class="ui-button-secondary"></button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <p-table [value]="data" [scrollable]="true" frozenWidth="337px" unfrozenWidth="calc(100% - 337px)"
+    [(selection)]="selectedDataTableItems">
+    <ng-template pTemplate="frozencolgroup" let-columns>
+      <colgroup>
+        <col style="width: 38px">
+        <col style="width: 38px">
+        <col style="width: 70px">
+        <col style="width: 200px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col style="width: 200px">
+        <col style="width: 500px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="frozenheader">
+      <tr>
+        <th style="width: 38px; text-align: center;">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngIf="hasRemoveRoleMembershipPermission" style="width: 38px;"></th>
+        <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+        <th style="width: 150px;">{{ 'COMMON.username' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="frozenbody" let-row let-i="rowIndex">
+      <tr>
+        <td style="width: 38px; text-align: center;">
+          <p-tableCheckbox [value]="row"></p-tableCheckbox>
+        </td>
+        <td *ngIf="hasRemoveRoleMembershipPermission" style="width: 38px; text-align: center;">
+          <button title="{{ 'COMMON.remove_from_list' | translate }}" class="btn btn-xs btn-white btn-default" *ngIf="hasRemoveRoleMembershipPermission || row.is_new"
+            style="padding: 3px 0!important; height: 23px; border: 0; background: transparent!important;" (click)="removeFromList([row])">
+            <i class="ace-icon fa fa-times-circle bigger-120 red"></i>
+          </button>
+        </td>
+        <td style="width: 70px; text-align: center;">
+          <div class="index_{{ row.user_id }}">{{ first + i + 1 }}</div>
+        </td>
+        <td style="width: 200px;">{{ row.username }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 200px;">{{ 'PERSON.full_name' | translate }}</th>
+        <th style="width: 500px;">{{ 'COMMON.description' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td style="width: 200px;">{{ row.full_name }}</td>
+        <td style="width: 500px;">{{ row.description }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div style="text-align: right">
+        <div style="float: left;">
+          <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0" label="{{ 'COMMON.action' | translate }}"
+            icon="fa-check" [model]="tableActions"></p-splitButton>
+        </div>
+        <span style="float: right">{{ 'COMMON.total' | translate }}&nbsp;{{ data.length }}&nbsp;{{ 'COMMON.record' | translate | lowercase }}</span>
+        <div class="clearfix"></div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      {{ 'COMMON.empty_table' | translate}}
+    </ng-template>
+  </p-table>
+</div>

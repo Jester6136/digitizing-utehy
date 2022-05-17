@@ -1,0 +1,53 @@
+<p-dialog #dialog [draggable]="false" [showHeader]="false" [(visible)]="display" [modal]="true" [responsive]="true"
+          [style]="{width: '90%', minWidth: '200px'}" (onHide)="onHide()" [focusOnShow]="false" [blockScroll]="true"
+          [baseZIndex]="50000">
+
+  <div style="display: flex; height: calc(100vh - 50px)">
+    <div class="ui-g-3">
+      <p-card header="{{ 'PRINT.header' | translate }}" [style]="{height: '100%', padding: '10px'}">
+        {{ 'PRINT.total_page' | translate }}{{ total_page }}
+        <h5>{{ 'PRINT.copies' | translate }}</h5>
+        <p-spinner size="10" [(ngModel)]="copies" [min]="1"></p-spinner>
+        <h5>{{ 'PRINT.pages' | translate }}</h5>
+        <div class="ui-g" style="width: 250px; margin-bottom: 10px">
+          <div class="ui-g-12">
+            <p-radioButton (ngModelChange)="allFlagChange($event)" name="page" [value]="true"
+                           label="{{ 'PRINT.all' | translate }}" [(ngModel)]="all_flag"></p-radioButton>
+          </div>
+          <div class="ui-g-12" style="display: flex">
+            <p-radioButton (ngModelChange)="allFlagChange($event)" [style]="{'padding-top': '5px'}" name="page"
+                           [value]="false" [(ngModel)]="all_flag"></p-radioButton>
+            <input id="input-page" [attr.disabled]="all_flag ? '' : null"
+                   placeholder="{{ 'PRINT.pages_placeholder' | translate }}" type="text"
+                   style="width: 100%; margin-left: 7px" pInputText [(ngModel)]="pages">
+          </div>
+        </div>
+        <p-footer>
+          <button id="btn-print" class="btn btn-primary btn-xs" style="margin-right: 10px" (click)="print(true)"
+                  type="button">
+            <i class="fa fa-print"></i> {{ 'PRINT.print_and_close' | translate }}
+          </button>
+          <button class="btn btn-info btn-xs" style="margin-right: 10px" (click)="print(false)" type="button">
+            <i class="fa fa-print"></i> {{ 'PRINT.print' | translate }}
+          </button>
+          <button class="btn btn-default btn-xs" (click)="hideDialog()" type="button">
+            <i class="fa fa-print"></i> {{ 'PRINT.close' | translate }}
+          </button>
+        </p-footer>
+      </p-card>
+    </div>
+
+    <div class="ui-g-9">
+      <ng-container *ngIf="startInitPDF">
+        <p-card [style]="{height: '100%', padding: '0', background: '#ddd', overflow: 'auto'}">
+          <div class="pdf-container">
+            <pdf-viewer [src]="src" [render-text-mode]="0" [original-size]="false"
+                        (page-rendered)="pageRendered($event)" (after-load-complete)="callBackFn($event)"></pdf-viewer>
+          </div>
+        </p-card>
+      </ng-container>
+    </div>
+
+  </div>
+
+</p-dialog>

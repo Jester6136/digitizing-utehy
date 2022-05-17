@@ -1,0 +1,108 @@
+<div class="row">
+  <div *ngIf="hasViewRolePermission" class="col-sm-4">
+    <div class="widget-box widget-color-blue2">
+      <div class="widget-header">
+        <h4 class="widget-title lighter smaller">
+          {{ 'MODULE.SECURITY.functionality' | translate }}
+        </h4>
+      </div>
+      <div class="widget-body">
+        <div class="widget-main padding-8">
+          <p-scrollPanel [style]="{width: '100%', height: '100%'}">
+            <form #filterForm="ngForm" (ngSubmit)="filterTree2(filterForm.value)">
+              <input type="text" name="filter_text" style="width: calc(100% - 31px); display: block; margin: 7px;" [(ngModel)]="filterForm.filter_text"
+                pInputText placeholder="{{ 'COMMON.search' | translate }}" />
+            </form>
+              <p-tree [value]="data" selectionMode="single"  (onNodeSelect)="treeSelectionChange($event.node)"
+              ></p-tree>
+          </p-scrollPanel>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div [class.col-sm-8]="hasViewRolePermission" [class.col-sm-12]="!hasViewRolePermission">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li *ngIf="hasViewRolePermission" (click)="isPermissionTab = true" class="active">
+          <a data-toggle="tab" href="#permission">{{ 'MODULE.SECURITY.permission' | translate }}</a>
+        </li>
+        <li *ngIf="role.use_context_security && hasViewRoleScopePermission" (click)="isPermissionTab = false">
+          <a data-toggle="tab" href="#scope">{{ 'MODULE.SECURITY.scope' | translate }}</a>
+        </li>
+      </ul>
+      <div class="tab-content" style="height: calc(100vh - 247px); overflow-y: auto; overflow-x: hidden;">
+        <div *ngIf="hasViewRolePermission" id="permission" class="tab-pane in active datatable-container-permission" style="height: 100%">
+          <div class="ui-widget-header" style="padding:4px 0px 4px 4px;;border-bottom: 0 none">
+            <div class="ui-inputgroup">
+              <input type="text" [(ngModel)]="globalFilterText" (keypress)="filterInTable_Permissions($event)" pInputText
+                placeholder="{{ 'COMMON.grid_search' | translate }}">
+              <button pButton type="button" (click)="filterInTable($event)" icon="fa-search" class="ui-button-secondary"></button>
+            </div>
+          </div>
+          <div>
+            <p-table #dataTable [value]="chosingPermissions" [lazy]="true" [dataKey]="dataKey_Permissions">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 50px;">{{ 'COMMON.index' | translate }}</th>
+                  <th style="text-align: left;">{{ 'MODULE.SECURITY.path' | translate }}</th>
+                  <th style="width: 40%; text-align: left;">{{ 'MODULE.SECURITY.function_name' | translate }}</th>
+                  <th style="width: 80px; text-align: center;"> 
+                    <input type="checkbox" name="all" (change)="checkAll($event)" [checked]="isCheckAllPermission()" [disabled]="!hasGrantPermissionToRole"
+                    />
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row let-i="rowIndex">
+                <tr [pSelectableRow]="row">
+                  <td style="width: 50px;">
+                    <div class="index_{{ row.id }}">{{ i + 1 }}</div>
+                  </td>
+                  <td style="text-align: left;">{{ row.path }}</td>
+                  <td style="width: 40%; text-align: left;">{{ row.action_name }}</td>
+                  <td style="width: 80px; text-align: center;">
+                    <input type="checkbox" [disabled]="!hasGrantPermissionToRole" value="{{ row.action_code }}" [(ngModel)]="row.granted"/>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>   
+          </div> 
+        </div>
+        <div *ngIf="role.use_context_security && hasViewRoleScopePermission" id="scope" class="tab-pane in datatable-container-scopes">
+          <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+            <div class="ui-inputgroup">
+              <input type="text" [(ngModel)]="globalFilterText" (keypress)="filterInTable_Scopes($event)" pInputText
+                placeholder="{{ 'COMMON.grid_search' | translate }}">
+              <button pButton type="button" (click)="filterInTable($event)" icon="fa-search" class="ui-button-secondary"></button>
+            </div> 
+          </div>
+          <div>
+            <p-table #dataTable [value]="contextScopes" [lazy]="true" [dataKey]="dataKey_Scopes">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 50px;">{{ 'COMMON.index' | translate }}</th>
+                  <th style="text-align: left;">{{ 'COMMON.code' | translate }}</th>
+                  <th style="width: 40%; text-align: left;">{{ 'COMMON.name' | translate }}</th>
+                  <th style="width: 80px; text-align: center;"> 
+                    <input type="checkbox" name="all" (change)="checkAllScope($event)" [checked]="isCheckAllScope()" [disabled]="!hasGrantScopeToRole"/>                    
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row let-i="rowIndex">
+                <tr [pSelectableRow]="row">
+                  <td style="width: 50px;">
+                    <div class="index_{{ row.id }}">{{ i + 1 }}</div>
+                  </td>
+                  <td style="text-align: left;">{{ row.code }}</td>
+                  <td style="width: 40%; text-align: left;">{{ row.name }}</td>
+                  <td style="width: 80px; text-align: center;">
+                    <input type="checkbox" [disabled]="!hasGrantScopeToRole" [(ngModel)]="row.granted" value="{{ row.id }}"/>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>    
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,310 @@
+<div class="breadcrumbs ace-save-state breadcrumbs-fixed" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="ace-icon fa fa-home home-icon"></i>
+      <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
+    </li>
+    <li class="active">{{ 'MODULE.SECURITY.user_list' | translate }}</li>
+  </ul>
+  <div class="nav-search">
+    <p class="pull-right no-margin">
+      <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
+        <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
+      </a>
+      <a *ngIf="hasCreatePermission" (click)="openCreateModal()" class="btn btn-success btn-xs">
+        <i class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}
+      </a>
+    </p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="row">
+    <div class="ui-g-12" *ngIf="showSearchPanel">
+      <p-panel class="ui-fluid">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">{{ 'COMMON.search' | translate }}</span>
+            <p class="pull-right no-margin">
+              <button type="button" title="{{ 'COMMON.close' | translate }}" (click)="toggleSearchPanel()" class="btn btn-xs btn-primary"
+                style="width: 29.29px">
+                <i class="ace-icon fa bigger-110 icon-only fa-angle-double-up"></i>
+              </button>
+            </p>
+          </div>
+        </p-header>
+        <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
+          <div class="ui-g lap-form">
+            <div class="ui-g-12">
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'COMMON.username' | translate }}</div>
+                <div class="ui-g-12 ui-md-6">
+                  <input pInputText formControlName="username" ngModel type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">{{ 'PERSON.full_name' | translate }}</div>
+                <div class="ui-g-12 ui-md-6">
+                  <input pInputText formControlName="full_name" ngModel type="text" />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-3 inline-label text-right">&nbsp;</div>
+                <div class="ui-g-12 ui-md-4">
+                  <p-checkbox formControlName="active_flag" [value]="1" label="{{ 'COMMON.active' | translate }}"></p-checkbox>
+                  <p-checkbox formControlName="deactive_flag" [value]="0" label="{{ 'COMMON.deactive' | translate }}"></p-checkbox>
+                </div>
+                <div class="ui-g-12 ui-md-2 text-right">
+                  <button type="submit" class="btn btn-primary btn-xs">
+                    <i class="fa fa-search"></i> {{ 'COMMON.search' | translate }}
+                  </button>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+    <div class="ui-g-12 datatable-container table-not-fixed">
+      <div class="row">
+        <div class="col-xs-12">
+          <p-table #dataTable [value]="data" [lazy]="true" [(selection)]="selectedDataTableItems">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 38px;">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width: 15%; text-align: left;">{{ 'COMMON.username' | translate }}</th>
+                <th style="width: 20%; text-align: left;">{{ 'PERSON.full_name' | translate }}</th>
+                <th style="text-align: left;">{{ 'COMMON.description' | translate }}</th>
+                <th style="width: 130px; text-align: left;">{{ 'COMMON.status' | translate }}</th>
+                <th style="width: 200px; text-align: left;" *ngIf="hasAddRoleToUserPermission || hasRemoveRoleFromUserPermission || hasUpdatePermission || hasDeletePermission">{{ 'COMMON.action' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex">
+              <tr [pSelectableRow]="row">
+                <td style="width: 38px;">
+                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                </td>
+                <td style="width: 70px; text-align: center;">
+                  <div class="index_{{ row.user_id }}">{{ first + i + 1 }}</div>
+                </td>
+                <td style="width: 15%; text-align: left;">{{ row.username }}</td>
+                <td style="width: 20%; text-align: left;">{{ row.objectjson_person.full_name }}</td>
+                <td style="text-align: left;">{{ row.description }}</td>
+                <td style="width: 130px; text-align: left;">
+                  <span *ngIf="row.active_flag == 1" class="label label-sm label-success arrowed arrowed-right">
+                    {{ 'COMMON.active' | translate }}
+                  </span>
+                  <span *ngIf="row.active_flag == 0" class="label label-sm label-danger arrowed arrowed-right">
+                    {{ 'COMMON.deactive' | translate }}
+                  </span>
+                </td>
+                <td class="action-col" *ngIf="hasAddRoleToUserPermission || hasRemoveRoleFromUserPermission || hasUpdatePermission || hasDeletePermission" style="width: 200px; text-align: left;">
+                  <div class="btn-group">
+                    <button *ngIf="hasViewRoleOfUserPermission" title="{{ 'MODULE.SECURITY.view_role_of_user' | translate }}" class="btn btn-xs btn-white btn-default"
+                      (click)="openUpdateRoleModal($event, row)">
+                      <i class="ace-icon fa fa-shield-alt"></i>
+                    </button>
+                    <button *ngIf="hasUpdatePermission" title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default" (click)="openUpdateModal($event, row)">
+                      <i class="ace-icon fa fa-edit"></i>
+                    </button>
+                    <button *ngIf="hasUpdatePermission" title="{{ 'MODULE.SECURITY.reset_password' | translate }}" class="btn btn-xs btn-white btn-default"
+                      (click)="onResetPassWord([row])">
+                      <i class="ace-icon fa fa-redo"></i>
+                    </button>
+                    <button *ngIf="hasDeletePermission" title="{{ (row.active_flag == 1 ? 'COMMON.deactive' : 'COMMON.active') | translate }}"
+                      class="btn btn-xs btn-white btn-default" (click)="onChangeActiveStatus([row])">
+                      <i [class.fa-lock]="row.active_flag == 1" [class.fa-unlock]="row.active_flag == 0" class="ace-icon fa"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="50">
+                  <div style="text-align: center">
+                    <div style="float: left;">
+                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0" label="{{ 'COMMON.action' | translate }}"
+                        icon="fa-check" [model]="tableActions"></p-splitButton>
+                    </div>
+                    <div style="display: inline-block">
+                      <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]" [totalRecords]="totalRecords"
+                        (onPageChange)="onPageChange($event)" [rows]="pageSize" [pageLinkSize]="10"></p-paginator>
+                    </div>
+                    <div class="custom-ng-star-inserted">
+                      <div class="ui-inputgroup">
+                        <input type="text" name="inputTextInt" [pKeyFilter]="rgxPInt" (keypress)="goToPage($event)" [(ngModel)]="page" pInputText
+                          placeholder="{{ 'COMMON.page_number' | translate }}">
+                        <span class="ui-inputgroup-addon">/ {{ totalPages }}</span>
+                        <button pButton type="button" (click)="goToPage($event)" icon="fa-random" class="ui-button-secondary"></button>
+                      </div>
+                    </div>
+                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <div class="clearfix"></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="50">
+                  {{ 'COMMON.empty_table' | translate}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="createUserModal" class="modal fade" role="dialog"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.SECURITY.create_user' | translate }}</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.SECURITY.update_user' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="!doneSetupForm" class="loading-overlay">
+            <i class="fa fa-spinner fa-spin orange"></i>
+          </div>
+          <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
+            <div class="row ui-fluid">
+              <div *ngIf="USE_HRM_MODULE && isCreate" class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'PERSON.employee' | translate }}
+                  <span *ngIf="USE_HRM_MODULE && !ALLOW_CREATE_EMPLOYEE_FROM_USER_LIST" class="red"></span>
+                </div>
+                <div class="ui-g-12 ui-md-10">
+                  <ng-selectize class="employee_id" (ngModelChange)="chooseEmployee($event)" [config]="selectizeEmployeeConfig(1, 'full_name', 'employee_id', true, 2)"
+                    formControlName="employee" [ngModel]="selectedEmployee" placeholder="{{ 'COMMON.choose' | translate }}"></ng-selectize>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'COMMON.username' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['username'].errors" [control]="updateForm.controls['username']"></error-messages>
+                  <input class="form-control input-sm" type="text" autofocus formControlName="username" [(ngModel)]="user.username" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'PERSON.full_name' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['full_name'].errors" [control]="updateForm.controls['full_name']"></error-messages>
+                  <input class="form-control input-sm" type="text" formControlName="full_name" [(ngModel)]="user.objectjson_person.full_name"
+                  />
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'PERSON.date_of_birth' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages class="has-icon" [errors]="updateForm.controls['date_of_birth'].errors" [control]="updateForm.controls['date_of_birth']"></error-messages>
+                  <p-calendar #calDoB_l [showIcon]="true" [(ngModel)]="user.objectjson_person.date_of_birth" [maxDate]="today" formControlName="date_of_birth"
+                  [locale]="locale_calendar" (keydown)="onlyNumbers($event)" (input)="addSlash($event)" [dateFormat]="dateFormat" (onBlur)="blurCalendar($event, calDoB_l)"
+                    (onSelect)="selectCalendar($event, calDoB_l)" appendTo="body"></p-calendar>
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'PERSON.gender' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['gender'].errors" [control]="updateForm.controls['gender']"></error-messages>
+                  <ng-selectize [enabled]="enabledInput" [(ngModel)]="selectedGender" [config]="selectizeConfig(1, 'label', 'value', true)"
+                    formControlName="gender" [options]="genders" placeholder="{{ 'COMMON.choose' | translate }}"></ng-selectize>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">Email
+                </div>
+                <div class="ui-g-12" [class.ui-md-10]="!USE_DOMAIN" [class.ui-md-4]="USE_DOMAIN">
+                  <error-messages [errors]="updateForm.controls['email'].errors" [control]="updateForm.controls['email']"></error-messages>
+                  <input class="form-control input-sm" type="email" formControlName="email" [(ngModel)]="user.objectjson_person.email" />
+                </div>
+                <div *ngIf="USE_DOMAIN" class="ui-g-12 ui-md-2 inline-label text-right">{{ 'MODULE.SECURITY.domain' | translate }}
+                  <span class="red">*</span>
+                </div>
+                <div *ngIf="USE_DOMAIN" class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['domain'].errors" [control]="updateForm.controls['domain']"></error-messages>
+                  <ng-selectize [config]="selectizeConfig(1, 'domain_name', 'domain_name', true)" formControlName="domain" [options]="domains"
+                    placeholder="{{ 'COMMON.choose' | translate }}" [(ngModel)]="selectedDomain"></ng-selectize>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">{{ 'COMMON.description' | translate }}</div>
+                <div class="ui-g-12 ui-md-10">
+                  <error-messages class="has-dl" [errors]="updateForm.controls['description_l'].errors" [control]="updateForm.controls['description_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['description_e'].errors" [control]="updateForm.controls['description_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <textarea [rows]="3" formControlName="description_l" [class.hidden]="!local_flag" [(ngModel)]="user.description_l" pInputTextarea
+                      style="resize: none" autoResize="false"></textarea>
+                    <textarea [rows]="3" formControlName="description_e" [class.hidden]="local_flag" [(ngModel)]="user.description_e" pInputTextarea
+                      style="resize: none" autoResize="false"></textarea>
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()"></language-switcher>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetUpdateForm()">
+            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
+          </button>
+          <button type="button" (click)="onSubmit()" [disabled]="!doneSetupForm || !updateForm.valid || !modified() || submitting"
+            class="btn btn-success btn-sm btn-submit">
+            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+          </button>
+          <button type="button" class="btn btn-default btn-sm" (click)="closeUpdateForm($event)">
+            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="hasAddRoleToUserPermission && showUpdateRoleModal" id="updateRoleModal" class="modal fade" role="dialog" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-xl full-height-modal">
+      <div id="updateRoleForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{ 'MODULE.SECURITY.grant_role_for_user' | translate }} : {{user.username}}</h4>
+          </div>
+          <div class="modal-body no-padding">
+            <div class="ui-g-6" *ngIf="hasAddRoleToUserPermission">
+              <app-update-role-first-datatable [hasAddRoleToUserPermission]="hasAddRoleToUserPermission" [selectedRoles]="addSecondDataTable.data"
+                (emiterAddToList)="addToList($event)"></app-update-role-first-datatable>
+            </div>
+            <div [class.ui-g-6]="hasAddRoleToUserPermission" [class.ui-g-12]="!hasAddRoleToUserPermission">
+              <app-update-role-second-datatable #addSecondDataTable [hasAddRoleToUserPermission]="hasAddRoleToUserPermission" [hasRemoveRoleFromUserPermission]="hasRemoveRoleFromUserPermission"
+                [user_id]="user_id" (emiterRemoveFromList)="removeFromList($event)" [selectedRoles]="selectedRoles"></app-update-role-second-datatable>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success btn-sm" (click)="onUpdateRole()">
+              <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
+            </button>
+            <button type="button" class="btn btn-default btn-sm" (click)="closeUpdateRoleModal()">
+              <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog [baseZIndex]="25000" header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}" (click)="cd.accept()"></button>
+    <button class="btn-default" type="button" pButton icon="fa-close" label="{{ 'COMMON.cancel' | translate }}" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

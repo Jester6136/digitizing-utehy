@@ -1,0 +1,32 @@
+<div id="forgot-box" class="forgot-box widget-box no-border">
+  <div class="widget-body">
+    <div class="widget-main">
+      <h4 class="header red lighter bigger">
+        <i class="ace-icon fa fa-key"></i>
+        {{ 'MODULE.SECURITY.choose_facility' | translate }}
+      </h4>
+
+      <div class="space-6"></div>
+      <p>{{ 'MODULE.SECURITY.choose_facility_sub' | translate }}</p>
+
+      <fieldset>
+        <ng-selectize [config]="config" [options]="facilities" placeholder="{{ 'COMMON.choose' | translate }}"
+        [(ngModel)]="selectedFacility" ngDefaultControl></ng-selectize>
+
+        <div class="clearfix">
+          <button [class.disabled]="spinning == true" [disabled]="spinning == true" type="button" (click)="start()" class="width-35 pull-right btn btn-sm btn-danger">
+            <i class="ace-icon fa fa-lightbulb-o"></i>
+            <span class="bigger-110">{{ 'COMMON.start' | translate }}</span>
+          </button>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="toolbar center">
+      <a href="javascript:;" (click)="logout()" class="back-to-login-link">
+        <i class="ace-icon fa fa-arrow-left"></i>
+        {{ 'COMMON.logout' | translate }}
+      </a>
+    </div>
+  </div>
+</div>
