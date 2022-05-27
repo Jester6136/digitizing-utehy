@@ -65,6 +65,23 @@
     </div>
     <div class="ui-g-12 datatable-container">
       <div class="row">
+        <div class="ui-g-12 ui-form-group">
+          <div class="ui-g-12 ui-md-2 inline-label text-right">
+            Giáo viên hướng dẫn
+          </div>
+          <div class="ui-g-12 ui-md-2">
+            <input pInputText type="text" [(ngModel)]="project_register.teacher_name" readonly/>
+          </div>
+
+          <div class="ui-g-12 ui-md-2 inline-label text-right">
+            Tên đề tài
+          </div>
+          <div class="ui-g-12 ui-md-6">
+            <input pInputText type="text" [(ngModel)]="project_register.student_project_name" readonly/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-12">
           <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
             <ng-template pTemplate="header">
@@ -97,11 +114,6 @@
               <tr>
                 <td colspan="50">
                   <div style="text-align: center">
-                    <div style="float: left;">
-                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
-                        label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
-                      </p-splitButton>
-                    </div>
                     <div style="display: inline-block">
                       <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
                         [totalRecords]="totalRecords" (onPageChange)="onPageChange($event)" [rows]="pageSize"
@@ -139,8 +151,8 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CMS.create_website_item_type_ref' | translate }}</h4>
-          <h4 *ngIf="!isCreate" class="modal-title">Cập nhật báo cáo đồ án</h4>
+          <h4 *ngIf="isCreate_custom" class="modal-title">{{ 'MODULE.CMS.create_website_item_type_ref' | translate }}</h4>
+          <h4 *ngIf="!isCreate_custom" class="modal-title">Cập nhật báo cáo đồ án</h4>
         </div>
         <div class="modal-body">
           <div *ngIf="!doneSetupForm" class="loading-overlay">
@@ -175,7 +187,7 @@
             <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
           </button>
           <button type="button" (click)="onSubmit()"
-            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
+            [disabled]="!doneSetupForm || !updateForm.valid || submitting"
             class="btn btn-success btn-sm btn-submit">
             <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
           </button>
@@ -195,3 +207,26 @@
       (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+
+
+<p-dialog header="Tạo báo cáo" [(visible)]="display" [modal]="true"
+  [responsive]="true" [style]="{width: '550px', minWidth: '200px'}" [minY]="70" [maximizable]="true"
+  [baseZIndex]="10000">
+  <div *ngIf="!doneSetupForm" class="loading-overlay">
+    <i class="fa fa-spinner fa-spin orange"></i>
+  </div>
+  <div style="display: flex; justify-content: right;">
+    <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
+      value="ga">
+    <input accept=".doc" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
+    <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
+      value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />
+  </div>
+  <p-footer>
+    <button class="btn-success" type="button" pButton icon="pi pi-check" (click)="uploadFile()"
+      label="{{ 'COMMON.save' | translate }}"></button>
+    <button class="btn-default" type="button" pButton icon="pi pi-close" (click)="display=false"
+      label="{{ 'COMMON.cancel' | translate }}"></button>
+  </p-footer>
+</p-dialog>

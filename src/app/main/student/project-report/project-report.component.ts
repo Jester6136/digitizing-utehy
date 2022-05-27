@@ -16,6 +16,10 @@ declare var $: any;
 })
 export class ProjectReportComponent extends Grid implements OnInit {
   public isCreate = false;
+  public fileExcel : any;
+  public display: any;
+  
+  public isCreate_Custom = false;
   public website_item_type_ref: WebsiteItemTypeRef;
   public project_register: ProjectRegister;
   public project_report: ProjectReport;
@@ -35,7 +39,7 @@ export class ProjectReportComponent extends Grid implements OnInit {
     this.exportFilename = 'list_website_item_type_ref.xlsx';
     this.setNullIfEmpty = [];
     this.filterFields = ['item_type_rcd', 'item_type_name', 'item_type_size', 'sort_order', 'item_type_description'];
-    this.dataKey = 'item_type_rcd';
+    this.dataKey = 'report_week';
     this.searchValue.page = this.page;
     this.searchValue.pageSize = this.pageSize;
     this.searchFormGroup = new FormGroup({
@@ -63,7 +67,28 @@ export class ProjectReportComponent extends Grid implements OnInit {
       //     }
       //   });
       // }
-      
+
+      setTimeout(()=>{
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' },
+         Url: '/api/project_register/get-by-id?project_type='+this.selectedProject,
+          Module: 'STUDENT'})
+        .subscribe(res => {
+          console.log(res.data);
+          
+          this.project_register = res.data;
+          if(this.project_register === null){
+            this.project_register = new ProjectRegister();
+            this.project_register.student_project_name = "";
+            this.project_register.teacher_name = "";
+          }
+          setTimeout(()=> {
+            this._changeDetectorRef.detectChanges();
+          })
+        }, (error) => { 
+          this._functionConstants.ShowNotification(ENotificationType.RED, error.messageCode);
+         });
+      })
+
       setTimeout(() => {
         this._changeDetectorRef.detectChanges();
       });
@@ -71,8 +96,14 @@ export class ProjectReportComponent extends Grid implements OnInit {
 
     this.predicateBeforeSearch = () => {
       this.searchFormGroup.get('project_type').setValue(this.selectedProject);
+      this.pageSize = 20;
     }
   }
+  showDialog() {
+    this.display = true;
+    this.doneSetupForm = true;
+    
+ }
 
   public loadDropdowns() {
     // setTimeout(() => {
@@ -100,35 +131,70 @@ export class ProjectReportComponent extends Grid implements OnInit {
     this.loadDropdowns();
     
   }
-
-  public openCreateModal(row: any = null) {
-    this.doneSetupForm = false;
-    this.showUpdateModal = true;
-    setTimeout(() => {
-      $('#updateWebsiteItemTypeRefModal').appendTo('body').modal('toggle');
-    });
-    setTimeout(() => {
-      this.website_item_type_ref = new WebsiteItemTypeRef();
-      this.isCreate = true;
-      this.updateForm = new FormGroup({
-        'item_type_rcd': new FormControl('', [Validators.required, Validators.maxLength(50)]),
-        'item_type_icon': new FormControl('', [Validators.maxLength(100)]),
-        'item_type_name_l': new FormControl('', [Validators.required, Validators.maxLength(100)]),
-        'item_type_name_e': new FormControl('', [Validators.required, Validators.maxLength(100)]),
-        'item_type_size': new FormControl('', [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-        'sort_order': new FormControl('', [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-        'item_type_description_l': new FormControl('', [Validators.maxLength(1000)]),
-        'item_type_description_e': new FormControl('', [Validators.maxLength(1000)]),
-      });
-      this.updateFormOriginalData = this.updateForm.getRawValue();
-      this.doneSetupForm = true;
-      setTimeout(() => {
-        this._changeDetectorRef.detectChanges();
-        this.setAutoFocus();
-        this.updateValidator();
-      });
-    }, 300);
+  
+  public uploadExcel(event) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.fileExcel = event.target.files[0];
+      this.project_report.report_final_file = this.fileExcel.name;
+    }
   }
+
+  public uploadFile() {
+    this.doneSetupForm = false;
+    if (this.fileExcel) {
+      this._apiService.importFile(this.fileExcel, 'http://localhost:57065/api/project_report/upload').subscribe((res: any) => {
+        if (res.body) {
+          // this.search();
+          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.body.messageCode);
+          this.display = false;
+          this.doneSetupForm = true;
+          // this.fileExcel = null;
+          // this.fileNameExcel = null;
+
+           //Update student
+          //  this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/project_report/update-report', Module: 'STUDENT',
+          //  Data: JSON.stringify(this.student_recruitment_report) }).subscribe(res => {
+          //   this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+          //  }, (error) => { this.submitting = false; });
+           //Update student
+
+
+          this._changeDetectorRef.detectChanges();
+        }
+      });
+    } else {
+      this.doneSetupForm = true;
+      this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'MESSAGE.choose_file');
+    }
+  }
+  // public openCreateModal(row: any = null) {
+  //   this.doneSetupForm = false;
+  //   this.showUpdateModal = true;
+  //   setTimeout(() => {
+  //     $('#updateWebsiteItemTypeRefModal').appendTo('body').modal('toggle');
+  //   });
+  //   setTimeout(() => {
+  //     this.website_item_type_ref = new WebsiteItemTypeRef();
+  //     this.isCreate = true;
+  //     this.updateForm = new FormGroup({
+  //       'item_type_rcd': new FormControl('', [Validators.required, Validators.maxLength(50)]),
+  //       'item_type_icon': new FormControl('', [Validators.maxLength(100)]),
+  //       'item_type_name_l': new FormControl('', [Validators.required, Validators.maxLength(100)]),
+  //       'item_type_name_e': new FormControl('', [Validators.required, Validators.maxLength(100)]),
+  //       'item_type_size': new FormControl('', [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+  //       'sort_order': new FormControl('', [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+  //       'item_type_description_l': new FormControl('', [Validators.maxLength(1000)]),
+  //       'item_type_description_e': new FormControl('', [Validators.maxLength(1000)]),
+  //     });
+  //     this.updateFormOriginalData = this.updateForm.getRawValue();
+  //     this.doneSetupForm = true;
+  //     setTimeout(() => {
+  //       this._changeDetectorRef.detectChanges();
+  //       this.setAutoFocus();
+  //       this.updateValidator();
+  //     });
+  //   }, 300);
+  // }
 
   public updateValidator() {
     // this.updateForm.valueChanges.subscribe(res => {
@@ -155,40 +221,26 @@ export class ProjectReportComponent extends Grid implements OnInit {
   public onSubmit() {
     if (this.submitting == false) {
       this.submitting = true;
-      if (this.isCreate) {
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/website-item-type-ref/create-website-item-type-ref', Module: 'CMS', Data: JSON.stringify(this.website_item_type_ref) }).subscribe(res => {
+      if (this.isCreate_Custom) {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/project_report/create', Module: 'STUDENT',
+         Data: JSON.stringify(this.project_report) }).subscribe(res => {
+          let index = this.data.findIndex(ds => ds[this.dataKey] == this.project_report[this.dataKey]);
           let item = this.copyProperty(res.data);
           let idx;
-          if (this._storageService.getItem(SystemConstants.get('PREFIX_DATA_LANGUAGE')) == 'en') {
-            item.item_type_name = item.item_type_name_e;
-            item.item_type_description = item.item_type_description_e;
-          } else {
-            item.item_type_name = item.item_type_name_l;
-            item.item_type_description = item.item_type_description_l;
-          }
-          if (this.data.length >= this.pageSize) {
-            this.data.splice(this.data.length - 1, 1);
-          }
-          this.data.unshift(item);
+
+          this.data[index] = item;
           this.data = this.data.slice();
-          this.totalRecords += 1;
-          this.website_item_type_ref = new WebsiteItemTypeRef();
-          this.resetUpdateForm();
+          this.closeUpdateForm(null);
           this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
           this.submitting = false;
         }, (error) => { this.submitting = false; });
       } else {
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/website-item-type-ref/update-website-item-type-ref', Module: 'CMS', Data: JSON.stringify(this.website_item_type_ref) }).subscribe(res => {
-          let index = this.data.findIndex(ds => ds[this.dataKey] == this.website_item_type_ref[this.dataKey]);
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/project_report/update', Module: 'STUDENT',
+         Data: JSON.stringify(this.project_report) }).subscribe(res => {
+          let index = this.data.findIndex(ds => ds[this.dataKey] == this.project_report[this.dataKey]);
           let item = this.copyProperty(res.data);
           let idx;
-          if (this._storageService.getItem(SystemConstants.get('PREFIX_DATA_LANGUAGE')) == 'en') {
-            item.item_type_name = item.item_type_name_e;
-            item.item_type_description = item.item_type_description_e;
-          } else {
-            item.item_type_name = item.item_type_name_l;
-            item.item_type_description = item.item_type_description_l;
-          }
+
           this.data[index] = item;
           this.data = this.data.slice();
           this.closeUpdateForm(null);
@@ -225,7 +277,6 @@ export class ProjectReportComponent extends Grid implements OnInit {
   }
 
   public openUpdateModal(row) {
-    console.log(row);
     this.doneSetupForm = false;
     this.showUpdateModal = true;
     setTimeout(() => {
@@ -235,12 +286,12 @@ export class ProjectReportComponent extends Grid implements OnInit {
     if(row.student_project_report_id=="00000000-0000-0000-0000-000000000000"){
       setTimeout(() => {
         this.project_report = new ProjectReport();
-        this.isCreate = true;
+        this.isCreate_Custom = true;  
         this.project_report.student_project_register_id=row.student_project_register_id;
         this.project_report.student_project_report_id=row.student_project_report_id;
         this.project_report.report_week=row.report_week;
         this.project_report.report_url=row.report_url;
-        console.log(this.project_report);
+        this.project_report.project_type=this.selectedProject;
         this.updateForm = new FormGroup({
           'report_week': new FormControl({ value: this.project_report.report_week, disabled: true }, []), 
           'report_url': new FormControl(this.project_report.report_url, []),
@@ -258,7 +309,7 @@ export class ProjectReportComponent extends Grid implements OnInit {
     else{
       setTimeout(() => {
         this.project_report = new ProjectReport();
-        this.isCreate = false;
+        this.isCreate_Custom = false;
         this.project_report.student_project_register_id=row.student_project_register_id;
         this.project_report.student_project_report_id=row.student_project_report_id;
         this.project_report.report_week=row.report_week;
@@ -278,53 +329,6 @@ export class ProjectReportComponent extends Grid implements OnInit {
       }, 300);
     }
   }
-
-  // public registerTeacher(row){
-  //   this.project_register.teacher_pro_id = row.teacher_pro_id;
-
-  //   setTimeout(() => {
-  //     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
-  //      Url: '/api/project_register/create', Module: 'STUDENT',
-  //       Data: JSON.stringify(this.project_register)  })
-  //     .subscribe(res => {
-  //       console.log(res);
-  //       // this.hasRegisterPermission=false;
-  //       row.quantity = row.quantity -1;
-  //       row.available_to_register = false;
-  //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-  //       setTimeout(() => {
-  //         this._changeDetectorRef.detectChanges();
-  //       });
-  //     }, (error) => { 
-  //       this.submitting = false;
-  //       console.log(error);
-  //      });
-  //     })
-  // }
-
-  // public cancelRegisterTeacher(row){
-  //   this.project_register.teacher_pro_id = row.teacher_pro_id;
-
-  //   setTimeout(() => {
-  //     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
-  //      Url: '/api/project_register/delete', Module: 'STUDENT',
-  //       Data: JSON.stringify(this.project_register)  })
-  //     .subscribe(res => {
-  //       console.log(res);
-  //       // this.hasRegisterPermission=true;
-  //       row.quantity = row.quantity + 1;
-  //       row.available_to_register = true;
-  //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-  //       setTimeout(() => {
-  //         this._changeDetectorRef.detectChanges();
-  //       });
-  //     }, (error) => { 
-  //       this.submitting = false;
-  //       console.log(error);
-  //      });
-  //     })
-
-  // }
 
   public getArrayRequest() {
     let arrRequest = [];

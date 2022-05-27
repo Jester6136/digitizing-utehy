@@ -26,6 +26,7 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
   public courseyears :any;
 
   public hasRegisterPermission = true;
+  public expireRegisterPermission = false;
 
   public constructor(injector: Injector) {
     super(injector);
@@ -44,10 +45,8 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
     this.searchFormGroup = new FormGroup({
       'project_type': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
-    this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'update_website_item_type_ref');
-    this.hasDeletePermission = this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/student-teacher-project/search');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/project_register/create');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {
@@ -55,21 +54,48 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
       });
     }
     this.predicateAfterSearch = () => {      
+      this.hasRegisterPermission=true;
+      this.expireRegisterPermission = false;
+      setTimeout(()=>{
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' },
+         Url: '/api/project_register/get-by-id?project_type='+this.selectedProject,
+          Module: 'STUDENT'})
+        .subscribe(res => {
+          this.project_register = res.data;
+          if(this.project_register === null){
+            this.expireRegisterPermission = true;
+            this.project_register = new ProjectRegister();
+            this.project_register.student_project_name = "";
+          }
+          else{
+            if(this.project_register.project_register_status != 1){
+              this.expireRegisterPermission = true;
+            }
+          }
+          setTimeout(()=> {
+            this._changeDetectorRef.detectChanges();
+          })
+        }, (error) => { 
+          this._functionConstants.ShowNotification(ENotificationType.RED, error.messageCode);
+         });
+      })
+
       if(this.data.length === 0){
 
       }
       else{
-        this.hasRegisterPermission=true;
         this.data.forEach(element => {
           if(element.available_to_register === false){
             this.hasRegisterPermission=false;
           }
         });
       }
-      
-      setTimeout(() => {
+
+      setTimeout(()=> {
         this._changeDetectorRef.detectChanges();
-      });
+      })
+      
+
     }
 
     this.predicateBeforeSearch = () => {
@@ -320,6 +346,32 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
       })
 
   }
+
+  public rename_project(student_project_name){
+    console.log(student_project_name);
+    console.log(this.project_register);
+    
+    if(this.hasRegisterPermission == true){
+      this._functionConstants.ShowNotification(ENotificationType.RED,"Bạn phải đăng kí giảng viên trước!!");
+    }
+    else{
+      setTimeout(() => {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
+         Url: '/api/project_register/update', Module: 'STUDENT',
+          Data: JSON.stringify(this.project_register)  })
+        .subscribe(res => {
+          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+          });
+        }, (error) => { 
+          this.submitting = false;
+          console.log(error);
+         });
+        })
+    }
+  }
+
   public getArrayRequest() {
     let arrRequest = [];
     return arrRequest;

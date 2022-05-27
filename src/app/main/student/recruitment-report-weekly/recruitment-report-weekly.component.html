@@ -45,7 +45,7 @@
                 </div>
                 <div class="ui-g-12 ui-md-8">
                   <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)" [(ngModel)]="selectedWeekSearch"
-                  formControlName="report_week_rcd" [options]="weeks" [disabled] ="isRemove"
+                  formControlName="report_week" [options]="weeks" [disabled] ="isRemove"
                   placeholder="Tuần 1"></ng-selectize>
                 </div>
               </div>
@@ -67,14 +67,27 @@
     </div>
     <div class="ui-g-12 datatable-container">
       <div class="row">
+        <div class="ui-g-12 ui-form-group">
+          <div class="ui-g-12 ui-md-2 inline-label text-right">
+            Giáo viên hướng dẫn
+          </div>
+          <div class="ui-g-12 ui-md-2">
+            <input pInputText type="text" [(ngModel)]="student_job_candidate.teacher_name" readonly/>
+          </div>
+
+          <div class="ui-g-12 ui-md-2 inline-label text-right">
+            Doanh nghiệp/Công ty
+          </div>
+          <div class="ui-g-12 ui-md-2">
+            <input pInputText type="text" [(ngModel)]="student_job_candidate.company_rcd" readonly/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-12">
           <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 38px; text-align: center;">
-                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
                 <th style="width: 5%; text-align: center ;">Thứ</th>
                 <th style="text-align: left;">Công việc</th>
                 <th style="text-align: left;">Kết quả đạt được</th>
@@ -85,13 +98,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
               <tr [pSelectableRow]="row">
-                <td style="width: 38px; text-align: center;">
-                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
-                </td>
-                <td style="width: 70px; text-align: center;">
-                  <div class="index_{{ row.item_type_rcd }}">{{ first + i + 1 }}</div>
-                </td>
-                <td style="width: 5%; text-align: center;">{{ row.report_day_rcd }}</td>
+                <td style="width: 5%; text-align: center;">{{ row.report_day }}</td>
                 <td style="text-align: left;">{{ row.job_assignment }}</td>
                 <td style="text-align: left;">{{ row.result_in_day }}</td>
                 <td style="width: 15%; text-align: center;">{{ row.description }}</td>
@@ -186,16 +193,16 @@
                   Tuần báo cáo
                 </div>
                 <div class="ui-g-12 ui-md-4">
-                  <input pInputText autofocus formControlName="week_name"
-                    [(ngModel)]="student_recruitment_report_weekly.week_name" type="text" />
+                  <input pInputText autofocus formControlName="report_week"
+                    [(ngModel)]="student_recruitment_report.report_week" type="text" />
                 </div>
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Thứ
                 </div>
                 <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['report_day_rcd'].errors"
-                    [control]="updateForm.controls['report_day_rcd']"></error-messages>
-                  <input pInputText formControlName="report_day_rcd" [(ngModel)]="student_recruitment_report_weekly.report_day_rcd"
+                  <error-messages [errors]="updateForm.controls['report_day'].errors"
+                    [control]="updateForm.controls['report_day']"></error-messages>
+                  <input pInputText formControlName="report_day" [(ngModel)]="student_recruitment_report.report_day"
                     type="text" />
                 </div>
               </div>
@@ -206,7 +213,7 @@
                   <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="job_assignment" [(ngModel)]="student_recruitment_report_weekly.job_assignment" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <textarea [rows]="5" formControlName="job_assignment" [(ngModel)]="student_recruitment_report.job_assignment" pInputTextarea style="resize: none" autoResize="false"></textarea>
                 </div>
               </div>
               <div class="ui-g-12 ui-form-group">
@@ -215,7 +222,7 @@
                   <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="result_in_day" [(ngModel)]="student_recruitment_report_weekly.result_in_day" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <textarea [rows]="5" formControlName="result_in_day" [(ngModel)]="student_recruitment_report.result_in_day" pInputTextarea style="resize: none" autoResize="false"></textarea>
                 </div>
               </div>
               <div class="ui-g-12 ui-form-group">
@@ -224,7 +231,7 @@
                   <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="description" [(ngModel)]="student_recruitment_report_weekly.description" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <textarea [rows]="5" formControlName="description" [(ngModel)]="student_recruitment_report.description" pInputTextarea style="resize: none" autoResize="false"></textarea>
                 </div>
               </div>
 
@@ -236,7 +243,7 @@
             <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
           </button>
           <button type="button" (click)="onSubmit()"
-            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
+            [disabled]="!doneSetupForm || !updateForm.valid || submitting"
             class="btn btn-success btn-sm btn-submit">
             <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
           </button>
@@ -270,7 +277,7 @@
   </div>
   <div style="display: flex; justify-content: right;">
     <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
-      value="{{student_recruitment_report.report_doc}}">
+      value="{{student_job_candidate.report_src}}">
     <input accept=".doc" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
     <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
       value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />

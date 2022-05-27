@@ -1,6 +1,8 @@
 export class ProjectReport {
     public student_project_report_id :string     
     public student_project_register_id :string     
+    public project_type :number     
+    public student_rcd :string     
     public report_week :number      
     public report_url :string   
     public report_final_file :string   

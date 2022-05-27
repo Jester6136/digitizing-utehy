@@ -2,6 +2,7 @@ export class ProjectRegister {
     public student_project_register_id :string;
     public student_rcd :string;
     public teacher_pro_id :string;
+    public teacher_name :string;
     public student_project_name :string;
     public project_register_status :number;
     public active_flag :number;

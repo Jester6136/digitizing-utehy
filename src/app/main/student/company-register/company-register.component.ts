@@ -49,10 +49,8 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
       'recruitment_title': new FormControl(''),
       'recruitment_job': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
-    this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'update_website_item_type_ref');
-    this.hasDeletePermission = this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/company-recruitment/search');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/job-candidate/create');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {
@@ -80,53 +78,69 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
     this.state = true;
     if(row.student_wish_rcd == null){
       console.log('Có thể tạo mới');
-      this.iCreate=true;
+      this.iCreate = true;
+    }
+    else if(row.student_wish_rcd ==""){
+      console.log('Có thể tạo mới');
+      this.iCreate = true;
     }
     else{
       console.log('Có thể cập nhật');
-      this.iCreate=false;
+      this.iCreate = false;
     }
   }
 
   public chooseStudentWish(event,row){
+    console.log(row);
+    
     this.student_job_candidate = new StudentJobCandidate();
     this.student_job_candidate.recruitment_id=row.recruitment_id;
-    this.student_job_candidate.student_rcd='10119486';
     this.student_job_candidate.course_year=row.course_year;
     if(this.state){
       //Delete
       if(event ==""){
-       
+        console.log('Đây là Delete');
       }
       //Create
       else if (this.iCreate){
+        console.log('Đây là Create');
+        
         this.student_job_candidate.student_wish_rcd=event;
         this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/create', Module: 'STUDENT', 
         Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+
           this.student_job_candidate.student_wish_rcd = event
           this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
         }, (error) => { 
-          row.student_wish_rcd =  null;
-          console.log(row);
-          
+          row.student_wish_rcd = null;
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+          });
           this.submitting = false;
          });
       }
       //Update
       else{
+        console.log('Đây là Update');
         this.student_job_candidate.student_wish_rcd=event;
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
-        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-          this.student_job_candidate.student_wish_rcd = event
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        }, (error) => { 
-          this.submitting = false;
-         });
+        //////
+        //Giả sử đây là bên trong service
+        
+        ///
+        // this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
+        // Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+
+        //   this.student_job_candidate.student_wish_rcd = event
+        //   this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+        // }, (error) => { 
+        //   this.submitting = false;
+        //  });
       }
     }
      
       
   }
+
   public ngOnInit() {
     this.pre_company_recruitment =new PreCompanyRecruitment();
     this.company_recruitment=new CompanyRecruitment();

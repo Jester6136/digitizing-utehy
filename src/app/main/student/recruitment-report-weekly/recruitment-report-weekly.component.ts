@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/takeUntil';
 import { WebsiteItemTypeRef } from '../../../main/entities/website-item-type-ref';
-import { StudentRecruitmentReportWeekly } from '../entities/studentrecruitmentreportweekly';
 import { StudentRecruitmentReport} from '../entities/studentrecruitmentreport';
 import { InternshipProcessEvaluate } from '../entities/internshipprocessevaluate';
+import { StudentJobCandidate } from '../entities/studentjobcandidate';
 declare var $: any;
 
 @Component({
@@ -18,19 +18,20 @@ declare var $: any;
 export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public dataKey1: any;
   public dataKey2: any;
-  public dataKey3: any;
+  public isCreate_Custom = false;
   public Uploadable = true;
   public isRemove = true;
   public result_report_weekly = "Chưa có";
-  public student_recruitment_report_weekly : StudentRecruitmentReportWeekly;
   public selectedWeekSearch = "1";
   public weeks : any;
   public isCreate = false;
+  public file_report ="";
   public fileExcel : any;
   public display: any;
   public website_item_type_ref: WebsiteItemTypeRef;
   public student_recruitment_report: StudentRecruitmentReport;
   public internship_process_evaluate: InternshipProcessEvaluate;
+  public student_job_candidate: StudentJobCandidate;
   public constructor(injector: Injector) {
     super(injector);
     this.LZCompress = true; // using LZString compress data
@@ -43,13 +44,11 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.setNullIfEmpty = [];
     this.filterFields = ['item_type_rcd', 'item_type_name', 'item_type_size', 'sort_order', 'item_type_description'];
     //this.dataKey = 'item_type_rcd';
-    this.dataKey1 = 'student_rcd';
-    this.dataKey2 = 'report_week_rcd';
-    this.dataKey3 = 'report_day_rcd';
+    this.dataKey = 'report_day';
     this.searchValue.page = this.page;
     this.searchValue.pageSize = this.pageSize;
     this.searchFormGroup = new FormGroup({
-      'report_week_rcd': new FormControl(''),
+      'report_week': new FormControl(''),
     });
     this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
     this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
@@ -62,15 +61,17 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
       });
     }
     this.predicateAfterSearch = () => {
+      //Lấy nhận xét tuần của doanh nghiệp
       setTimeout(()=>{
         this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' },
-         Url: '/api/student-recruitment-report-weekly/get-internship-process-evaluate-by-id?report_week_rcd='+this.selectedWeekSearch,
+         Url: '/api/student-recruitment-report-weekly/get-internship-process-evaluate-by-id?report_week='+this.selectedWeekSearch,
           Module: 'STUDENT'})
         .subscribe(res => {
-          this.internship_process_evaluate = res.data;
-          console.log(this.internship_process_evaluate );
-
-          
+            this.internship_process_evaluate = res.data;
+            if( this.internship_process_evaluate == null){
+              this.internship_process_evaluate=new InternshipProcessEvaluate();
+              this.internship_process_evaluate.process_comment="";
+            }
           setTimeout(()=> {
             this._changeDetectorRef.detectChanges();
           })
@@ -80,11 +81,13 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
       })
 
 
-      this._changeDetectorRef.detectChanges();
+      setTimeout(()=> {
+        this._changeDetectorRef.detectChanges();
+      })
     };
 
     this.predicateBeforeSearch = () => {
-      this.searchFormGroup.get('report_week_rcd').setValue(this.selectedWeekSearch);
+      this.searchFormGroup.get('report_week').setValue(this.selectedWeekSearch);
     }
   }
 
@@ -92,11 +95,11 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     Observable.combineLatest(
       this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student-recruitment-report-weekly/get-dropdown/', Module: 'STUDENT' }),
     ).takeUntil(this.unsubscribe).subscribe(res => {
-      this.weeks = null;
       setTimeout(() => {
-        this.weeks = this.weeks || res[0].data;
-        this.search();        
+        this.weeks = res[0].data;
+        this.search();  
       });
+      
     });
   }
 
@@ -105,16 +108,25 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.website_item_type_ref = new WebsiteItemTypeRef();
     this.student_recruitment_report = new  StudentRecruitmentReport();
     this.internship_process_evaluate = new InternshipProcessEvaluate();
+    this.student_job_candidate = new StudentJobCandidate();
     this.loadDropdowns();
-    this.getRecruitmentReport();
+    this.getRecruitmentReport();    
   }
 
   public getRecruitmentReport(){
     setTimeout(() => {
-    this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student-recruitment-report-weekly/get-student-recruitment-report-by-id', Module: 'STUDENT'})
+    this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/job-candidate/get-by-id', Module: 'STUDENT'})
     .subscribe(res => {
-      this.student_recruitment_report = res.data;
-      console.log(this.student_recruitment_report);
+      this.student_job_candidate = res.data;
+      if(this.student_job_candidate == null){
+          
+      }
+      else{
+        if(this.student_job_candidate.report_src == null){
+          this.student_job_candidate.report_src="";
+        }
+      }
+      console.log(this.student_job_candidate);
       setTimeout(()=> {
         this._changeDetectorRef.detectChanges();
       })
@@ -127,14 +139,14 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   showDialog() {
      this.display = true;
      this.doneSetupForm = true;
-     console.log(this.student_recruitment_report);
+     console.log(this.student_job_candidate);
      
   }
 
   public uploadExcel(event) {
     if (event.target.files && event.target.files.length > 0) {
       this.fileExcel = event.target.files[0];
-      this.student_recruitment_report.report_doc = this.fileExcel.name;
+      this.student_job_candidate.report_src = this.fileExcel.name;
     }
   }
 
@@ -151,8 +163,8 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
           // this.fileNameExcel = null;
 
            //Update student
-           this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student-recruitment-report-weekly/update-report', Module: 'STUDENT',
-           Data: JSON.stringify(this.student_recruitment_report) }).subscribe(res => {
+           this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update-report-src', Module: 'STUDENT',
+           Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
             this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
            }, (error) => { this.submitting = false; });
            //Update student
@@ -166,9 +178,6 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
       this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'MESSAGE.choose_file');
     }
   }
-
-
-
 
 
   // public openCreateModal(row: any = null) {
@@ -201,9 +210,9 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   // }
 
   public updateValidator() {
-    this.updateForm.valueChanges.subscribe(res => {
-      this.enabledSubmitFlag = this.modified();
-    });
+    // this.updateForm.valueChanges.subscribe(res => {
+    //   this.enabledSubmitFlag = this.modified();
+    // });
     // this.updateForm.get('item_type_name_l').valueChanges.subscribe((value: string) => {
     //   if (!value || value.trim() == '') {
     //     this.updateForm.get('item_type_name_e').setValidators([Validators.required, Validators.maxLength(100)]);
@@ -225,38 +234,26 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public onSubmit() {
     if (this.submitting == false) {
       this.submitting = true;
-      if (this.isCreate) {
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/website-item-type-ref/create-website-item-type-ref', Module: 'CMS', Data: JSON.stringify(this.website_item_type_ref) }).subscribe(res => {
+      if (this.isCreate_Custom) {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student-recruitment-report-weekly/create', Module: 'STUDENT',
+         Data: JSON.stringify(this.student_recruitment_report) }).subscribe(res => {
+          let index = this.data.findIndex(ds => ds[this.dataKey] == this.student_recruitment_report[this.dataKey]);
           let item = this.copyProperty(res.data);
           let idx;
-          if (this._storageService.getItem(SystemConstants.get('PREFIX_DATA_LANGUAGE')) == 'en') {
-            item.item_type_name = item.item_type_name_e;
-            item.item_type_description = item.item_type_description_e;
-          } else {
-            item.item_type_name = item.item_type_name_l;
-            item.item_type_description = item.item_type_description_l;
-          }
-          if (this.data.length >= this.pageSize) {
-            this.data.splice(this.data.length - 1, 1);
-          }
-          this.data.unshift(item);
+
+          this.data[index] = item;
           this.data = this.data.slice();
-          this.totalRecords += 1;
-          this.website_item_type_ref = new WebsiteItemTypeRef();
-          this.resetUpdateForm();
+          this.closeUpdateForm(null);
           this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
           this.submitting = false;
         }, (error) => { this.submitting = false; });
       } else {
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student-recruitment-report-weekly/update', Module: 'STUDENT', Data: JSON.stringify(this.student_recruitment_report_weekly) }).subscribe(res => {
-          //let index = this.data.findIndex(ds => ds[this.dataKey] == this.website_item_type_ref[this.dataKey]);
-          let index = this.data.findIndex(ds =>
-             ds[this.dataKey1] == this.student_recruitment_report_weekly[this.dataKey1] && 
-             ds[this.dataKey2] == this.student_recruitment_report_weekly[this.dataKey2] && 
-             ds[this.dataKey3] == this.student_recruitment_report_weekly[this.dataKey3]
-             );
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student-recruitment-report-weekly/update', Module: 'STUDENT',
+         Data: JSON.stringify(this.student_recruitment_report) }).subscribe(res => {
+          let index = this.data.findIndex(ds => ds[this.dataKey] == this.student_recruitment_report[this.dataKey]);
           let item = this.copyProperty(res.data);
           let idx;
+
           this.data[index] = item;
           this.data = this.data.slice();
           this.closeUpdateForm(null);
@@ -293,35 +290,39 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   }
 
   public openUpdateModal(row) {
+    console.log(row);
     
-    this.selectedWeekSearch = row.week_name;
     this.doneSetupForm = false;
     this.showUpdateModal = true;
     setTimeout(() => {
       $('#updateStudentRecruitmentReportWeeklyModal').appendTo('body').modal('toggle');
     });
-    
-    setTimeout(() => {
-      let arrRequest = this.getArrayRequest();
-      arrRequest.push(this._apiService.post('/api/adapter/execute', 
-      { Method: { Method: 'GET' },
-       Url: '/api/student-recruitment-report-weekly/get-by-id?student_rcd=' + row.student_rcd + '&report_week_rcd=' +row.report_week_rcd+'&report_day_rcd='+row.report_day_rcd,
-        Module: 'STUDENT' }));
-      Observable.combineLatest(arrRequest).subscribe((res: any) => {
-        this.isCreate = false;
-        this.student_recruitment_report_weekly = res[0].data;
-        console.log(this.student_recruitment_report_weekly);
-        
-        console.log(this.selectedWeekSearch);
-        this.student_recruitment_report_weekly.week_name = this.selectedWeekSearch
+    if(row.candidate_id=="00000000-0000-0000-0000-000000000000"){
+      setTimeout(() => {
+        this.student_recruitment_report = new StudentRecruitmentReport();
+        this.student_recruitment_report= this.copyProperty(row);
+        this.student_recruitment_report.report_week = Number(this.selectedWeekSearch);
+        this.student_recruitment_report.report_day = Number(row.report_day);
+        if(this.student_recruitment_report.job_assignment ==null){
+          this.student_recruitment_report.job_assignment = "";
+        }
+        if(this.student_recruitment_report.result_in_day == null){
+          this.student_recruitment_report.result_in_day = "";
+        }
+        if(this.student_recruitment_report.description == null){
+          this.student_recruitment_report.description = "";
+        }
+        this.isCreate_Custom = true;
+        console.log(this.student_recruitment_report);
         
         this.updateForm = new FormGroup({
-          'week_name': new FormControl({ value: this.student_recruitment_report_weekly.week_name, disabled: true }, []),
-          'report_day_rcd': new FormControl({ value:this.student_recruitment_report_weekly.report_day_rcd,disabled: true}, []),
-          'job_assignment': new FormControl(this.student_recruitment_report_weekly.job_assignment, []),
-          'result_in_day': new FormControl(this.student_recruitment_report_weekly.result_in_day, []),
-          'description': new FormControl(this.student_recruitment_report_weekly.description, []),
+          'report_week': new FormControl({ value: this.student_recruitment_report.report_week, disabled: true }, []),
+          'report_day': new FormControl({ value:this.student_recruitment_report.report_day,disabled: true}, []),
+          'job_assignment': new FormControl(this.student_recruitment_report.job_assignment, []),
+          'result_in_day': new FormControl(this.student_recruitment_report.result_in_day, []),
+          'description': new FormControl(this.student_recruitment_report.description, []),
         });
+
         this.updateFormOriginalData = this.updateForm.getRawValue();
         this.doneSetupForm = true;
         setTimeout(() => {
@@ -329,8 +330,34 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
           this.setAutoFocus();
           this.updateValidator();
         });
-      });
-    }, 300);
+      }, 300);
+    }
+    //Chỉnh sửa báo cáo
+    else{
+      setTimeout(() => {
+        setTimeout(() => {
+          this.student_recruitment_report= this.copyProperty(row);
+          this.student_recruitment_report.report_week = Number(this.selectedWeekSearch);
+          this.isCreate_Custom = false;
+          
+          this.updateForm = new FormGroup({
+            'report_week': new FormControl({ value: this.student_recruitment_report.report_week, disabled: true }, []),
+            'report_day': new FormControl({ value:this.student_recruitment_report.report_day,disabled: true}, []),
+            'job_assignment': new FormControl(this.student_recruitment_report.job_assignment, []),
+            'result_in_day': new FormControl(this.student_recruitment_report.result_in_day, []),
+            'description': new FormControl(this.student_recruitment_report.description, []),
+          });
+  
+          this.updateFormOriginalData = this.updateForm.getRawValue();
+          this.doneSetupForm = true;
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+            this.setAutoFocus();
+            this.updateValidator();
+          });
+        }, 300);
+      })
+    }
   }
 
   public getArrayRequest() {
