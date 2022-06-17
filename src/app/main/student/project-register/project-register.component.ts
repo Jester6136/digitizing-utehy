@@ -46,7 +46,6 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
       'project_type': new FormControl(''),
     });
     this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/student-teacher-project/search');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/project_register/create');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {

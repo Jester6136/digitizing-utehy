@@ -26,7 +26,7 @@ export class ProjectReportComponent extends Grid implements OnInit {
   public selectedProject = 4;
   public project_types :any;
 
-  // public hasRegisterPermission = true;
+  public hasUploadPermission :any;
 
   public constructor(injector: Injector) {
     super(injector);
@@ -45,10 +45,10 @@ export class ProjectReportComponent extends Grid implements OnInit {
     this.searchFormGroup = new FormGroup({
       'project_type': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
-    this.hasUpdatePermission = true;//this._authenService.hasPermission(this.pageId, 'update_website_item_type_ref');
-    this.hasDeletePermission = true;//this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/project_report/search');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/project_report/create');
+    this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'api/project_report/update');
+    this.hasUploadPermission = this._authenService.hasPermission(this.pageId, 'api/project_report/upload');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {

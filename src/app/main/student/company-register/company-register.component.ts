@@ -19,6 +19,7 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   public iCreate = false;
   public iUpdate = false;
 
+  public tmpData :any;
   public inactive = false;
   public viewForm: FormGroup;
   public isCreate = false;
@@ -40,17 +41,16 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
     this.exportUrl = '/api/website-item-type-ref/export-to-excel';
     this.exportFilename = 'list_website_item_type_ref.xlsx';
     this.setNullIfEmpty = [];
-    this.filterFields = [ 'company_rcd', 'recruitment_title', 'recruitment_job', 'company_website_address','student_wish_rcd'];
+    this.filterFields = [ 'company_rcd', 'recruitment_job', 'company_website_address','student_wish_rcd'];
     this.dataKey = 'recruitment_id';
     this.searchValue.page = this.page;
     this.searchValue.pageSize = this.pageSize;
     this.searchFormGroup = new FormGroup({
       'company_rcd': new FormControl(''),
-      'recruitment_title': new FormControl(''),
       'recruitment_job': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/company-recruitment/search');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/job-candidate/create');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'student-recruitmentwishregister');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create-job-candidata');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {
@@ -77,39 +77,36 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   public changeState(row){
     this.state = true;
     if(row.student_wish_rcd == null){
-      console.log('Có thể tạo mới');
       this.iCreate = true;
     }
     else if(row.student_wish_rcd ==""){
-      console.log('Có thể tạo mới');
       this.iCreate = true;
     }
     else{
-      console.log('Có thể cập nhật');
       this.iCreate = false;
     }
   }
 
   public chooseStudentWish(event,row){
-    console.log(row);
-    
     this.student_job_candidate = new StudentJobCandidate();
     this.student_job_candidate.recruitment_id=row.recruitment_id;
+    this.student_job_candidate.candidate_id=row.candidate_id;
     this.student_job_candidate.course_year=row.course_year;
-    if(this.state){
-      //Delete
-      if(event ==""){
-        console.log('Đây là Delete');
-      }
+    var empty_guid ='00000000-0000-0000-0000-000000000000'
+    var tmp_row = this.copyProperty(row);
+    if(this.state && event!=''){
       //Create
-      else if (this.iCreate){
-        console.log('Đây là Create');
-        
+      if (this.iCreate){        
         this.student_job_candidate.student_wish_rcd=event;
+        this.student_job_candidate.candidate_id = empty_guid;
         this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/create', Module: 'STUDENT', 
         Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-
           this.student_job_candidate.student_wish_rcd = event
+          row.candidate_id = res.data.candidate_id
+          console.log('create');
+          
+          console.log(row);
+
           this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
         }, (error) => { 
           row.student_wish_rcd = null;
@@ -121,21 +118,32 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
       }
       //Update
       else{
-        console.log('Đây là Update');
         this.student_job_candidate.student_wish_rcd=event;
-        //////
-        //Giả sử đây là bên trong service
-        
-        ///
-        // this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
-        // Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-
-        //   this.student_job_candidate.student_wish_rcd = event
-        //   this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        // }, (error) => { 
-        //   this.submitting = false;
-        //  });
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
+        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+          this.student_job_candidate.student_wish_rcd = event
+          row.candidate_id = res.data.candidate_id
+          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+        }, (error) => { 
+          this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
+          this.submitting = false;
+         });
       }
+    }
+    
+    if(event == ''){
+      //delete 2 
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/delete', Module: 'STUDENT', 
+        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+          this.student_job_candidate.student_wish_rcd = event
+          row= tmp_row;
+          row.candidate_id = null;
+          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+        }, (error) => { 
+          this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
+          this.submitting = false;
+         });
+
     }
      
       
@@ -151,42 +159,56 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
     $(event.target).closest('.modal').modal('hide');
   }
 
-  public openCreateModal(row: any = null) {
-    this.doneSetupForm = false;
-    this.showUpdateModal = true;
-    setTimeout(() => {
-      $('#updateStudentJobCandidate').appendTo('body').modal('toggle');
-    });
-    setTimeout(() => {
-      console.log(row);
+  // public openCreateModal(row: any = null) {
+  //   this.doneSetupForm = false;
+  //   this.showUpdateModal = true;
+  //   setTimeout(() => {
+  //     $('#updateStudentJobCandidate').appendTo('body').modal('toggle');
+  //   });
+  //   setTimeout(() => {
+  //     this.student_job_candidate = new StudentJobCandidate();
+  //     this.student_job_candidate.student_rcd = '11219686';
+  //     this.student_job_candidate.recruitment_id = row.recruitment_id;
+  //     this.student_job_candidate.status_rcd = '1';
+  //     this.student_job_candidate.course_year = row.course_year;
+  //     this.student_job_candidate.company_rcd = row.company_rcd;
       
-      this.student_job_candidate = new StudentJobCandidate();
-      this.student_job_candidate.student_rcd = '11219686';
-      this.student_job_candidate.recruitment_id = row.recruitment_id;
-      this.student_job_candidate.status_rcd = '1';
-      this.student_job_candidate.course_year = row.course_year;
-      this.student_job_candidate.company_rcd = row.company_rcd;
-      console.log(this.student_job_candidate);
-      
-      this.isCreate = true;
-      this.updateForm = new FormGroup({
-        'company_rcd': new FormControl({ value: this.student_job_candidate.company_rcd, disabled: true }, []),
-        'student_wish_rcd': new FormControl('', [Validators.required]),
-        'cv_path': new FormControl('', [Validators.required]),
-        'course_year': new FormControl({ value: this.student_job_candidate.company_rcd, disabled: true }, []),
-      });
-      this.updateFormOriginalData = this.updateForm.getRawValue();
-      this.doneSetupForm = true;
-      setTimeout(() => {
-        this._changeDetectorRef.detectChanges();
-        this.setAutoFocus();
-        this.updateValidator();
-      });
-    }, 300);
+  //     this.isCreate = true;
+  //     this.updateForm = new FormGroup({
+  //       'company_rcd': new FormControl({ value: this.student_job_candidate.company_rcd, disabled: true }, []),
+  //       'student_wish_rcd': new FormControl('', [Validators.required]),
+  //       'cv_path': new FormControl('', [Validators.required]),
+  //       'course_year': new FormControl({ value: this.student_job_candidate.company_rcd, disabled: true }, []),
+  //     });
+  //     this.updateFormOriginalData = this.updateForm.getRawValue();
+  //     this.doneSetupForm = true;
+  //     setTimeout(() => {
+  //       this._changeDetectorRef.detectChanges();
+  //       this.setAutoFocus();
+  //       this.updateValidator();
+  //     });
+  //   }, 300);
+  // }
+  convertDate(date) {
+    let result;
+    if (date)
+      date = new Date(date);
+      var month = String((date.getMonth() + 1));
+      if(month.length == 1) month = '0'+month;
+      var day = String(date.getDate());
+      if(day.length == 1) day = '0'+day;
+      result = day + '/' + month + '/' +date.getFullYear()+ ' ' + date.getHours() + 'h';
+    return result;
   }
 
-
+  auto_grow(element) {
+    element.style.height = "";
+    element.style.height = (element.scrollHeight)+3+"px";
+  }
+  
   public ViewModal(row){
+    console.log(row);
+    
     this.doneSetupFormView = false;
     this.showUpdateModalView = true;
     setTimeout(() => {
@@ -197,12 +219,13 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
       arrRequest.push(this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/company-recruitment/get-by-id?id=' + row.recruitment_id, Module: 'STUDENT' }));
       Observable.combineLatest(arrRequest).subscribe((res: any) => {
         this.company_recruitment = res[0].data;
+        this.company_recruitment.recruitment_expiry_date = this.convertDate(this.company_recruitment.recruitment_expiry_date);
         this.viewForm = new FormGroup({
           'company_rcd': new FormControl({ value: this.company_recruitment.company_rcd, disabled: true }, []),
           'recruitment_title': new FormControl({ value: this.company_recruitment.recruitment_title, disabled: true }, []),
           'recruitment_job': new FormControl({ value: this.company_recruitment.recruitment_job, disabled: true }, []),
           'recruitment_quantity': new FormControl({ value: this.company_recruitment.recruitment_quantity, disabled: true }, []),
-          'recruitment_description': new FormControl({ value: this.company_recruitment.recruitment_description, disabled: true }, []),
+          'recruitment_description': new FormControl({ value: this.company_recruitment.recruitment_description,disabled:true}, []),
           'recruitment_skill_requirement': new FormControl({ value: this.company_recruitment.recruitment_skill_requirement, disabled: true }, []),
           'recruitment_job_requirement': new FormControl({ value: this.company_recruitment.recruitment_job_requirement, disabled: true }, []),
           'recruitment_cv_requirement': new FormControl({ value: this.company_recruitment.recruitment_cv_requirement, disabled: true }, []),
@@ -247,7 +270,6 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   public onSubmit() {
     if (this.submitting == false) {
       if (this.isCreate) {
-        console.log(this.student_job_candidate);
         
         this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/create', Module: 'STUDENT', Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
           let item = this.copyProperty(res.data);

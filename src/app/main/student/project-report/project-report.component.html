@@ -8,13 +8,13 @@
   </ul>
   <div class="nav-search">
     <p class="pull-right no-margin">
-      <a class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> 
+      <a  *ngIf="hasUploadPermission" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> 
         <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Tạo báo cáo</a>
       <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
         <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
       </a>
-      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
-          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
+      <!-- <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
+          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a> -->
     </p>
   </div>
 </div>
@@ -113,7 +113,12 @@
             <ng-template pTemplate="footer">
               <tr>
                 <td colspan="50">
-                  <div style="text-align: center">
+                  <div style="text-align: center;display: flex;justify-content: center; position: relative;">
+                    <div style="float: left; position: absolute;left: 0px;padding-top: 3px;">
+                      <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
+                        label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
+                      </p-splitButton>
+                    </div>
                     <div style="display: inline-block">
                       <p-paginator [first]="first" dropdownAppendTo="body" [rowsPerPageOptions]="[5, 10, 20, 50, 100]"
                         [totalRecords]="totalRecords" (onPageChange)="onPageChange($event)" [rows]="pageSize"
@@ -128,7 +133,7 @@
                           class="ui-button-secondary"></button>
                       </div>
                     </div>
-                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <span style="float: right;position: absolute;right: 0px;padding-top: 3px;">{{ pageLabel }}</span>
                     <div class="clearfix"></div>
                   </div>
                 </td>

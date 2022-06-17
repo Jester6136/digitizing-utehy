@@ -32,6 +32,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public student_recruitment_report: StudentRecruitmentReport;
   public internship_process_evaluate: InternshipProcessEvaluate;
   public student_job_candidate: StudentJobCandidate;
+  public hasUploadPermission:any;
   public constructor(injector: Injector) {
     super(injector);
     this.LZCompress = true; // using LZString compress data
@@ -50,10 +51,12 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.searchFormGroup = new FormGroup({
       'report_week': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'search-student-recruitment-report-weekly');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'api/student-recruitment-report-weekly/create');
     this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'update-student-recruitment-weekly');
     this.hasDeletePermission = this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
+    this.hasUploadPermission = this._authenService.hasPermission(this.pageId, 'api/student-recruitment-report-weekly/upload');
+
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {
@@ -119,14 +122,17 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     .subscribe(res => {
       this.student_job_candidate = res.data;
       if(this.student_job_candidate == null){
-          
+          this.student_job_candidate = new StudentJobCandidate(); 
+          this.student_job_candidate.teacher_name = ""; 
+          this.student_job_candidate.company_rcd = ""; 
+          this.student_job_candidate.report_src = ""; 
+          this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Bạn chưa đăng kí hoặc chưa được phê duyệt nguyện vọng");
       }
       else{
         if(this.student_job_candidate.report_src == null){
           this.student_job_candidate.report_src="";
         }
       }
-      console.log(this.student_job_candidate);
       setTimeout(()=> {
         this._changeDetectorRef.detectChanges();
       })

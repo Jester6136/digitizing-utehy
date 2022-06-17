@@ -8,7 +8,7 @@
   </ul>
   <div class="nav-search">
     <p class="pull-right no-margin">
-      <a *ngIf="hasUpdatePermission" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Import CV</a>
+      <a *ngIf="hasUploadPermission" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Cập nhật CV</a>
 
       <a *ngIf="hasUpdatePermission" class="btn btn-success btn-xs" (click)="Update()"><i
           class="fa fa-plus"></i>&nbsp;&nbsp;Lưu thông tin</a>
@@ -177,23 +177,25 @@
                   <span class="inline-label text-right"> Tỉnh/Thành phố thường chú</span>
                     <ng-selectize style="padding: 5px;" [config]="selectizeConfig(1, 'label', 'value', false)"
                      [(ngModel)]="student.student_province_of_residence"
-                    [options]="provinces" (ngModelChange)="chooseprovinces($event)"></ng-selectize>
+                    [options]="provinces1" (ngModelChange)="chooseprovinces1($event)"></ng-selectize>
                   
                   <!-- <input pInputText [(ngModel)]="student.student_province_of_residence" type="text" /> -->
                 </div>
+                
                 <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Quận/Huyện thường chú</span>
                   <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
-                   [(ngModel)]="student.student_resident_district"
-                   (ngModelChange)="choosedistrics($event)"
-                  [options]="districs"></ng-selectize>
+                   [(ngModel)]="student.student_resident_district" ng-disabled = "!student.student_province_of_residence"
+                   (ngModelChange)="choosedistrics1($event)"
+                  [options]="districs1"></ng-selectize>
                   <!-- <input pInputText [(ngModel)]="student.student_resident_district" type="text" /> -->
                 </div>
+
                 <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Xã thường chú</span>
                   <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
-                   [(ngModel)]="student.student_resident_ward" (ngModelChange)="choosewards($event)"
-                  [options]="wards"></ng-selectize>
+                   [(ngModel)]="student.student_resident_ward" ng-disabled = "!student.student_resident_district"
+                  [options]="wards1"></ng-selectize>
                   <!-- <input pInputText [(ngModel)]="student.student_resident_ward" type="text" /> -->
                 </div>
               </div>
@@ -210,16 +212,25 @@
 
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-4">
-                  <span class="inline-label text-right"> Tỉnh/Thành phố nơi sinh</span>
-                  <input pInputText [(ngModel)]="student.student_province_born" type="text" />
+                  <span class="inline-label text-right"> Tỉnh/Thành phố thường chú</span>
+                    <ng-selectize style="padding: 5px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                     [(ngModel)]="student.student_province_born"
+                    [options]="provinces2" (ngModelChange)="chooseprovinces2($event)"></ng-selectize>
                 </div>
+                
                 <div class="ui-g-12 ui-md-4">
-                  <span class="inline-label text-right">Quận/Huyện nơi sinh</span>
-                  <input pInputText [(ngModel)]="student.student_district_born" type="text" />
+                  <span class="inline-label text-right">Quận/Huyện thường chú</span>
+                  <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                   [(ngModel)]="student.student_district_born" ng-disabled = "!student.student_province_born"
+                   (ngModelChange)="choosedistrics2($event)"
+                  [options]="districs2"></ng-selectize>
                 </div>
+
                 <div class="ui-g-12 ui-md-4">
-                  <span class="inline-label text-right">Xã nơi sinh</span>
-                  <input pInputText [(ngModel)]="student.student_ward_born" type="text" />
+                  <span class="inline-label text-right">Xã thường chú</span>
+                  <ng-selectize style="padding: 0px;" [config]="selectizeConfig(1, 'label', 'value', false)"
+                   [(ngModel)]="student.student_ward_born" ng-disabled = "!student.student_district_born"
+                  [options]="wards2"></ng-selectize>
                 </div>
               </div>
 
@@ -431,13 +442,12 @@
   <div *ngIf="!doneSetupForm" class="loading-overlay">
     <i class="fa fa-spinner fa-spin orange"></i>
   </div>
+
   <div style="display: flex; justify-content: right;">
-    <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
-      value="{{student.cv_path}}">
-    <input accept=".doc" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
-    <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
-      value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />
+    <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" placeholder="Chèn link CV"
+      [(ngModel)]="student.cv_path">
   </div>
+
   <p-footer>
     <button class="btn-success" type="button" pButton icon="pi pi-check" (click)="uploadFile()"
       label="{{ 'COMMON.save' | translate }}"></button>

@@ -1,5 +1,6 @@
 
 export class PreCompanyRecruitment {
+    public candidate_id: string;
     public recruitment_id: string;
     public course_year:string;
     public company_rcd: string;

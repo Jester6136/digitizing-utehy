@@ -16,12 +16,15 @@ declare var $: any;
 export class BackgroundComponent extends Grid implements OnInit {
   public student:Student;
   public isCreate = false;
-  public fileExcel : any;
   public display: any;
   public website_item_type_ref: WebsiteItemTypeRef;
-  public provinces : any;
-  public districs: any;
-  public wards: any;
+  public provinces1 : any;
+  public districs1: any;
+  public wards1: any;
+  public provinces2 : any;
+  public districs2: any;
+  public wards2: any;
+  public hasUploadPermission: any;
   public constructor(injector: Injector) {
     super(injector);
     this.LZCompress = true; // using LZString compress data
@@ -40,10 +43,8 @@ export class BackgroundComponent extends Grid implements OnInit {
     //   'item_type_rcd': new FormControl(''),
     //   'item_type_name': new FormControl(''),
     // });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
-    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
     this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'student-update');
-    this.hasDeletePermission = this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
+    this.hasUploadPermission = this._authenService.hasPermission(this.pageId, 'student-upload');
     this.tableActions = [];
     // if (this.hasDeletePermission) {
     //   this._translateService.get('COMMON.delete').subscribe((message) => {
@@ -56,11 +57,11 @@ export class BackgroundComponent extends Grid implements OnInit {
   }
 
   public loadDropdowns() {
-    // this.search();
     setTimeout(() => {
       this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-provinces', Module: 'STUDENT'})
       .subscribe(res => {
-        this.provinces = res.data;        
+        this.provinces1 = res.data;        
+        this.provinces2 = res.data;        
         setTimeout(() => {
           this._changeDetectorRef.detectChanges();
         });
@@ -68,7 +69,7 @@ export class BackgroundComponent extends Grid implements OnInit {
         this.submitting = false;
         console.log(error);
        });
-      })
+      })    
   }
   
 
@@ -78,27 +79,29 @@ export class BackgroundComponent extends Grid implements OnInit {
     .subscribe(res => {
       this.student = res.data;
       console.log(this.student);
+      
 
-      if(this.student.student_province_of_residence != null){
-        // setTimeout(() => {
-        //   this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-districts-by-id/'+this.student.student_province_of_residence, Module: 'STUDENT'})
-        //   .subscribe(res => {
-        //     this.districs = res.data;        
-        //     setTimeout(() => {
-        //       this._changeDetectorRef.detectChanges();
-        //     });
-        //   }, (error) => { 
-        //     this.submitting = false;
-        //     console.log(error);
-        //    });
-        //   })
-      }
 
-      if(this.student.student_resident_district != null){
+      if(this.student.student_resident_district != ""){
         setTimeout(() => {
           this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-wards-by-id/'+this.student.student_resident_district, Module: 'STUDENT'})
           .subscribe(res => {
-            this.wards = res.data; 
+            this.wards1 = res.data; 
+            setTimeout(() => {
+              this._changeDetectorRef.detectChanges();
+            });
+          }, (error) => { 
+            this.submitting = false;
+            console.log(error);
+           });
+          })
+      }
+
+      if(this.student.student_district_born != ""){
+        setTimeout(() => {
+          this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-wards-by-id/'+this.student.student_district_born, Module: 'STUDENT'})
+          .subscribe(res => {
+            this.wards2 = res.data; 
             setTimeout(() => {
               this._changeDetectorRef.detectChanges();
             });
@@ -109,7 +112,6 @@ export class BackgroundComponent extends Grid implements OnInit {
           })
       }
       
-      this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
       setTimeout(() => {
         this._changeDetectorRef.detectChanges();
       });
@@ -117,7 +119,7 @@ export class BackgroundComponent extends Grid implements OnInit {
       this.submitting = false;
       console.log(error);
      });
-    })
+    },500)
   }
 
   public ngOnInit() {
@@ -125,15 +127,53 @@ export class BackgroundComponent extends Grid implements OnInit {
     this.website_item_type_ref = new WebsiteItemTypeRef();
     this.getStudent();
     this.loadDropdowns();
-    console.log(this.wards);
-    
   }
 
-  public chooseprovinces($event){
+  public chooseprovinces1($event){
+    if($event == ''){
+      this.districs1 = null;
+    }
+    else{
+      setTimeout(() => {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-districts-by-id/'+$event, Module: 'STUDENT'})
+        .subscribe(res => {
+          this.districs1 = res.data;        
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+          });
+        }, (error) => { 
+          this.submitting = false;
+          console.log(error);
+         });
+        })
+    }
+  }
+
+  public choosedistrics1($event){
+    if($event == ''){
+      this.wards1 = null;
+    }
+    else{
+      setTimeout(() => {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-wards-by-id/'+$event, Module: 'STUDENT'})
+        .subscribe(res => {
+          this.wards1 = res.data;
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+          });
+        }, (error) => { 
+          this.submitting = false;
+          console.log(error);
+         });
+        })
+    }
+  }
+
+  public chooseprovinces2($event){
     setTimeout(() => {
       this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-districts-by-id/'+$event, Module: 'STUDENT'})
       .subscribe(res => {
-        this.districs = res.data;        
+        this.districs2 = res.data;        
         setTimeout(() => {
           this._changeDetectorRef.detectChanges();
         });
@@ -144,11 +184,11 @@ export class BackgroundComponent extends Grid implements OnInit {
       })
   }
 
-  public choosedistrics($event){
+  public choosedistrics2($event){
     setTimeout(() => {
       this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-wards-by-id/'+$event, Module: 'STUDENT'})
       .subscribe(res => {
-        this.wards = res.data; 
+        this.wards2 = res.data; 
         setTimeout(() => {
           this._changeDetectorRef.detectChanges();
         });
@@ -159,58 +199,54 @@ export class BackgroundComponent extends Grid implements OnInit {
       })
       
   }
-
-  public choosewards($event){
-      console.log(this.wards);
-      
-  }
-
 
   showDialog() {
     this.display = true;
     this.doneSetupForm = true;
   }
 
-  public uploadExcel(event) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.fileExcel = event.target.files[0];
-      this.student.cv_path = this.fileExcel.name;
-    }
-  }
+  // public uploadExcel(event) {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     this.fileExcel = event.target.files[0];
+  //     this.student.cv_path = this.fileExcel.name;
+  //   }
+  // }
 
 
   
   
   public uploadFile() {
-    this.doneSetupForm = false;
-    if (this.fileExcel) {
-      this._apiService.importFile(this.fileExcel, 'http://localhost:57065/api/student/upload').subscribe((res: any) => {
-        if (res.body) {
-          // this.search();
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.body.messageCode);
-          this.display = false;
-          this.doneSetupForm = true;
-          // this.fileExcel = null;
-          // this.fileNameExcel = null;
-
-          //Update student
-          this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student/update', Module: 'STUDENT',
-          Data: JSON.stringify(this.student) }).subscribe(res => {
-           this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-          }, (error) => { this.submitting = false; });
-          //Update student
+     //Update student
+     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student/update', Module: 'STUDENT',
+     Data: JSON.stringify(this.student) }).subscribe(res => {
+      this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+      this._changeDetectorRef.detectChanges();
+     }, (error) => { this.submitting = false; });
+     //Update student
 
 
-          this._changeDetectorRef.detectChanges();
-        }
-      });
-    } else {
-      this.doneSetupForm = true;
-      this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'MESSAGE.choose_file');
-    }
+
+    // this.doneSetupForm = false;
+    // if (this.fileExcel) {
+    //   this._apiService.importFile(this.fileExcel, 'http://localhost:57065/api/student/upload').subscribe((res: any) => {
+    //     if (res.body) {
+    //       // this.search();
+    //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.body.messageCode);
+    //       this.display = false;
+    //       this.doneSetupForm = true;
+    //       // this.fileExcel = null;
+    //       // this.fileNameExcel = null;
+
+    //       this._changeDetectorRef.detectChanges();
+    //     }
+    //   });
+    // } else {
+    //   this.doneSetupForm = true;
+    //   this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'MESSAGE.choose_file');
+    // }
   }
 
-  public Update(){
+  public Update(){    
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student/update', Module: 'STUDENT',
      Data: JSON.stringify(this.student) }).subscribe(res => {
       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);

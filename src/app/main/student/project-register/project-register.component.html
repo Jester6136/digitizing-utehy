@@ -11,8 +11,6 @@
       <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
         <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
       </a>
-      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
-          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
     </p>
   </div>
 </div>
@@ -111,8 +109,8 @@
             <ng-template pTemplate="footer">
               <tr>
                 <td colspan="50">
-                  <div style="text-align: center">
-                    <div style="float: left;">
+                  <div style="text-align: center;display: flex;justify-content: center; position: relative;">
+                    <div style="float: left; position: absolute;left: 0px;padding-top: 3px;">
                       <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
                         label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
                       </p-splitButton>
@@ -131,7 +129,7 @@
                           class="ui-button-secondary"></button>
                       </div>
                     </div>
-                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <span style="float: right;position: absolute;right: 0px;padding-top: 3px;">{{ pageLabel }}</span>
                     <div class="clearfix"></div>
                   </div>
                 </td>
@@ -162,124 +160,6 @@
         <button class="btn btn-info" (click)="rename_project(project_register.student_project_name)">
           Lưu
         </button>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateWebsiteItemTypeRefModal"
-    class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CMS.create_website_item_type_ref' | translate }}</h4>
-          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.CMS.update_website_item_type_ref' | translate }}</h4>
-        </div>
-        <div class="modal-body">
-          <div *ngIf="!doneSetupForm" class="loading-overlay">
-            <i class="fa fa-spinner fa-spin orange"></i>
-          </div>
-          <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
-            <div class="row ui-fluid">
-
-              <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.item_type_rcd' | translate }}
-                  <span class="red">&nbsp;*</span>
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['item_type_rcd'].errors"
-                    [control]="updateForm.controls['item_type_rcd']"></error-messages>
-                  <input pInputText autofocus formControlName="item_type_rcd"
-                    [(ngModel)]="website_item_type_ref.item_type_rcd" type="text" />
-                </div>
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.sort_order' | translate }}
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['sort_order'].errors"
-                    [control]="updateForm.controls['sort_order']"></error-messages>
-                  <input pInputText formControlName="sort_order" [(ngModel)]="website_item_type_ref.sort_order"
-                    type="text" />
-                </div>
-              </div>
-              <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.item_type_name' | translate }}
-                  <span class="red">&nbsp;*</span>
-                </div>
-                <div class="ui-g-12 ui-md-10">
-                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_l'].errors"
-                    [control]="updateForm.controls['item_type_name_l']"></error-messages>
-                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_e'].errors"
-                    [control]="updateForm.controls['item_type_name_e']"></error-messages>
-                  <div class="ui-inputgroup dual-language">
-                    <input pInputText formControlName="item_type_name_l" [class.hidden]="!local_flag"
-                      [(ngModel)]="website_item_type_ref.item_type_name_l" type="text" />
-                    <input pInputText formControlName="item_type_name_e" [class.hidden]="local_flag"
-                      [(ngModel)]="website_item_type_ref.item_type_name_e" type="text" />
-                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
-                    </language-switcher>
-                  </div>
-                </div>
-              </div>
-              <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.item_type_icon' | translate }}
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['item_type_icon'].errors"
-                    [control]="updateForm.controls['item_type_icon']"></error-messages>
-                  <input pInputText formControlName="item_type_icon" [(ngModel)]="website_item_type_ref.item_type_icon"
-                    type="text" />
-                </div>
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.item_type_size' | translate }}
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['item_type_size'].errors"
-                    [control]="updateForm.controls['item_type_size']"></error-messages>
-                  <input pInputText formControlName="item_type_size" [(ngModel)]="website_item_type_ref.item_type_size"
-                    type="text" />
-                </div>
-              </div>
-              <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  {{ 'MODULE.CMS.item_type_description' | translate }}
-                </div>
-                <div class="ui-g-12 ui-md-10">
-                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_l'].errors"
-                    [control]="updateForm.controls['item_type_description_l']"></error-messages>
-                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_e'].errors"
-                    [control]="updateForm.controls['item_type_description_e']"></error-messages>
-                  <div class="ui-inputgroup dual-language">
-                    <textarea [rows]="3" formControlName="item_type_description_l" [class.hidden]="!local_flag"
-                      [(ngModel)]="website_item_type_ref.item_type_description_l" pInputTextarea style="resize: none"
-                      autoResize="false"></textarea>
-                    <textarea [rows]="3" formControlName="item_type_description_e" [class.hidden]="local_flag"
-                      [(ngModel)]="website_item_type_ref.item_type_description_e" pInputTextarea style="resize: none"
-                      autoResize="false"></textarea>
-                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
-                    </language-switcher>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" [disabled]="!doneSetupForm" class="btn btn-default btn-sm" (click)="resetUpdateForm()">
-            <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
-          </button>
-          <button type="button" (click)="onSubmit()"
-            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
-            class="btn btn-success btn-sm btn-submit">
-            <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
-          </button>
-          <button type="button" class="btn btn-default btn-sm btn-close" (click)="closeUpdateForm($event)">
-            <i class="fa fa-times"></i> {{ 'COMMON.cancel' | translate }}
-          </button>
-        </div>
       </div>
     </div>
   </div>

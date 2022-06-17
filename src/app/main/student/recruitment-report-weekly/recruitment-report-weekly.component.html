@@ -9,7 +9,7 @@
   <div class="nav-search">
     <p class="pull-right no-margin">
       
-      <a class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> 
+      <a *ngIf="hasUploadPermission" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> 
         <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Tạo báo cáo</a>
 
       <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
@@ -92,7 +92,7 @@
                 <th style="text-align: left;">Công việc</th>
                 <th style="text-align: left;">Kết quả đạt được</th>
                 <th style="width: 15%; text-align: center;">Ghi chú</th>
-                <th style="width: 80px; text-align: center;" *ngIf="hasUpdatePermission">{{
+                <th style="width: 80px; text-align: center;" *ngIf="hasUpdatePermission||hasCreatePermission">{{
                   'COMMON.action' | translate }}</th>
               </tr>
             </ng-template>
@@ -103,10 +103,10 @@
                 <td style="text-align: left;">{{ row.result_in_day }}</td>
                 <td style="width: 15%; text-align: center;">{{ row.description }}</td>
                 <td class="action-col" style="width: 80px; text-align: center;"
-                  *ngIf="hasUpdatePermission">
+                  *ngIf="hasUpdatePermission||hasCreatePermission">
                   <div class="btn-group">
                     <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
-                      *ngIf="hasUpdatePermission" (click)="openUpdateModal(row)"><i
+                      *ngIf="hasUpdatePermission||hasCreatePermission" (click)="openUpdateModal(row)"><i
                         class="ace-icon fa fa-edit"></i></button>
                   </div>
                 </td>
@@ -115,8 +115,8 @@
             <ng-template pTemplate="footer">
               <tr>
                 <td colspan="50">
-                  <div style="text-align: center">
-                    <div style="float: left;">
+                  <div style="text-align: center;display: flex;justify-content: center; position: relative;">
+                    <div style="float: left; position: absolute;left: 0px;padding-top: 3px;">
                       <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
                         label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
                       </p-splitButton>
@@ -135,7 +135,7 @@
                           class="ui-button-secondary"></button>
                       </div>
                     </div>
-                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <span style="float: right;position: absolute;right: 0px;padding-top: 3px;">{{ pageLabel }}</span>
                     <div class="clearfix"></div>
                   </div>
                 </td>
@@ -173,7 +173,7 @@
     </div>
 
   </div>
-  <div *ngIf="(hasUpdatePermission) && showUpdateModal" id="updateStudentRecruitmentReportWeeklyModal"
+  <div *ngIf="(hasUpdatePermission||hasCreatePermission) && showUpdateModal" id="updateStudentRecruitmentReportWeeklyModal"
     class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -210,7 +210,6 @@
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Công việc
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
                   <textarea [rows]="5" formControlName="job_assignment" [(ngModel)]="student_recruitment_report.job_assignment" pInputTextarea style="resize: none" autoResize="false"></textarea>
@@ -219,7 +218,6 @@
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Kết quả đạt được
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
                   <textarea [rows]="5" formControlName="result_in_day" [(ngModel)]="student_recruitment_report.result_in_day" pInputTextarea style="resize: none" autoResize="false"></textarea>
@@ -228,7 +226,6 @@
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Chú thích
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
                   <textarea [rows]="5" formControlName="description" [(ngModel)]="student_recruitment_report.description" pInputTextarea style="resize: none" autoResize="false"></textarea>
@@ -278,7 +275,7 @@
   <div style="display: flex; justify-content: right;">
     <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
       value="{{student_job_candidate.report_src}}">
-    <input accept=".doc" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
+    <input accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
     <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
       value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />
   </div>

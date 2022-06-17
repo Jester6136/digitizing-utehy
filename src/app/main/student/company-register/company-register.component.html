@@ -38,7 +38,7 @@
             <div class="ui-g-12">
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Mã doanh nghiệp
+                  Mã công ty
                 </div>
                 <div class="ui-g-12 ui-md-8">
                   <input pInputText formControlName="company_rcd" ngModel type="text" />
@@ -46,18 +46,10 @@
               </div>
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Giới thiệu
+                  Vị trí tuyển dụng
                 </div>
                 <div class="ui-g-12 ui-md-8">
-                  <input pInputText formControlName="recruitment_title" ngModel type="text" />
-                </div>
-              </div>
-              <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Vị trí công việc
-                </div>
-                <div class="ui-g-12 ui-md-8">
-                  <input pInputText formControlName="recruitment_title" ngModel type="text" />
+                  <input pInputText formControlName="recruitment_job" ngModel type="text" />
                 </div>
               </div>
 
@@ -83,13 +75,14 @@
             <ng-template pTemplate="header">
               <tr>
                 <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
-                <th style="width: 10%; text-align: left;">Mã công ty</th>
-                <th style="text-align: left;">Giới thiệu</th>
-                <th style="text-align: left;">Vị trí công việc</th>
+                <th style="width: 7%; text-align: left;">Mã công ty</th>
+                <th style="width: 17%; text-align: left;">Tên công ty</th>
+                <th style="text-align: left;">Vị trí tuyển dụng</th>
+                <th style="text-align: left;">Thời gian bắt đầu</th>
+                <th style="text-align: left;">Hạn đăng kí</th>
                 <th style="width: 5%; text-align: center;">Địa chỉ web</th>
                 <th style="width: 5%; text-align: center;">Trạng thái đăng kí</th>
-                <th style="width: 120px; text-align: center;" *ngIf="hasUpdatePermission || hasCreatePermission">{{
-                  'COMMON.action' | translate }}</th>
+                <th style="width:80px; text-align: center;" *ngIf="hasViewPermission">Tác vụ</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
@@ -97,10 +90,12 @@
                 <td style="width: 70px; text-align: center;">
                   <div class="index_{{ row.item_type_rcd }}">{{ first + i + 1 }}</div>
                 </td>
-                <td style="width: 10%; text-align: left;">{{ row.company_rcd }}</td>
-                <td style="text-align: left;">{{ row.recruitment_title }}</td>
+                <td style="width: 7%; text-align: left;">{{ row.company_rcd }}</td>
+                <td style="width: 17%; text-align: left;">{{ row.company_name }}</td>
                 <td style="text-align: left;">{{ row.recruitment_job }}</td>
-                <td style="width: 10%; text-align: center;">{{ row.company_website_address }}</td>
+                <td style="text-align: left;">{{ row.created_date_time|date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: left;">{{ row.recruitment_expiry_date|date:'dd/MM/yyyy' }}</td>
+                <td style="width: 10%; text-align: center;"><a href="{{ row.company_website_address }}">{{ row.company_website_address }}</a></td>
                 <td style="width: 10%; text-align: center;"> 
                   <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)"
                     optionDisabled="inactive"
@@ -111,15 +106,10 @@
                     placeholder="{{ 'COMMON.all' | translate }}"></ng-selectize>
                 </td>
                 
-                <td class="action-col" style="width: 120px; text-align: left;" *ngIf="hasUpdatePermission || hasCreatePermission">
+                <td class="action-col" style="width: 80px; text-align: center;" *ngIf="hasViewPermission">
                   <div class="btn-group">
                     <button title="Chi tiết" class="btn btn-xs btn-white btn-default" (click)="ViewModal(row)"> 
                       <i class="fa fa-eye"></i></button>
-                    <!-- <button title="Đăng kí" *ngIf="hasCreatePermission" class="btn btn-xs btn-white btn-default" (click)="openCreateModal(row)"> 
-                        <i class="fa fa-plus"></i></button>
-                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
-                      *ngIf="hasUpdatePermission" (click)="openUpdateModal(row)"><i
-                        class="ace-icon fa fa-edit"></i></button> -->
                   </div>
                 </td>
               </tr>
@@ -127,8 +117,8 @@
             <ng-template pTemplate="footer">
               <tr>
                 <td colspan="50">
-                  <div style="text-align: center">
-                    <div style="float: left;">
+                  <div style="text-align: center;display: flex;justify-content: center; position: relative;">
+                    <div style="float: left; position: absolute;left: 0px;padding-top: 3px;">
                       <p-splitButton *ngIf="tableActions.length > 0" [disabled]="selectedDataTableItems.length == 0"
                         label="{{ 'COMMON.action' | translate }}" icon="fa-check" [model]="tableActions">
                       </p-splitButton>
@@ -147,7 +137,7 @@
                           class="ui-button-secondary"></button>
                       </div>
                     </div>
-                    <span style="float: right;line-height:27px">{{ pageLabel }}</span>
+                    <span style="float: right;position: absolute;right: 0px;padding-top: 3px;">{{ pageLabel }}</span>
                     <div class="clearfix"></div>
                   </div>
                 </td>
@@ -165,13 +155,13 @@
       </div>
     </div>
   </div>
- <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateStudentJobCandidate"
+ <!-- <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateStudentJobCandidate"
     class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h4 *ngIf="isCreate" class="modal-title">Đăng kí thực tập</h4>
-          <h4 *ngIf="!isCreate" class="modal-title">Cập nhật</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">Chi tiết thực tập</h4>
         </div>
         <div class="modal-body">
           <div *ngIf="!doneSetupForm" class="loading-overlay">
@@ -180,6 +170,7 @@
           <form *ngIf="doneSetupForm" [formGroup]="updateForm" id="updateForm" class="lap-form">
             <div class="row ui-fluid">
               <div class="ui-g-12 ui-form-group">
+
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Mã doanh nghiệp
                   <span class="red">&nbsp;*</span>
@@ -190,6 +181,7 @@
                   <input pInputText autofocus formControlName="company_rcd"
                     [(ngModel)]="student_job_candidate.company_rcd" type="text" />
                 </div>
+
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Đăng kí nguyện vọng
                 </div>
@@ -241,7 +233,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   
 <div *ngIf="showUpdateModalView" id="viewCompanyRecruiment"
     class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
@@ -259,7 +251,6 @@
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Mã doanh nghiệp
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-4">
                   <input pInputText autofocus formControlName="company_rcd"
@@ -278,7 +269,6 @@
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Công việc tuyển dụng
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-4">
                   <input pInputText autofocus formControlName="recruitment_job"
@@ -296,11 +286,29 @@
 
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  Hạn tuyển dụng
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <input pInputText autofocus formControlName="recruitment_expiry_date"
+                    [(ngModel)]="company_recruitment.recruitment_expiry_date" type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  Năm học
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <input pInputText formControlName="course_year" [(ngModel)]="company_recruitment.course_year"
+                    type="text" />
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-form-group">
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Mô tả
-                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="recruitment_description" [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_description" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <textarea [rows]="9" style="overflow:auto" formControlName="recruitment_description" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_description"
+                   pInputTextarea></textarea>
                 </div>
               </div>
 
@@ -309,8 +317,9 @@
                   Yêu cầu kỹ năng
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="recruitment_skill_requirement" [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_skill_requirement" pInputTextarea style="resize: none" autoResize="false"></textarea>
-
+                  <textarea [rows]="7" style="overflow:auto" formControlName="recruitment_skill_requirement" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_skill_requirement"
+                   pInputTextarea></textarea>
                 </div>
               </div>
 
@@ -319,8 +328,9 @@
                   Yêu cầu công việc
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="recruitment_job_requirement" [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_job_requirement" pInputTextarea style="resize: none" autoResize="false"></textarea>
-
+                  <textarea [rows]="9" style="overflow:auto" formControlName="recruitment_job_requirement" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_job_requirement"
+                   pInputTextarea></textarea>
                 </div>
               </div>
 
@@ -329,8 +339,9 @@
                   Yêu cầu hồ sơ
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="recruitment_cv_requirement" [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_cv_requirement" pInputTextarea style="resize: none" autoResize="false"></textarea>
-
+                  <textarea [rows]="7" style="overflow:auto" formControlName="recruitment_cv_requirement" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_cv_requirement"
+                   pInputTextarea></textarea>
                 </div>
               </div>
               <div class="ui-g-12 ui-form-group">
@@ -338,36 +349,21 @@
                   Quyền lợi
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="recruitment_benefit" [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_benefit" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <textarea [rows]="9" style="overflow:auto" formControlName="recruitment_benefit" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_benefit"
+                   pInputTextarea></textarea>
                 </div>
               </div>
-
               <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Hạn tuyển dụng
-                  <span class="red">&nbsp;*</span>
-                </div>
-                <div class="ui-g-12 ui-md-2">
-                  <input pInputText autofocus formControlName="recruitment_expiry_date"
-                    [(ngModel)]="company_recruitment.recruitment_expiry_date" type="text" />
-                </div>
-
+                
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
                   Thông tin liên hệ
                 </div>
-                <div class="ui-g-12 ui-md-2">
-                  <input pInputText formControlName="recruitment_contact" [(ngModel)]="company_recruitment.recruitment_contact"
-                    type="text" />
+                <div class="ui-g-12 ui-md-10">
+                  <textarea [rows]="3" style="overflow:auto" formControlName="recruitment_contact" 
+                  [class.hidden]="!local_flag" [(ngModel)]="company_recruitment.recruitment_contact"
+                   pInputTextarea></textarea>
                 </div>
-
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Năm học
-                </div>
-                <div class="ui-g-12 ui-md-2">
-                  <input pInputText formControlName="course_year" [(ngModel)]="company_recruitment.course_year"
-                    type="text" />
-                </div>
-
               </div>
 
               
