@@ -18,7 +18,6 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   public state= false;
   public iCreate = false;
   public iUpdate = false;
-
   public tmpData :any;
   public inactive = false;
   public viewForm: FormGroup;
@@ -27,6 +26,8 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   public company_recruitment: CompanyRecruitment;
   public student_job_candidate: StudentJobCandidate;
   public student_wish_values: any;
+  public empty_guid ='00000000-0000-0000-0000-000000000000';
+  public hasRegisterPermission = true;
 
   public doneSetupFormView :any;
   public showUpdateModalView :any;
@@ -58,7 +59,26 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
       });
     }
     this.predicateAfterSearch = () => {
-      this._changeDetectorRef.detectChanges();
+      this.hasRegisterPermission=true;
+      setTimeout(() => {
+        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' },
+         Url: '/api/job-candidate/check-able-to-register', Module: 'STUDENT'})
+        .subscribe(res => {
+          
+          this.hasRegisterPermission=res.data.value;
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+          });
+        }, (error) => { 
+          this.submitting = false;
+          console.log(error);
+         });
+        })
+        
+      setTimeout(()=> {
+        this._changeDetectorRef.detectChanges();
+      },300)
+
     };
   }
 
@@ -87,73 +107,132 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
     }
   }
 
-  public chooseStudentWish(event,row){
-    this.student_job_candidate = new StudentJobCandidate();
-    this.student_job_candidate.recruitment_id=row.recruitment_id;
-    this.student_job_candidate.candidate_id=row.candidate_id;
-    this.student_job_candidate.course_year=row.course_year;
-    var empty_guid ='00000000-0000-0000-0000-000000000000'
-    var tmp_row = this.copyProperty(row);
-    if(this.state && event!=''){
-      //Create
-      if (this.iCreate){        
-        this.student_job_candidate.student_wish_rcd=event;
-        this.student_job_candidate.candidate_id = empty_guid;
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/create', Module: 'STUDENT', 
-        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-          this.student_job_candidate.student_wish_rcd = event
-          row.candidate_id = res.data.candidate_id
-          console.log('create');
-          
-          console.log(row);
-
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        }, (error) => { 
-          row.student_wish_rcd = null;
-          setTimeout(() => {
-            this._changeDetectorRef.detectChanges();
-          });
-          this.submitting = false;
-         });
-      }
-      //Update
-      else{
-        this.student_job_candidate.student_wish_rcd=event;
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
-        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-          this.student_job_candidate.student_wish_rcd = event
-          row.candidate_id = res.data.candidate_id
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        }, (error) => { 
-          this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
-          this.submitting = false;
-         });
-      }
-    }
-    
-    if(event == ''){
-      //delete 2 
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/delete', Module: 'STUDENT', 
-        Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-          this.student_job_candidate.student_wish_rcd = event
-          row= tmp_row;
-          row.candidate_id = null;
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        }, (error) => { 
-          this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
-          this.submitting = false;
-         });
-
-    }
-     
-      
-  }
-
   public ngOnInit() {
     this.pre_company_recruitment =new PreCompanyRecruitment();
     this.company_recruitment=new CompanyRecruitment();
     this.loadDropdowns();
   }
+
+  public register(row){
+    this._translateService.get('MESSAGE.confirm_delete').subscribe(() => {
+      this._confirmationService.confirm({
+        message: "Bạn có chắc chắn đăng kí thực tập doanh nghiệp này?",
+        accept: () => {
+
+          this.student_job_candidate = new StudentJobCandidate();
+          this.student_job_candidate.recruitment_id=row.recruitment_id;
+          this.student_job_candidate.candidate_id=row.candidate_id;
+          this.student_job_candidate.course_year=row.course_year;
+      
+          setTimeout(() => {
+            this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
+             Url: '/api/job-candidate/create', Module: 'STUDENT',
+              Data: JSON.stringify(this.student_job_candidate)  })
+            .subscribe(res => {
+              row.candidate_id = res.data.candidate_id;
+              row.available_to_register = false;
+              this.hasRegisterPermission = false;
+              this._changeDetectorRef.detectChanges();
+              this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+              setTimeout(() => {
+                this._changeDetectorRef.detectChanges();
+              });
+            }, (error) => { 
+              this.submitting = false;
+              console.log(error);
+             });
+            })
+
+        }
+      });
+    });    
+  }
+
+  public cancelregister(row){
+    this._translateService.get('MESSAGE.confirm_delete').subscribe((message) => {
+      this._confirmationService.confirm({
+        message: "Bạn có chắc chắn hủy thực tập doanh nghiệp này?",
+        accept: () => {
+          this.student_job_candidate = new StudentJobCandidate();
+          this.student_job_candidate.recruitment_id=row.recruitment_id;
+          this.student_job_candidate.candidate_id=row.candidate_id;
+          
+          this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/delete', Module: 'STUDENT', 
+          Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+            row.available_to_register = true;
+            row.candidate_id = this.empty_guid;
+            this.hasRegisterPermission = true;
+            this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+            setTimeout(() => {
+              this._changeDetectorRef.detectChanges();
+            });
+          }, (error) => { 
+            this.submitting = false;
+           });
+        }
+      });
+    });
+  }
+
+  public chooseStudentWish(event,row){
+    // this.student_job_candidate = new StudentJobCandidate();
+    // this.student_job_candidate.recruitment_id=row.recruitment_id;
+    // this.student_job_candidate.candidate_id=row.candidate_id;
+    // this.student_job_candidate.course_year=row.course_year;
+    // var empty_guid ='00000000-0000-0000-0000-000000000000'
+    // var tmp_row = this.copyProperty(row);
+    // if(this.state && event!=''){
+    //   //Create
+    //   if (this.iCreate){        
+    //     this.student_job_candidate.student_wish_rcd=event;
+    //     this.student_job_candidate.candidate_id = empty_guid;
+    //     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/create', Module: 'STUDENT', 
+    //     Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+    //       this.student_job_candidate.student_wish_rcd = event
+    //       row.candidate_id = res.data.candidate_id
+    //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+    //     }, (error) => { 
+    //       row.student_wish_rcd = null;
+    //       setTimeout(() => {
+    //         this._changeDetectorRef.detectChanges();
+    //       });
+    //       this.submitting = false;
+    //      });
+    //   }
+    //   //Update
+    //   else{
+    //     this.student_job_candidate.student_wish_rcd=event;
+    //     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update', Module: 'STUDENT', 
+    //     Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+    //       this.student_job_candidate.student_wish_rcd = event
+    //       row.candidate_id = res.data.candidate_id
+    //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+    //     }, (error) => { 
+    //       this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
+    //       this.submitting = false;
+    //      });
+    //   }
+    // }
+    
+    // if(event == ''){
+    //   //delete 2 
+    //     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/delete', Module: 'STUDENT', 
+    //     Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+    //       this.student_job_candidate.student_wish_rcd = event
+    //       row= tmp_row;
+    //       row.candidate_id = null;
+    //       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+    //     }, (error) => { 
+    //       this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Hãy load lại trang");
+    //       this.submitting = false;
+    //      });
+
+    // }
+     
+      
+  }
+
+  
 
   public closeViewForm(event){
     $(event.target).closest('.modal').modal('hide');
@@ -207,8 +286,6 @@ export class CompanyRegisterComponent extends Grid implements OnInit {
   }
   
   public ViewModal(row){
-    console.log(row);
-    
     this.doneSetupFormView = false;
     this.showUpdateModalView = true;
     setTimeout(() => {

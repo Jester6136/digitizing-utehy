@@ -73,7 +73,7 @@
                 <th style="width: 15%;text-align: left;">Số điện thoại</th>
                 <th style="text-align: left;">Email</th>
                 <th style="width: 15%; text-align: center;">Số lượng còn lại</th>
-                <th style="width: 15%; text-align: center;" *ngIf="!expireRegisterPermission">Đăng kí</th>
+                <th style="width: 15%; text-align: center;" *ngIf="expireRegisterPermission">Đăng kí</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
@@ -88,7 +88,7 @@
                 <td style="text-align: left;">{{ row.phone }}</td>
                 <td style="text-align: left;">{{ row.email }}</td>
                 <td style="width: 5%; text-align: center;">{{ row.quantity }}</td>
-                <td style="width: 5%; text-align: center;" *ngIf="!expireRegisterPermission">
+                <td style="width: 15%; text-align: center;" *ngIf="expireRegisterPermission">
                     <button class="btn btn-info" *ngIf="row.available_to_register && hasRegisterPermission" (click)="registerTeacher(row)">Đăng kí</button>
                     <button class="btn btn-danger" *ngIf="!row.available_to_register" (click)="cancelRegisterTeacher(row)">Hủy đăng kí</button>
                 </td>
@@ -156,7 +156,7 @@
       <div class="ui-g-12 ui-md-4" >
         <input type="text" [(ngModel)]="project_register.student_project_name"/>
       </div>
-      <div class="ui-g-12 ui-md-2" *ngIf="!expireRegisterPermission">
+      <div class="ui-g-12 ui-md-2">
         <button class="btn btn-info" (click)="rename_project(project_register.student_project_name)">
           Lưu
         </button>

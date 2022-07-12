@@ -48,6 +48,14 @@ import { RouterModule } from '@angular/router';
                     preload: true, delay: true
                 }
             },
+            {
+                path: 'student-job-candidate',
+                loadChildren: () => import('./job-candidate/job-candidate.module').then(m => m.JobCandidateModule),
+                data: {
+                    full_path: 'student/student-job-candidate',
+                    preload: true, delay: true
+                }
+            },
         ]), // Append position
     ],
     exports: [], // Do not change "// Append position" line above althought only indent

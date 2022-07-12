@@ -7,5 +7,5 @@ export class PreCompanyRecruitment {
     public recruitment_title: string;
     public recruitment_job: string;
     public company_website_address: string;
-    public student_wish_rcd: string;
+    public available_to_register: boolean;
 }

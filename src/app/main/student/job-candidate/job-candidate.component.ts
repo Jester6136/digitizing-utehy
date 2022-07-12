@@ -5,36 +5,24 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/takeUntil';
 import { WebsiteItemTypeRef } from '../../../main/entities/website-item-type-ref';
-import { TeacherProject } from '../entities/teacherproject';
-import {ProjectRegister} from '../entities/projectregister'
 declare var $: any;
 
 @Component({
-  selector: 'app-project-register',
-  templateUrl: './project-register.component.html',
+  selector: 'app-job-candidate',
+  templateUrl: './job-candidate.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectRegisterComponent extends Grid implements OnInit {
+export class JobCandidateComponent extends Grid implements OnInit {
+
   public isCreate = false;
   public website_item_type_ref: WebsiteItemTypeRef;
-  public project_register: ProjectRegister;
-  public selectedCourseYear = "2021-2022";
-  public selectedSemester = "1";
-  public selectedProject = 5;
-  public project_types :any;
-  public semesters :any;
-  public courseyears :any;
-
-  public hasRegisterPermission = true;
-  public expireRegisterPermission = false;
-
   public constructor(injector: Injector) {
     super(injector);
     this.LZCompress = true; // using LZString compress data
     this.loadBalancing = true;
     this.APIModuleName = 'STUDENT';
     this.getListByIdApiUrl = '/api/website-item-type-ref/get-list-by-id/';
-    this.searchApiUrl = '/api/student-teacher-project/search';
+    this.searchApiUrl = '/api/job-candidate/search';
     this.exportUrl = '/api/website-item-type-ref/export-to-excel';
     this.exportFilename = 'list_website_item_type_ref.xlsx';
     this.setNullIfEmpty = [];
@@ -43,91 +31,30 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
     this.searchValue.page = this.page;
     this.searchValue.pageSize = this.pageSize;
     this.searchFormGroup = new FormGroup({
-      'project_type': new FormControl(''),
+      'recruitment_job': new FormControl(''),
     });
-    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'api/student-teacher-project/search');
+    this.hasViewPermission = this._authenService.hasPermission(this.pageId, 'view_website_item_type_ref');
+    this.hasCreatePermission = this._authenService.hasPermission(this.pageId, 'create_website_item_type_ref');
+    this.hasUpdatePermission = this._authenService.hasPermission(this.pageId, 'update_website_item_type_ref');
+    this.hasDeletePermission = this._authenService.hasPermission(this.pageId, 'delete_website_item_type_ref');
     this.tableActions = [];
     if (this.hasDeletePermission) {
       this._translateService.get('COMMON.delete').subscribe((message) => {
         this.tableActions.push({ label: message, icon: 'fa-close', command: () => { this.onRemove(this.selectedDataTableItems); } });
       });
     }
-    this.predicateAfterSearch = () => {      
-      this.hasRegisterPermission=true;
-      this.expireRegisterPermission = false;
-      setTimeout(()=>{
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' },
-         Url: '/api/project_register/get-by-id?project_type='+this.selectedProject,
-          Module: 'STUDENT'})
-        .subscribe(res => {
-          this.project_register = res.data;
-          
-          if(this.project_register === null){
-            this.expireRegisterPermission = true;
-            this.project_register = new ProjectRegister();
-            this.project_register.student_project_name = "";
-          }
-          else{
-            if(this.project_register.project_register_status != 1){
-              this.expireRegisterPermission = true;
-            }
-          }
-          setTimeout(()=> {
-            this._changeDetectorRef.detectChanges();
-          })
-        }, (error) => { 
-          this._functionConstants.ShowNotification(ENotificationType.RED, error.messageCode);
-         });
-      })
-
-      if(this.data.length === 0){
-
-      }
-      else{
-        this.data.forEach(element => {
-          if(element.available_to_register === false){
-            this.hasRegisterPermission=false;
-          }
-        });
-      }
-
-      setTimeout(()=> {
-        this._changeDetectorRef.detectChanges();
-      })
-      
-
-    }
-
-    this.predicateBeforeSearch = () => {
-      this.searchFormGroup.get('project_type').setValue(this.selectedProject);
-    }
+    this.predicateAfterSearch = () => {
+      this._changeDetectorRef.detectChanges();
+    };
   }
 
   public loadDropdowns() {
-    // setTimeout(() => {
-    //   this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/course-year/get-dropdown?prev=5&next=1', Module: 'CORE' })
-    //   .subscribe(res => {
-    //     console.log(res.data);
-        
-    //     this.courseyears = res.data;        
-    //     setTimeout(() => {
-    //       this._changeDetectorRef.detectChanges();
-    //     });
-    //   }, (error) => { 
-    //     this.submitting = false;
-    //     console.log(error);
-    //    });
-    //   })
-      this.semesters =[{"parent_id": null, "label": "Kì 1", "value": "1", "sort_order": null, "level": null, "label_e": null, "label_l": null }, {"parent_id": null, "label": "Kì 2", "value": "2", "sort_order": null, "level": null, "label_e": null, "label_l": null }];
-      this.project_types =[{"parent_id": null, "label": "Đồ án 1", "value": 1, "sort_order": null, "level": null, "label_e": null, "label_l": null },{"parent_id": null, "label": "Đồ án 2", "value": 2, "sort_order": null, "level": null, "label_e": null, "label_l": null },{"parent_id": null, "label": "Đồ án 3", "value": 3, "sort_order": null, "level": null, "label_e": null, "label_l": null },{"parent_id": null, "label": "Đồ án 4", "value": 4, "sort_order": null, "level": null, "label_e": null, "label_l": null },{"parent_id": null, "label": "Đồ án 5", "value": 5, "sort_order": null, "level": null, "label_e": null, "label_l": null }]
-      this.search();
+    this.search();
   }
 
   public ngOnInit() {
     this.website_item_type_ref = new WebsiteItemTypeRef();
-    this.project_register = new ProjectRegister();
     this.loadDropdowns();
-    
   }
 
   public openCreateModal(row: any = null) {
@@ -160,25 +87,25 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
   }
 
   public updateValidator() {
-    // this.updateForm.valueChanges.subscribe(res => {
-    //   this.enabledSubmitFlag = this.modified();
-    // });
-    // this.updateForm.get('item_type_name_l').valueChanges.subscribe((value: string) => {
-    //   if (!value || value.trim() == '') {
-    //     this.updateForm.get('item_type_name_e').setValidators([Validators.required, Validators.maxLength(100)]);
-    //   } else {
-    //     this.updateForm.get('item_type_name_e').setValidators([Validators.maxLength(100)]);
-    //   }
-    //   this.updateForm.get('item_type_name_e').updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    // });
-    // this.updateForm.get('item_type_name_e').valueChanges.subscribe((value: string) => {
-    //   if (!value || value.trim() == '') {
-    //     this.updateForm.get('item_type_name_l').setValidators([Validators.required, Validators.maxLength(100)]);
-    //   } else {
-    //     this.updateForm.get('item_type_name_l').setValidators([Validators.maxLength(100)]);
-    //   }
-    //   this.updateForm.get('item_type_name_l').updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    // });
+    this.updateForm.valueChanges.subscribe(res => {
+      this.enabledSubmitFlag = this.modified();
+    });
+    this.updateForm.get('item_type_name_l').valueChanges.subscribe((value: string) => {
+      if (!value || value.trim() == '') {
+        this.updateForm.get('item_type_name_e').setValidators([Validators.required, Validators.maxLength(100)]);
+      } else {
+        this.updateForm.get('item_type_name_e').setValidators([Validators.maxLength(100)]);
+      }
+      this.updateForm.get('item_type_name_e').updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
+    this.updateForm.get('item_type_name_e').valueChanges.subscribe((value: string) => {
+      if (!value || value.trim() == '') {
+        this.updateForm.get('item_type_name_l').setValidators([Validators.required, Validators.maxLength(100)]);
+      } else {
+        this.updateForm.get('item_type_name_l').setValidators([Validators.maxLength(100)]);
+      }
+      this.updateForm.get('item_type_name_l').updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
   }
 
   public onSubmit() {
@@ -298,78 +225,6 @@ export class ProjectRegisterComponent extends Grid implements OnInit {
         });
       });
     }, 300);
-  }
-
-  public registerTeacher(row){
-    this.project_register.teacher_pro_id = row.teacher_pro_id;
-
-    setTimeout(() => {
-      this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
-       Url: '/api/project_register/create', Module: 'STUDENT',
-        Data: JSON.stringify(this.project_register)  })
-      .subscribe(res => {
-        console.log(res);
-        this.hasRegisterPermission=false;
-        row.quantity = row.quantity -1;
-        row.available_to_register = false;
-        this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        setTimeout(() => {
-          this._changeDetectorRef.detectChanges();
-        });
-      }, (error) => { 
-        this.submitting = false;
-        console.log(error);
-       });
-      })
-  }
-
-  public cancelRegisterTeacher(row){
-    this.project_register.teacher_pro_id = row.teacher_pro_id;
-
-    setTimeout(() => {
-      this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
-       Url: '/api/project_register/delete', Module: 'STUDENT',
-        Data: JSON.stringify(this.project_register)  })
-      .subscribe(res => {
-        console.log(res);
-        this.hasRegisterPermission=true;
-        row.quantity = row.quantity + 1;
-        row.available_to_register = true;
-        this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-        setTimeout(() => {
-          this._changeDetectorRef.detectChanges();
-        });
-      }, (error) => { 
-        this.submitting = false;
-        console.log(error);
-       });
-      })
-
-  }
-
-  public rename_project(student_project_name){
-    console.log(student_project_name);
-    console.log(this.project_register);
-    
-    if(this.hasRegisterPermission == true){
-      this._functionConstants.ShowNotification(ENotificationType.RED,"Bạn phải đăng kí giảng viên trước!!");
-    }
-    else{
-      setTimeout(() => {
-        this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' },
-         Url: '/api/project_register/update', Module: 'STUDENT',
-          Data: JSON.stringify(this.project_register)  })
-        .subscribe(res => {
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-          setTimeout(() => {
-            this._changeDetectorRef.detectChanges();
-          });
-        }, (error) => { 
-          this.submitting = false;
-          console.log(error);
-         });
-        })
-    }
   }
 
   public getArrayRequest() {

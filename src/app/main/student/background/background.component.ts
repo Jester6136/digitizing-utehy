@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { log } from 'console';
 import { ENotificationType, Grid, SystemConstants, CustomizeFileUpload } from 'core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/combineLatest';
@@ -24,6 +25,7 @@ export class BackgroundComponent extends Grid implements OnInit {
   public provinces2 : any;
   public districs2: any;
   public wards2: any;
+  public test: any;
   public hasUploadPermission: any;
   public constructor(injector: Injector) {
     super(injector);
@@ -71,17 +73,13 @@ export class BackgroundComponent extends Grid implements OnInit {
        });
       })    
   }
-  
 
   public getStudent(){
     setTimeout(() => {
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-by-id', Module: 'STUDENT'})
     .subscribe(res => {
       this.student = res.data;
-      console.log(this.student);
       
-
-
       if(this.student.student_resident_district != ""){
         setTimeout(() => {
           this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-wards-by-id/'+this.student.student_resident_district, Module: 'STUDENT'})
@@ -246,7 +244,17 @@ export class BackgroundComponent extends Grid implements OnInit {
     // }
   }
 
-  public Update(){    
+  convert_time(str) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [day,mnth,date.getFullYear()].join("/");
+  }
+
+  public Update(){  
+    if(this.student.date_of_birth != null){
+      this.student.date_of_birth = this.convert_time(this.student.date_of_birth);
+    }
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student/update', Module: 'STUDENT',
      Data: JSON.stringify(this.student) }).subscribe(res => {
       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);

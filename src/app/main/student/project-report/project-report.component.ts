@@ -23,7 +23,7 @@ export class ProjectReportComponent extends Grid implements OnInit {
   public website_item_type_ref: WebsiteItemTypeRef;
   public project_register: ProjectRegister;
   public project_report: ProjectReport;
-  public selectedProject = 4;
+  public selectedProject = 5;
   public project_types :any;
 
   public hasUploadPermission :any;

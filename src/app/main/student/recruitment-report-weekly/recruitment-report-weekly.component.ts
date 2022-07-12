@@ -28,6 +28,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public file_report ="";
   public fileExcel : any;
   public display: any;
+  public can_upload = false;
   public website_item_type_ref: WebsiteItemTypeRef;
   public student_recruitment_report: StudentRecruitmentReport;
   public internship_process_evaluate: InternshipProcessEvaluate;
@@ -113,7 +114,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.internship_process_evaluate = new InternshipProcessEvaluate();
     this.student_job_candidate = new StudentJobCandidate();
     this.loadDropdowns();
-    this.getRecruitmentReport();    
+    this.getRecruitmentReport(); 
   }
 
   public getRecruitmentReport(){
@@ -124,11 +125,12 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
       if(this.student_job_candidate == null){
           this.student_job_candidate = new StudentJobCandidate(); 
           this.student_job_candidate.teacher_name = ""; 
-          this.student_job_candidate.company_rcd = ""; 
+          this.student_job_candidate.company_rcd = "";
           this.student_job_candidate.report_src = ""; 
           this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Bạn chưa đăng kí hoặc chưa được phê duyệt nguyện vọng");
       }
       else{
+        this.can_upload = true;
         if(this.student_job_candidate.report_src == null){
           this.student_job_candidate.report_src="";
         }
@@ -145,8 +147,6 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   showDialog() {
      this.display = true;
      this.doneSetupForm = true;
-     console.log(this.student_job_candidate);
-     
   }
 
   public uploadExcel(event) {
@@ -157,31 +157,32 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   }
 
   public uploadFile() {
-    this.doneSetupForm = false;
+    this.doneSetupForm = false;    
     if (this.fileExcel) {
       this._apiService.importFile(this.fileExcel, 'http://localhost:57065/api/student-recruitment-report-weekly/upload').subscribe((res: any) => {
-        if (res.body) {
-          // this.search();
-          this._functionConstants.ShowNotification(ENotificationType.GREEN, res.body.messageCode);
-          this.display = false;
-          this.doneSetupForm = true;
-          // this.fileExcel = null;
-          // this.fileNameExcel = null;
-
-           //Update student
-           this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update-report-src', Module: 'STUDENT',
-           Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
-            this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
-           }, (error) => { this.submitting = false; });
-           //Update student
-
-
-          this._changeDetectorRef.detectChanges();
+          if (res.body) {
+            if(res.body.updateFail == 'MESSAGE.update_fail'){
+              this._functionConstants.ShowNotification(ENotificationType.ORANGE,"file rỗng hoặc tên file sai định dạng");
+            }
+            else{
+              this.display = false;
+              this.doneSetupForm = true;
+               //Update student
+               this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/job-candidate/update-report-src', Module: 'STUDENT',
+               Data: JSON.stringify(this.student_job_candidate) }).subscribe(res => {
+                this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);
+               }, (error) => {
+                 this.submitting = false; 
+                });
+               //Update student
+  
+              this._changeDetectorRef.detectChanges();
+            }
         }
       });
     } else {
       this.doneSetupForm = true;
-      this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'MESSAGE.choose_file');
+      this._functionConstants.ShowNotification(ENotificationType.ORANGE, 'Hãy chọn file doc');
     }
   }
 
@@ -296,8 +297,6 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   }
 
   public openUpdateModal(row) {
-    console.log(row);
-    
     this.doneSetupForm = false;
     this.showUpdateModal = true;
     setTimeout(() => {
@@ -306,7 +305,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     if(row.candidate_id=="00000000-0000-0000-0000-000000000000"){
       setTimeout(() => {
         this.student_recruitment_report = new StudentRecruitmentReport();
-        this.student_recruitment_report= this.copyProperty(row);
+        // this.student_recruitment_report = this.copyProperty(row);
         this.student_recruitment_report.report_week = Number(this.selectedWeekSearch);
         this.student_recruitment_report.report_day = Number(row.report_day);
         if(this.student_recruitment_report.job_assignment ==null){
@@ -319,8 +318,6 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
           this.student_recruitment_report.description = "";
         }
         this.isCreate_Custom = true;
-        console.log(this.student_recruitment_report);
-        
         this.updateForm = new FormGroup({
           'report_week': new FormControl({ value: this.student_recruitment_report.report_week, disabled: true }, []),
           'report_day': new FormControl({ value:this.student_recruitment_report.report_day,disabled: true}, []),

@@ -47,8 +47,11 @@
                   Ngày sinh
                 </div>
                 <div class="ui-g-12 ui-md-2">
-                  <input disabled pInputText [(ngModel)]="student.date_of_birth" type="text" />
+                  <p-calendar [(ngModel)]="student.date_of_birth" dateFormat="dd/mm/yy" [readonlyInput]="true" placeholder="Cập nhật ngày sinh!!" [monthNavigator]="true" [yearNavigator]="true" yearRange="1960:2035"></p-calendar>
                 </div>
+                <!-- <div class="ui-g-12 ui-md-2">
+                  <input disabled pInputText [(ngModel)]="student.date_of_birth" type="datetime-local" value="01-01-2001" />
+                </div> -->
                 <div class="ui-g-12 ui-md-1 inline-label text-right">
                   Giới tính
                 </div>
@@ -248,14 +251,14 @@
                   <span class="inline-label text-right">Link facebook</span>
                   <input pInputText [(ngModel)]="student.student_facebook_url" type="text" />
                 </div>
-                <div class="ui-g-12 ui-md-4">
+                <!-- <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Ảnh thẻ</span>
                   <input pInputText [(ngModel)]="student.student_card_photo" type="text" />
                 </div>
                 <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Ảnh CCCD</span>
                   <input pInputText [(ngModel)]="student.citizen_identification_photo" type="text" />
-                </div>
+                </div> -->
               </div>
 
               <div class="clearfix"></div>
@@ -371,7 +374,7 @@
                 </div>
                 <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Năm sinh</span>
-                  <input pInputText [(ngModel)]="student.mother_year_of_birth" type="text" />
+                  <input pInputText [(ngModel)]="student.spouses_year_of_birth" type="text" />
                 </div>
                 <div class="ui-g-12 ui-md-4">
                   <span class="inline-label text-right">Quốc tịch</span>

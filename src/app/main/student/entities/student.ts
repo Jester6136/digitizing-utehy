@@ -6,7 +6,7 @@ export class Student {
 	public student_nation :string   
 	public student_religion :string   
 	public student_countryside :string   
-	public student_apartment_number :number      
+	public student_apartment_number :string      
 	public student_health_insurance_code :string   
 	public student_citizen_identity_card :string   
 	public student_citizen_identity_card_date :string   
@@ -25,7 +25,7 @@ export class Student {
 	public student_card_photo :string   
 	public citizen_identification_photo :string   
 	public father_name :string   
-	public father_year_of_birth :Date
+	public father_year_of_birth :string
 	public father_nationality :string   
 	public father_nation :string   
 	public father_religion :string   
@@ -33,7 +33,7 @@ export class Student {
 	public father_work :string   
 	public father_phone_number :string   
 	public mother_name :string   
-	public mother_year_of_birth :Date
+	public mother_year_of_birth :string
 	public mother_nationality :string   
 	public mother_nation :string   
 	public mother_religion :string   
@@ -46,6 +46,7 @@ export class Student {
 	public spouses_religion :string   
 	public spouses_address :string   
 	public spouses_work :string   
+	public spouses_year_of_birth :string   
 	public spouses_phone_number :string   
 	public gender :string   
 	public student_email :string   

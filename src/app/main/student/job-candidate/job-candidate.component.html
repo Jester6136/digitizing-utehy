@@ -4,18 +4,15 @@
       <i class="ace-icon fa fa-home home-icon"></i>
       <a [routerLink]="">{{ 'COMMON.home' | translate }}</a>
     </li>
-    <li class="active">Báo cáo thực tập doanh nghiệp</li>
+    <li class="active">Trạng thái đăng kí thực tập</li>
   </ul>
   <div class="nav-search">
     <p class="pull-right no-margin">
-      
-      <a *ngIf="hasUploadPermission && can_upload" class="btn btn-danger btn-xs" href="javascript:;" (click)="showDialog()"> 
-        <i class="fa fa-file-excel blue"></i>&nbsp;&nbsp;Tạo báo cáo</a>
-
       <a *ngIf="!showSearchPanel" (click)="toggleSearchPanel()" href="javascript:;" class="btn btn-primary btn-xs">
         <i class="fa fa-search"></i>&nbsp;&nbsp;{{ 'COMMON.search' | translate }}
       </a>
-
+      <a *ngIf="hasCreatePermission" class="btn btn-success btn-xs" (click)="openCreateModal()"><i
+          class="fa fa-plus"></i>&nbsp;&nbsp;{{ 'COMMON.add' | translate }}</a>
     </p>
   </div>
 </div>
@@ -41,15 +38,12 @@
             <div class="ui-g-12">
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Tuần báo cáo
+                  Vị trí tuyển dụng
                 </div>
-                <div class="ui-g-12 ui-md-8">
-                  <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)" [(ngModel)]="selectedWeekSearch"
-                  formControlName="report_week" [options]="weeks" [disabled] ="isRemove"
-                  placeholder="Tuần 1"></ng-selectize>
+                <div class="ui-g-12 ui-md-4">
+                  <input pInputText formControlName="recruitment_job" ngModel type="text" />
                 </div>
               </div>
-
 
               <div class="clearfix"></div>
               <div class="ui-g-12 ui-form-group">
@@ -67,49 +61,32 @@
     </div>
     <div class="ui-g-12 datatable-container">
       <div class="row">
-        <div class="ui-g-12 ui-form-group">
-          <div class="ui-g-12 ui-md-2 inline-label text-right">
-            Giáo viên hướng dẫn
-          </div>
-          <div class="ui-g-12 ui-md-2">
-            <input pInputText type="text" [(ngModel)]="student_job_candidate.teacher_name" readonly/>
-          </div>
-
-          <div class="ui-g-12 ui-md-2 inline-label text-right">
-            Doanh nghiệp/Công ty
-          </div>
-          <div class="ui-g-12 ui-md-2">
-            <input pInputText type="text" [(ngModel)]="student_job_candidate.company_rcd" readonly/>
-          </div>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-xs-12">
           <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 5%; text-align: center ;">Thứ</th>
-                <th style="text-align: left;">Công việc</th>
-                <th style="text-align: left;">Kết quả đạt được</th>
-                <th style="width: 15%; text-align: center;">Ghi chú</th>
-                <th style="width: 80px; text-align: center;" *ngIf="hasUpdatePermission||hasCreatePermission">{{
-                  'COMMON.action' | translate }}</th>
+                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width: 7%; text-align: left;">Mã công ty</th>
+                <th style="width: 17%; text-align: left;">Tên công ty</th>
+                <th style="text-align: left;">Vị trí tuyển dụng</th>
+                <th style="text-align: center;">Thời điểm đăng kí</th>
+                <th style="text-align: center;">Hạn đăng kí</th>
+                <th style="width: 10%; text-align: center;">Địa chỉ web</th>
+                <th style="width: 10%; text-align: center;">Trạng thái đăng kí</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
               <tr [pSelectableRow]="row">
-                <td style="width: 5%; text-align: center;">{{ row.report_day }}</td>
-                <td style="text-align: left;">{{ row.job_assignment }}</td>
-                <td style="text-align: left;">{{ row.result_in_day }}</td>
-                <td style="width: 15%; text-align: center;">{{ row.description }}</td>
-                <td class="action-col" style="width: 80px; text-align: center;"
-                  *ngIf="hasUpdatePermission||hasCreatePermission">
-                  <div class="btn-group">
-                    <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
-                      *ngIf="hasUpdatePermission||hasCreatePermission" (click)="openUpdateModal(row)"><i
-                        class="ace-icon fa fa-edit"></i></button>
-                  </div>
+                <td style="width: 70px; text-align: center;">
+                  <div>{{ first + i + 1 }}</div>
                 </td>
+                <td style="width: 7%; text-align: left;">{{ row.company_rcd }}</td>
+                <td style="width: 17%; text-align: left;">{{ row.company_name }}</td>
+                <td style="text-align: left;">{{ row.recruitment_job }}</td>
+                <td style="text-align: left;">{{ row.created_date_time|date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: left;">{{ row.recruitment_expiry_date|date:'dd/MM/yyyy' }}</td>
+                <td style="width: 10%; text-align: center;"><a href="{{ row.company_website_address }}">{{ row.company_website_address }}</a></td>
+                <td style="width: 10%;text-align: left;">{{ row.status_value }}</td>
               </tr>
             </ng-template>
             <ng-template pTemplate="footer">
@@ -153,33 +130,13 @@
       </div>
     </div>
   </div>
-  <div class="nav-result">
-    <div class="ui-g-12 ui-form-group">
-      <div class="ui-g-12 ui-md-2 inline-label text-right">
-        Điểm báo cáo tuần 
-      </div>
-      <div class="ui-g-12 ui-md-2">
-        <input disabled [(ngModel)]="internship_process_evaluate.process_score"  type="text" />
-      </div>
-
-
-      <div class="ui-g-12 ui-md-2 inline-label text-right">
-        Bình luận
-      </div>
-      <div class="ui-g-12 ui-md-6">
-        <textarea disabled style="width:100%"
-        [(ngModel)]="internship_process_evaluate.process_comment" ></textarea>
-      </div>
-    </div>
-
-  </div>
-  <div *ngIf="(hasUpdatePermission||hasCreatePermission) && showUpdateModal" id="updateStudentRecruitmentReportWeeklyModal"
+  <div *ngIf="(hasCreatePermission || hasUpdatePermission) && showUpdateModal" id="updateWebsiteItemTypeRefModal"
     class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h4 *ngIf="isCreate" class="modal-title">{{ 'MODULE.CMS.create_website_item_type_ref' | translate }}</h4>
-          <h4 *ngIf="!isCreate" class="modal-title">Cập nhật</h4>
+          <h4 *ngIf="!isCreate" class="modal-title">{{ 'MODULE.CMS.update_website_item_type_ref' | translate }}</h4>
         </div>
         <div class="modal-body">
           <div *ngIf="!doneSetupForm" class="loading-overlay">
@@ -190,49 +147,88 @@
 
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Tuần báo cáo
+                  {{ 'MODULE.CMS.item_type_rcd' | translate }}
+                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-4">
-                  <input pInputText autofocus formControlName="report_week"
-                    [(ngModel)]="student_recruitment_report.report_week" type="text" />
+                  <error-messages [errors]="updateForm.controls['item_type_rcd'].errors"
+                    [control]="updateForm.controls['item_type_rcd']"></error-messages>
+                  <input pInputText autofocus formControlName="item_type_rcd"
+                    [(ngModel)]="website_item_type_ref.item_type_rcd" type="text" />
                 </div>
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Thứ
+                  {{ 'MODULE.CMS.sort_order' | translate }}
                 </div>
                 <div class="ui-g-12 ui-md-4">
-                  <error-messages [errors]="updateForm.controls['report_day'].errors"
-                    [control]="updateForm.controls['report_day']"></error-messages>
-                  <input pInputText formControlName="report_day" [(ngModel)]="student_recruitment_report.report_day"
+                  <error-messages [errors]="updateForm.controls['sort_order'].errors"
+                    [control]="updateForm.controls['sort_order']"></error-messages>
+                  <input pInputText formControlName="sort_order" [(ngModel)]="website_item_type_ref.sort_order"
                     type="text" />
                 </div>
               </div>
-
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Công việc
+                  {{ 'MODULE.CMS.item_type_name' | translate }}
+                  <span class="red">&nbsp;*</span>
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="job_assignment" [(ngModel)]="student_recruitment_report.job_assignment" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_l'].errors"
+                    [control]="updateForm.controls['item_type_name_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_name_e'].errors"
+                    [control]="updateForm.controls['item_type_name_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <input pInputText formControlName="item_type_name_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_name_l" type="text" />
+                    <input pInputText formControlName="item_type_name_e" [class.hidden]="local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_name_e" type="text" />
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
                 </div>
               </div>
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Kết quả đạt được
+                  {{ 'MODULE.CMS.item_type_icon' | translate }}
                 </div>
-                <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="result_in_day" [(ngModel)]="student_recruitment_report.result_in_day" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['item_type_icon'].errors"
+                    [control]="updateForm.controls['item_type_icon']"></error-messages>
+                  <input pInputText formControlName="item_type_icon" [(ngModel)]="website_item_type_ref.item_type_icon"
+                    type="text" />
+                </div>
+                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                  {{ 'MODULE.CMS.item_type_size' | translate }}
+                </div>
+                <div class="ui-g-12 ui-md-4">
+                  <error-messages [errors]="updateForm.controls['item_type_size'].errors"
+                    [control]="updateForm.controls['item_type_size']"></error-messages>
+                  <input pInputText formControlName="item_type_size" [(ngModel)]="website_item_type_ref.item_type_size"
+                    type="text" />
                 </div>
               </div>
               <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">
-                  Chú thích
+                  {{ 'MODULE.CMS.item_type_description' | translate }}
                 </div>
                 <div class="ui-g-12 ui-md-10">
-                  <textarea [rows]="5" formControlName="description" [(ngModel)]="student_recruitment_report.description" pInputTextarea style="resize: none" autoResize="false"></textarea>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_l'].errors"
+                    [control]="updateForm.controls['item_type_description_l']"></error-messages>
+                  <error-messages class="has-dl" [errors]="updateForm.controls['item_type_description_e'].errors"
+                    [control]="updateForm.controls['item_type_description_e']"></error-messages>
+                  <div class="ui-inputgroup dual-language">
+                    <textarea [rows]="3" formControlName="item_type_description_l" [class.hidden]="!local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_description_l" pInputTextarea style="resize: none"
+                      autoResize="false"></textarea>
+                    <textarea [rows]="3" formControlName="item_type_description_e" [class.hidden]="local_flag"
+                      [(ngModel)]="website_item_type_ref.item_type_description_e" pInputTextarea style="resize: none"
+                      autoResize="false"></textarea>
+                    <language-switcher [(local_flag)]="local_flag" (local_flagChange)="flagChange()">
+                    </language-switcher>
+                  </div>
                 </div>
               </div>
-
             </div>
+
           </form>
         </div>
         <div class="modal-footer">
@@ -240,7 +236,7 @@
             <i class="fa fa-sync-alt"></i> {{ 'COMMON.reset' | translate }}
           </button>
           <button type="button" (click)="onSubmit()"
-            [disabled]="!doneSetupForm || !updateForm.valid || submitting"
+            [disabled]="!doneSetupForm || !updateForm.valid || !enabledSubmitFlag || submitting"
             class="btn btn-success btn-sm btn-submit">
             <i class="fa fa-save"></i> {{ 'COMMON.ok' | translate }}
           </button>
@@ -252,9 +248,6 @@
     </div>
   </div>
 </div>
-
-
-
 <p-confirmDialog header="{{ 'COMMON.confirm' | translate }}" icon="fa fa-question-circle" width="425" #cd>
   <p-footer>
     <button class="btn-success" type="button" pButton icon="fa-check" label="{{ 'COMMON.ok' | translate }}"
@@ -263,26 +256,3 @@
       (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
-
-
-
-<p-dialog header="Tạo báo cáo" [(visible)]="display" [modal]="true"
-  [responsive]="true" [style]="{width: '550px', minWidth: '200px'}" [minY]="70" [maximizable]="true"
-  [baseZIndex]="10000">
-  <div *ngIf="!doneSetupForm" class="loading-overlay">
-    <i class="fa fa-spinner fa-spin orange"></i>
-  </div>
-  <div style="display: flex; justify-content: right;">
-    <input style="width: 100%; margin-right: 1px; border: 1px solid rgb(230, 224, 224);" [readonly]="true"
-      value="{{student_job_candidate.report_src}}">
-    <input placeholder="MaSV_HoVaTen" accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" name="file" id="file" (change)="uploadExcel($event)" type="file" #inputFileXL hidden>
-    <input type="button" (click)="inputFileXL.click()" style="border: 1px solid rgb(218, 215, 215); height: 30px;"
-      value="&nbsp;&nbsp; Chọn file .doc&nbsp;&nbsp;" />
-  </div>
-  <p-footer>
-    <button class="btn-success" type="button" pButton icon="pi pi-check" (click)="uploadFile()"
-      label="{{ 'COMMON.save' | translate }}"></button>
-    <button class="btn-default" type="button" pButton icon="pi pi-close" (click)="display=false"
-      label="{{ 'COMMON.cancel' | translate }}"></button>
-  </p-footer>
-</p-dialog>
