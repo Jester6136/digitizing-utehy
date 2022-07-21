@@ -27,39 +27,53 @@
           <div class="ui-helper-clearfix">
             <span class="ui-panel-title" style="font-size: 16px; display: inline-block; margin-top: 2px">{{
               'COMMON.search' | translate }}</span>
-            <p class="pull-right no-margin">
+            <!-- <p class="pull-right no-margin">
 
               <button type="button" title="{{ 'COMMON.close' | translate }}" (click)="toggleSearchPanel()"
                 class="btn btn-xs btn-primary" style="width: 29.29px">
                 <i class="ace-icon fa bigger-110 icon-only fa-angle-double-up"></i>
               </button>
-            </p>
+            </p> -->
           </div>
         </p-header>
         <form [formGroup]="searchFormGroup" (ngSubmit)="search(true)" novalidate>
           <div class="ui-g lap-form">
             <div class="ui-g-12">
               <div class="ui-g-12 ui-form-group">
-                <div class="ui-g-12 ui-md-2 inline-label text-right">
+                <div class="ui-g-4 ui-md-2 inline-label text-right">
                   Tuần báo cáo
                 </div>
-                <div class="ui-g-12 ui-md-8">
+                <div class="ui-g-8 ui-md-2">
                   <ng-selectize [config]="selectizeConfig(1, 'label', 'value', false)" [(ngModel)]="selectedWeekSearch"
-                  formControlName="report_week" [options]="weeks" [disabled] ="isRemove"
+                  formControlName="report_week" [options]="weeks" [disabled] ="isRemove" (ngModelChange)="dataChanged($event)"
                   placeholder="Tuần 1"></ng-selectize>
                 </div>
-              </div>
 
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Từ ngày:
+                </div>
+                <div class="ui-g-12 ui-md-1">
+                  <input pInputText type="text" [(ngModel)]="start_date" [ngModelOptions]="{standalone: true}" readonly/>
+                </div>
+        
+                <div class="ui-g-12 ui-md-1 inline-label text-right">
+                  Đến ngày:
+                </div>
+                <div class="ui-g-12 ui-md-1">
+                    <input pInputText type="text" [(ngModel)]="end_date" [ngModelOptions]="{standalone: true}" readonly/>
+                </div>
+              </div>
+     
 
               <div class="clearfix"></div>
-              <div class="ui-g-12 ui-form-group">
+              <!-- <div class="ui-g-12 ui-form-group">
                 <div class="ui-g-12 ui-md-2 inline-label text-right">&nbsp;</div>
                 <div class="ui-g-12 ui-md-2">
                   <button type="submit" class="btn btn-primary btn-xs">
                     <i class="fa fa-search"></i> {{ 'COMMON.search' | translate }}
                   </button>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </form>
@@ -77,8 +91,8 @@
 
           <div class="ui-g-12 ui-md-2 inline-label text-right">
             Doanh nghiệp/Công ty
-          </div>
-          <div class="ui-g-12 ui-md-2">
+          </div>  
+          <div class="ui-g-12 ui-md-4">
             <input pInputText type="text" [(ngModel)]="student_job_candidate.company_rcd" readonly/>
           </div>
         </div>
@@ -89,20 +103,20 @@
             <ng-template pTemplate="header">
               <tr>
                 <th style="width: 5%; text-align: center ;">Thứ</th>
-                <th style="text-align: left;">Công việc</th>
-                <th style="text-align: left;">Kết quả đạt được</th>
+                <th style="text-align: left;width: 35%;">Công việc</th>
+                <th style="text-align: left;width: 35%;">Kết quả đạt được</th>
                 <th style="width: 15%; text-align: center;">Ghi chú</th>
-                <th style="width: 80px; text-align: center;" *ngIf="hasUpdatePermission||hasCreatePermission">{{
+                <th style="width:6%;  text-align: center;" *ngIf="hasUpdatePermission||hasCreatePermission">{{
                   'COMMON.action' | translate }}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
               <tr [pSelectableRow]="row">
                 <td style="width: 5%; text-align: center;">{{ row.report_day }}</td>
-                <td style="text-align: left;">{{ row.job_assignment }}</td>
-                <td style="text-align: left;">{{ row.result_in_day }}</td>
+                <td style="text-align: left;width: 35%;">{{ row.job_assignment }}</td>
+                <td style="text-align: left;width: 35%;">{{ row.result_in_day }}</td>
                 <td style="width: 15%; text-align: center;">{{ row.description }}</td>
-                <td class="action-col" style="width: 80px; text-align: center;"
+                <td class="action-col" style="width: 6%; text-align: center;"
                   *ngIf="hasUpdatePermission||hasCreatePermission">
                   <div class="btn-group">
                     <button title="{{ 'COMMON.update' | translate }}" class="btn btn-xs btn-white btn-default"
@@ -112,7 +126,7 @@
                 </td>
               </tr>
             </ng-template>
-            <ng-template pTemplate="footer">
+            <!-- <ng-template pTemplate="footer">
               <tr>
                 <td colspan="50">
                   <div style="text-align: center;display: flex;justify-content: center; position: relative;">
@@ -140,7 +154,7 @@
                   </div>
                 </td>
               </tr>
-            </ng-template>
+            </ng-template> -->
             <ng-template pTemplate="emptymessage">
               <tr>
                 <td colspan="50">
@@ -164,7 +178,7 @@
 
 
       <div class="ui-g-12 ui-md-2 inline-label text-right">
-        Bình luận
+        Nhận xét
       </div>
       <div class="ui-g-12 ui-md-6">
         <textarea disabled style="width:100%"

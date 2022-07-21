@@ -1,6 +1,5 @@
 import { Component, Injector, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { log } from 'console';
 import { ENotificationType, Grid, SystemConstants, CustomizeFileUpload } from 'core';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/combineLatest';
@@ -79,6 +78,11 @@ export class BackgroundComponent extends Grid implements OnInit {
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/student/get-by-id', Module: 'STUDENT'})
     .subscribe(res => {
       this.student = res.data;
+      if(this.student.date_of_birth == null){
+        this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Bạn hãy cập nhật lại ngày sinh!!");
+      }
+
+      console.log(this.student);
       
       if(this.student.student_resident_district != ""){
         setTimeout(() => {
@@ -245,6 +249,8 @@ export class BackgroundComponent extends Grid implements OnInit {
   }
 
   convert_time(str) {
+    if(typeof str === "string")
+      return str;
     var date = new Date(str),
       mnth = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);
@@ -252,9 +258,15 @@ export class BackgroundComponent extends Grid implements OnInit {
   }
 
   public Update(){  
-    if(this.student.date_of_birth != null){
+    console.log(this.student.date_of_birth);
+    
+    if(this.student.date_of_birth==null){
+      this.student.date_of_birth =null;
+    }
+    else{
       this.student.date_of_birth = this.convert_time(this.student.date_of_birth);
     }
+    
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'POST' }, Url: '/api/student/update', Module: 'STUDENT',
      Data: JSON.stringify(this.student) }).subscribe(res => {
       this._functionConstants.ShowNotification(ENotificationType.GREEN, res.messageCode);

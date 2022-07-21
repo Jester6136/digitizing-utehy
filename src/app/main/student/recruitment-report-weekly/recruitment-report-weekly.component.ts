@@ -22,7 +22,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public Uploadable = true;
   public isRemove = true;
   public result_report_weekly = "Chưa có";
-  public selectedWeekSearch = "1";
+  public selectedWeekSearch:any;
   public weeks : any;
   public isCreate = false;
   public file_report ="";
@@ -34,6 +34,8 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
   public internship_process_evaluate: InternshipProcessEvaluate;
   public student_job_candidate: StudentJobCandidate;
   public hasUploadPermission:any;
+  public start_date:Date;
+  public end_date:Date;
   public constructor(injector: Injector) {
     super(injector);
     this.LZCompress = true; // using LZString compress data
@@ -46,6 +48,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.setNullIfEmpty = [];
     this.filterFields = ['item_type_rcd', 'item_type_name', 'item_type_size', 'sort_order', 'item_type_description'];
     //this.dataKey = 'item_type_rcd';
+    this.selectedWeekSearch='1';
     this.dataKey = 'report_day';
     this.searchValue.page = this.page;
     this.searchValue.pageSize = this.pageSize;
@@ -84,6 +87,8 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
          });
       })
 
+      this.end_date = this.data[0].end_date;
+      this.start_date = this.data[0].start_date;
 
       setTimeout(()=> {
         this._changeDetectorRef.detectChanges();
@@ -91,7 +96,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     };
 
     this.predicateBeforeSearch = () => {
-      this.searchFormGroup.get('report_week').setValue(this.selectedWeekSearch);
+      // this.searchFormGroup.get('report_week').setValue(this.selectedWeekSearch);
     }
   }
 
@@ -101,7 +106,7 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     ).takeUntil(this.unsubscribe).subscribe(res => {
       setTimeout(() => {
         this.weeks = res[0].data;
-        this.search();  
+        this.search();
       });
       
     });
@@ -117,6 +122,13 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     this.getRecruitmentReport(); 
   }
 
+  public dataChanged(event){
+    if(event==""){
+      this.selectedWeekSearch = 1;
+    }
+    this.search(true);
+  }
+
   public getRecruitmentReport(){
     setTimeout(() => {
     this._apiService.post('/api/adapter/execute', { Method: { Method: 'GET' }, Url: '/api/job-candidate/get-by-id', Module: 'STUDENT'})
@@ -124,12 +136,16 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
       this.student_job_candidate = res.data;
       if(this.student_job_candidate == null){
           this.student_job_candidate = new StudentJobCandidate(); 
+          
           this.student_job_candidate.teacher_name = ""; 
           this.student_job_candidate.company_rcd = "";
           this.student_job_candidate.report_src = ""; 
           this._functionConstants.ShowNotification(ENotificationType.ORANGE,"Bạn chưa đăng kí hoặc chưa được phê duyệt nguyện vọng");
       }
       else{
+        if(this.student_job_candidate.status_rcd=='3'){
+          this.student_job_candidate.company_rcd = "";
+        }
         this.can_upload = true;
         if(this.student_job_candidate.report_src == null){
           this.student_job_candidate.report_src="";
@@ -337,6 +353,34 @@ export class RecruitmentReportWeeklyComponent extends Grid implements OnInit {
     }
     //Chỉnh sửa báo cáo
     else{
+      setTimeout(() => {
+        let arrRequest = this.getArrayRequest();
+        arrRequest.push(this._apiService.post('/api/adapter/execute', 
+        { Method: { Method: 'GET' },
+         Url: '/api/student-recruitment-report-weekly/get-by-id?report_week=' + row.report_week+'&report_day='+row.report_day, Module: 'STUDENT' }));
+        Observable.combineLatest(arrRequest).subscribe((res: any) => {
+          // this.isCreate = false;
+          this.student_recruitment_report = res[0].data;
+
+          this.updateForm = new FormGroup({
+            'report_week': new FormControl({ value: this.student_recruitment_report.report_week, disabled: true }, []),
+            'report_day': new FormControl({ value:this.student_recruitment_report.report_day,disabled: true}, []),
+            'job_assignment': new FormControl(this.student_recruitment_report.job_assignment, []),
+            'result_in_day': new FormControl(this.student_recruitment_report.result_in_day, []),
+            'description': new FormControl(this.student_recruitment_report.description, []),
+          });
+          this.updateFormOriginalData = this.updateForm.getRawValue();
+          this.doneSetupForm = true;
+          setTimeout(() => {
+            this._changeDetectorRef.detectChanges();
+            this.setAutoFocus();
+            this.updateValidator();
+          });
+        });
+      }, 300);
+
+
+
       setTimeout(() => {
         setTimeout(() => {
           this.student_recruitment_report= this.copyProperty(row);

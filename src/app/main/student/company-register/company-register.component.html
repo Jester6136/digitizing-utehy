@@ -74,29 +74,31 @@
           <p-table #datatable [value]="data" [lazy]="true" [rows]="pageSize" [(selection)]="selectedDataTableItems">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 70px; text-align: center;">{{ 'COMMON.index' | translate }}</th>
+                <th style="width:6%; text-align: center;">{{ 'COMMON.index' | translate }}</th>
                 <th style="width: 7%; text-align: left;">Mã công ty</th>
                 <th style="width: 17%; text-align: left;">Tên công ty</th>
-                <th style="text-align: left;">Vị trí tuyển dụng</th>
-                <th style="text-align: left;">Thời gian bắt đầu</th>
-                <th style="text-align: left;">Hạn đăng kí</th>
+                <th style="text-align: left;width: 14%;">Vị trí tuyển dụng</th>
+                <th style="text-align: left;width: 7%;">Số lượng tuyển dụng</th>
+                <th style="text-align: left;width: 7%;">Thời gian bắt đầu</th>
+                <th style="text-align: left;width: 7%;">Hạn đăng kí</th>
                 <th style="width: 5%; text-align: center;">Địa chỉ web</th>
-                <th style="width:80px; text-align: center;" *ngIf="hasViewPermission">Tác vụ</th>
+                <th style="width:6%; text-align: center;" *ngIf="hasViewPermission">Tác vụ</th>
                 <th style="width: 10%; text-align: center;">Đăng kí</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-i="rowIndex">
               <tr [pSelectableRow]="row">
-                <td style="width: 70px; text-align: center;">
+                <td style="width:6%; text-align: center;">
                   <div class="index_{{ row.item_type_rcd }}">{{ first + i + 1 }}</div>
                 </td>
                 <td style="width: 7%; text-align: left;">{{ row.company_rcd }}</td>
                 <td style="width: 17%; text-align: left;">{{ row.company_name }}</td>
-                <td style="text-align: left;">{{ row.recruitment_job }}</td>
-                <td style="text-align: left;">{{ row.created_date_time|date:'dd/MM/yyyy' }}</td>
-                <td style="text-align: left;">{{ row.recruitment_expiry_date|date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: left;width: 14%;">{{ row.recruitment_job }}</td>
+                <td style="text-align: right;width: 7%;">{{ row.recruitment_quantity }}</td>
+                <td style="text-align: left;width: 7%;">{{ row.created_date_time|date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: left;width: 7%;">{{ row.recruitment_expiry_date|date:'dd/MM/yyyy' }}</td>
                 <td style="width: 10%; text-align: left;"><a href="{{ row.company_website_address }}">{{ row.company_website_address }}</a></td>
-                <td class="action-col" style="width: 80px; text-align: center;" *ngIf="hasViewPermission">
+                <td class="action-col" style="width: 6%; text-align: center;" *ngIf="hasViewPermission">
                   <div class="btn-group">
                     <button title="Chi tiết" class="btn btn-xs btn-white btn-default" (click)="ViewModal(row)"> 
                       <i class="fa fa-eye"></i></button>
